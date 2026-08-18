@@ -35,6 +35,7 @@ from mimic_jax.sage16.transfers import (
     SatelliteStrippingTransfer,
     StarburstTransfer,
     StarFormationTransfer,
+    UpstreamGroupFinalResult,
     UpstreamGroupGalaxyDiagnostics,
     UpstreamGroupHistoryResult,
     UpstreamGroupPreparationDiagnostics,
@@ -79,6 +80,16 @@ def _set_galaxy_and_central(states, galaxy_index, central_index, galaxy, central
         distinct_records,
         states,
     )
+
+
+def _validate_central_index(central_index, member_count):
+    """Validate concrete indices while permitting scalar traced batch inputs."""
+
+    if isinstance(central_index, int):
+        if not 0 <= central_index < member_count:
+            raise ValueError("central_index must select a member of the supplied FoF group")
+    elif getattr(central_index, "ndim", None) != 0:
+        raise ValueError("central_index must be a scalar")
 
 
 def _zero_galaxy_diagnostics():
@@ -131,8 +142,7 @@ def prepare_upstream_sequential_group(
 
     require_x64()
     member_count = states.HotGas.shape[0]
-    if not isinstance(central_index, int) or not 0 <= central_index < member_count:
-        raise ValueError("central_index must select a member of the supplied FoF group")
+    _validate_central_index(central_index, member_count)
 
     reionized = jax.vmap(
         lambda state, halo: apply_reionization(state, halo, context, parameters, units)
@@ -174,8 +184,7 @@ def upstream_sequential_group_substep(
 
     require_x64()
     member_count = states.HotGas.shape[0]
-    if not isinstance(central_index, int) or not 0 <= central_index < member_count:
-        raise ValueError("central_index must select a member of the supplied FoF group")
+    _validate_central_index(central_index, member_count)
     if perturbations is None:
         perturbations = process_perturbations()
 
@@ -451,3 +460,67 @@ def evolve_upstream_sequential_group_interval(
         diagnostics=diagnostics,
         success=jnp.all(successes),
     )
+
+
+def evolve_upstream_sequential_group_final(
+    initial_states: GalaxyState,
+    halos: HaloForcing,
+    context: StepContext,
+    central_index: int,
+    parameters: Sage16Parameters,
+    units: Sage16Units,
+    cooling_tables: CoolingTables,
+    *,
+    num_substeps: int,
+    perturbations=None,
+) -> UpstreamGroupFinalResult:
+    """Run the exact group interval without retaining diagnostic histories.
+
+    This catalogue-production path changes only materialization: it executes
+    the same preparation and substep functions as the diagnostic history API.
+    """
+
+    require_x64()
+    if not isinstance(num_substeps, int) or num_substeps <= 0:
+        raise ValueError("num_substeps must be a positive Python integer")
+    if perturbations is None:
+        perturbations = process_perturbations()
+
+    context = context._replace(num_substeps=jnp.asarray(num_substeps, dtype=jnp.int32))
+    prepared = prepare_upstream_sequential_group(
+        initial_states,
+        halos,
+        context,
+        central_index,
+        parameters,
+        units,
+    )
+    interval_dt = context.time_interval / as_float64(num_substeps)
+
+    def substep(substep_number, carry):
+        current_states, current_halos, success = carry
+        substep_context = context._replace(
+            substep_number=jnp.asarray(substep_number, dtype=jnp.int32),
+            substep_dt=interval_dt,
+            substep_time=(context.time + context.time_interval)
+            - (as_float64(substep_number) + 0.5) * interval_dt,
+        )
+        result = upstream_sequential_group_substep(
+            current_states,
+            current_halos,
+            substep_context,
+            central_index,
+            parameters,
+            units,
+            cooling_tables,
+            perturbations,
+        )
+        return result.states, result.halos, success & result.success
+
+    final_states, final_halos, success = jax.lax.fori_loop(
+        0,
+        num_substeps,
+        substep,
+        (prepared.states, halos, jnp.asarray(True)),
+    )
+    return UpstreamGroupFinalResult(final_states, final_halos, success)

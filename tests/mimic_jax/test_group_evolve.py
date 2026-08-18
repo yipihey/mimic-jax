@@ -6,6 +6,7 @@ import numpy as np
 
 from mimic_jax.sage16 import (
     active_group_baryonic_mass,
+    evolve_upstream_sequential_group_final,
     evolve_upstream_sequential_group_interval,
     fiducial_parameters,
     initial_galaxy_state,
@@ -21,6 +22,10 @@ from mimic_jax.sage16 import (
 
 def _stack(*records):
     return jax.tree_util.tree_map(lambda *values: jnp.stack(values), *records)
+
+
+def _record_at(records, index):
+    return jax.tree_util.tree_map(lambda values: values[index], records)
 
 
 def _controlled_group(hot_gas=8.0):
@@ -172,6 +177,126 @@ def test_full_group_interval_is_jittable_vmappable_and_uses_object_local_dt():
     np.testing.assert_array_equal(
         batched.final_states.StellarMass[0], eager.final_states.StellarMass
     )
+
+
+def test_final_only_group_path_is_bitwise_equal_and_vmappable():
+    states, halos = _controlled_group()
+    context = step_context(redshift=0.5, time_interval=0.002)
+    parameters = fiducial_parameters()
+    units = sage16_units()
+    tables = load_cooling_tables()
+
+    history = evolve_upstream_sequential_group_interval(
+        states,
+        halos,
+        context,
+        0,
+        parameters,
+        units,
+        tables,
+        num_substeps=2,
+    )
+
+    def run(group_states, group_halos):
+        return evolve_upstream_sequential_group_final(
+            group_states,
+            group_halos,
+            context,
+            0,
+            parameters,
+            units,
+            tables,
+            num_substeps=2,
+        )
+
+    final = jax.jit(run)(states, halos)
+    for observed, expected in zip(
+        jax.tree_util.tree_leaves(final.final_states),
+        jax.tree_util.tree_leaves(history.final_states),
+    ):
+        np.testing.assert_array_equal(observed, expected)
+    for observed, expected in zip(
+        jax.tree_util.tree_leaves(final.final_halos),
+        jax.tree_util.tree_leaves(history.final_halos),
+    ):
+        np.testing.assert_array_equal(observed, expected)
+    assert bool(final.success)
+
+    batched_states = jax.tree_util.tree_map(lambda value: jnp.stack((value, value)), states)
+    batched_halos = jax.tree_util.tree_map(lambda value: jnp.stack((value, value)), halos)
+    batched = jax.jit(jax.vmap(run))(batched_states, batched_halos)
+    np.testing.assert_array_equal(
+        batched.final_states.StellarMass[0], final.final_states.StellarMass
+    )
+
+    def run_dynamic(group_states, group_halos, central_index):
+        return evolve_upstream_sequential_group_final(
+            group_states,
+            group_halos,
+            context,
+            central_index,
+            parameters,
+            units,
+            tables,
+            num_substeps=2,
+        )
+
+    dynamic = jax.jit(jax.vmap(run_dynamic))(
+        batched_states,
+        batched_halos,
+        jnp.asarray((0, 0), dtype=jnp.int32),
+    )
+    np.testing.assert_array_equal(dynamic.final_states.ColdGas[0], final.final_states.ColdGas)
+
+
+def test_trailing_inactive_member_padding_is_bitwise_neutral():
+    states, halos = _controlled_group()
+    padded_states = _stack(
+        *[_record_at(states, index) for index in range(3)],
+        initial_galaxy_state(),
+    )
+    padded_halos = _stack(
+        *[_record_at(halos, index) for index in range(3)],
+        initial_halo_forcing(
+            Type=3,
+            CentralHalo=0,
+            Len=0,
+            Mvir=0.0,
+            Rvir=0.0,
+            Vvir=0.0,
+            Vmax=0.0,
+            dT=0.0,
+        ),
+    )
+    context = step_context(redshift=0.5, time_interval=0.002)
+    parameters = fiducial_parameters()
+    units = sage16_units()
+    tables = load_cooling_tables()
+
+    def run(group_states, group_halos):
+        return evolve_upstream_sequential_group_final(
+            group_states,
+            group_halos,
+            context,
+            0,
+            parameters,
+            units,
+            tables,
+            num_substeps=2,
+        )
+
+    exact = jax.jit(run)(states, halos)
+    padded = jax.jit(run)(padded_states, padded_halos)
+    for observed, expected in zip(
+        jax.tree_util.tree_leaves(padded.final_states),
+        jax.tree_util.tree_leaves(exact.final_states),
+    ):
+        np.testing.assert_array_equal(observed[:3], expected)
+    for observed, expected in zip(
+        jax.tree_util.tree_leaves(padded.final_halos),
+        jax.tree_util.tree_leaves(exact.final_halos),
+    ):
+        np.testing.assert_array_equal(observed[:3], expected)
 
 
 def test_group_baryon_conservation_derivative_is_zero():

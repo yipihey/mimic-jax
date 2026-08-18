@@ -412,3 +412,11 @@ class UpstreamGroupHistoryResult(NamedTuple):
     halos: Any
     diagnostics: UpstreamGroupStepDiagnostics
     success: Array
+
+
+class UpstreamGroupFinalResult(NamedTuple):
+    """Final-only FoF result for batched catalogue production."""
+
+    final_states: GalaxyState
+    final_halos: Any
+    success: Array

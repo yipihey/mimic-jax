@@ -30,7 +30,7 @@ def calculate_cooling_budget(
     def calculate(_):
         dt = object_substep_dt(halo, context)
         cooling_time = halo.Rvir / halo.Vvir
-        temperature = VIRIAL_TEMPERATURE_COEFFICIENT * halo.Vvir**2
+        temperature = VIRIAL_TEMPERATURE_COEFFICIENT * halo.Vvir * halo.Vvir
         log_metallicity = jax.lax.cond(
             state.MetalsHotGas > 0.0,
             lambda _: jnp.log10(as_float64(state.MetalsHotGas) / as_float64(state.HotGas)),

@@ -25,11 +25,14 @@ HEATING_VELOCITY_KM_S = 1.34e5
 
 def _empirical_accretion_rate(state, halo, parameters, units):
     unit_conversion = units.UnitMass_in_g / units.UnitTime_in_s * SECONDS_PER_YEAR / SOLAR_MASS_G
+    velocity_ratio = halo.Vvir / 200.0
     normalized_rate = (
         parameters.RadioModeEfficiency
         / unit_conversion
         * (as_float64(state.BlackHoleMass) / 0.01)
-        * (halo.Vvir / 200.0) ** 3
+        * velocity_ratio
+        * velocity_ratio
+        * velocity_ratio
     )
     return jnp.where(
         halo.Mvir > 0.0,
@@ -39,7 +42,7 @@ def _empirical_accretion_rate(state, halo, parameters, units):
 
 
 def _bondi_accretion_rate(state, halo, parameters, units):
-    temperature = VIRIAL_TEMPERATURE_COEFFICIENT * halo.Vvir**2
+    temperature = VIRIAL_TEMPERATURE_COEFFICIENT * halo.Vvir * halo.Vvir
     density_time = PROTON_MASS_G * BOLTZMANN_CGS * temperature / state.CoolingLambda
     density_time /= units.UnitDensity_in_cgs * units.UnitTime_in_s
     return (
@@ -52,7 +55,7 @@ def _bondi_accretion_rate(state, halo, parameters, units):
 
 def _cold_cloud_accretion_rate(state, halo, dt, cooling_after_prior_heating):
     radius_ratio = state.Rcool / halo.Rvir
-    threshold = 0.0001 * halo.Mvir * radius_ratio**3
+    threshold = 0.0001 * halo.Mvir * radius_ratio * radius_ratio * radius_ratio
     return jnp.where(
         as_float64(state.BlackHoleMass) > threshold,
         0.0001 * cooling_after_prior_heating / dt,
@@ -121,7 +124,8 @@ def apply_radio_mode_heating(
             )
             rate = jnp.minimum(rate, eddington_rate)
             accreted = jnp.minimum(rate * dt, as_float64(state.HotGas))
-            heating_coefficient = (HEATING_VELOCITY_KM_S / halo.Vvir) ** 2
+            velocity_ratio = HEATING_VELOCITY_KM_S / halo.Vvir
+            heating_coefficient = velocity_ratio * velocity_ratio
             heating_mass = heating_coefficient * accreted
             heating_limited = heating_mass > cooling_after_prior_heating
             accreted = jnp.where(
@@ -151,7 +155,7 @@ def apply_radio_mode_heating(
                 Heating=as_float64(state.Heating)
                 + jnp.where(
                     (heating_mass > 0.0) & (halo.dT > 0.0),
-                    0.5 * heating_mass * halo.Vvir**2 / halo.dT,
+                    0.5 * heating_mass * halo.Vvir * halo.Vvir / halo.dT,
                     0.0,
                 ),
             )

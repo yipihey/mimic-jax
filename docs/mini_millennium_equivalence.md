@@ -27,7 +27,7 @@ Keeping this conversion outside the differentiable core prevents output units fr
 
 The permanent regression evolves partition 0, tree 1575: a six-node linear history spanning snapshots 58–63. All 42 z=0 public catalogue fields match an upstream MIMIC HDF5 record. Integers are exact; float32 fields use `rtol=atol=2e-6`; ordinary float64 fields use `rtol=atol=2e-12`. The only unresolved upstream value is a `-1.6e-24` float32 hot-metal roundoff where mimic-jax produces exact zero, covered by the stated absolute tolerance.
 
-The reproducible checker additionally evolves tree 61, a 67-node history with two multi-progenitor joins and FoF groups of size two. Across all eight configured output snapshots it compares 13 records and 546 public fields by `UniqueGalaxyID`. Integers match exactly. Float32 reservoirs use the same `2e-6` tolerance. The largest resolved relative difference is `1.056e-6`, in accumulated float32 metal reservoirs. Output `Cooling` and `Heating` use `rtol=3e-10, atol=1e-8` because a tiny internal power difference is subsequently transformed by `log10`; the largest measured luminosity relative difference is `2.1e-10`.
+The reproducible checker additionally evolves tree 61, a 67-node history with two multi-progenitor joins and FoF groups of size two. Across all eight configured output snapshots it compares 13 records and 546 public fields by `UniqueGalaxyID`. Integers match exactly. Float32 reservoirs and the mixed-precision `log10` cooling/heating diagnostics use `rtol=atol=2e-6`; other float64 fields use `rtol=atol=2e-12`. The largest resolved relative difference is `1.056e-6`, in accumulated float32 metal reservoirs. The largest measured luminosity relative difference on this tree is `2.1e-10`; the broader tolerance is declared because other real histories can accumulate float-level differences before the output transform.
 
 Run the direct comparison after producing the upstream fiducial catalogue:
 
@@ -38,5 +38,24 @@ JAX_ENABLE_X64=1 mimic_venv/bin/python \
 ```
 
 This establishes complete process, inheritance, schedule, and selected real-tree catalogue equivalence. It does **not** yet claim all-tree Mini-Millennium population equivalence, a stellar-mass-function match, or a performance result. Those require a partition/catalogue runner and quantitative aggregate comparisons rather than extrapolation from two trees.
+
+## Partition gate and current limitation
+
+`evolve_lhalo_partition` batches independent same-snapshot FoF groups while the host retains ragged tree ownership. The exact mode specializes on live member count. The optional power-of-two mode appends inactive Type-3 slots and accepts the central index as batched data, reducing the number of compiled array shapes without reordering live galaxies. Infall totals use the same sequential member accumulation as upstream, so trailing zero/inactive slots do not change the floating-point reduction tree. Unit tests compare every live state and halo leaf bitwise between exact and padded group kernels.
+
+On partition-0 trees 1500--1599, the power-of-two path evolved 2,932 input halos and 2,929 FoF intervals and passed all 9,408 public-field comparisons over the eight configured output snapshots. Its catalogue digest also matched the exact-member path. This is a useful multi-tree gate, not full-population evidence.
+
+A deliberately complex tree-0 check currently has one failure among 33,306 comparisons: snapshot-32 `SupernovaOutflowRate` differs by `1.26e-5` relatively. The underlying SFR differs by about `1e-6` in absolute output units near a threshold, then the fiducial reheating factor of three amplifies the diagnostic-rate difference. The same field failed in the earlier exact-member full-partition diagnostic, so member padding is not responsible. A cold exact-member pass over partition 0 found 26 comparisons outside the declared tolerances among 890,274 fields, with the largest relative reservoir difference about `4.4e-4`. These discrepancies remain under investigation; the tolerances are not silently broadened and all-tree equivalence is not claimed.
+
+Run the batched gate with:
+
+```bash
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+  scripts/check_mini_millennium_partition_equivalence.py \
+  --tree-start 1500 --tree-count 100 \
+  --member-binning power_of_two --max-batch-members 512
+```
+
+See [`performance.md`](performance.md) for cold/warm timing and memory measurements from the same path.
 
 Code: [`mimic_jax/io/lhalo.py`](../mimic_jax/io/lhalo.py), [`mimic_jax/sage16/tree_evolve.py`](../mimic_jax/sage16/tree_evolve.py), and [`mimic_jax/sage16/catalogue.py`](../mimic_jax/sage16/catalogue.py). Tests: [`tests/mimic_jax/test_lhalo_io.py`](../tests/mimic_jax/test_lhalo_io.py) and [`tests/mimic_jax/test_tree_evolve.py`](../tests/mimic_jax/test_tree_evolve.py).

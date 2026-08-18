@@ -41,23 +41,48 @@ def prepare_infall_budget(
 
     require_x64()
     member_count = states.HotGas.shape[0]
-    if not isinstance(central_index, int) or not 0 <= central_index < member_count:
-        raise ValueError("central_index must select a member of the supplied FoF group")
+    if isinstance(central_index, int):
+        if not 0 <= central_index < member_count:
+            raise ValueError("central_index must select a member of the supplied FoF group")
+    elif getattr(central_index, "ndim", None) != 0:
+        raise ValueError("central_index must be a scalar")
     active = halos.Type != 3
     member_indices = jnp.arange(member_count, dtype=jnp.int32)
     surrendered = active & (member_indices != central_index)
 
-    def active_sum(values):
-        return jnp.sum(jnp.where(active, as_float64(values), 0.0), dtype=jnp.float64)
+    # Upstream accumulates these eight double totals together in live member
+    # order.  An explicit loop preserves that floating-point order and makes
+    # trailing inactive padding an exact no-op; a parallel ``jnp.sum`` may use
+    # a shape-dependent reduction tree.
+    zero = jnp.asarray(0.0, dtype=jnp.float64)
+    initial_totals = (zero, zero, zero, zero, zero, zero, zero, zero)
 
-    total_stars = active_sum(states.StellarMass)
-    total_black_holes = active_sum(states.BlackHoleMass)
-    total_cold = active_sum(states.ColdGas)
-    total_hot = active_sum(states.HotGas)
-    total_ics = active_sum(states.ICS)
-    total_ejected = active_sum(states.EjectedGas)
-    total_ics_metals = active_sum(states.MetalsICS)
-    total_ejected_metals = active_sum(states.MetalsEjectedGas)
+    def accumulate(index, totals):
+        values = (
+            states.StellarMass[index],
+            states.BlackHoleMass[index],
+            states.ColdGas[index],
+            states.HotGas[index],
+            states.ICS[index],
+            states.EjectedGas[index],
+            states.MetalsICS[index],
+            states.MetalsEjectedGas[index],
+        )
+        return tuple(
+            jnp.where(active[index], total + as_float64(value), total)
+            for total, value in zip(totals, values)
+        )
+
+    (
+        total_stars,
+        total_black_holes,
+        total_cold,
+        total_hot,
+        total_ics,
+        total_ejected,
+        total_ics_metals,
+        total_ejected_metals,
+    ) = jax.lax.fori_loop(0, member_count, accumulate, initial_totals)
 
     central_ejected, central_ejected_metals = _validated_mass_metals(
         total_ejected, total_ejected_metals

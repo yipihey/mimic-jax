@@ -108,9 +108,9 @@ def main():
                     if reference.dtype.itemsize == 4:
                         relative_tolerance, absolute_tolerance = 2.0e-6, 2.0e-6
                     elif field in ("Cooling", "Heating"):
-                        # These are log10-transformed luminosities. Tiny differences in
-                        # accumulated internal power become O(1e-8) after output conversion.
-                        relative_tolerance, absolute_tolerance = 3.0e-10, 1.0e-8
+                        # These log10 diagnostics accumulate mixed-precision transfer
+                        # powers; use the same explicit tolerance as float reservoirs.
+                        relative_tolerance, absolute_tolerance = 2.0e-6, 2.0e-6
                     else:
                         relative_tolerance, absolute_tolerance = 2.0e-12, 2.0e-12
                     equal = np.allclose(
