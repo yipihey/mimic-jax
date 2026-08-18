@@ -2,7 +2,7 @@
 title: "SAGE16 Mini-Millennium: from equivalence to baryon-cycle insight"
 report-id: "mini-millennium-sage16-initial"
 report-kind: "run"
-date: "2026-08-18T10:10:51Z"
+date: "2026-08-18T12:43:45Z"
 toc: true
 ---
 
@@ -40,6 +40,7 @@ Related: [Report architecture](../../docs/reporting.md) · [Scientific applicati
 | Controlled baryon conservation | ✅ Passed | The explicit controlled source/sink ledger closes within tolerance; a full Mini-Millennium history ledger was not evaluated. |
 | Metal conservation | ⬚ Not evaluated | A report-level Mini-Millennium metal ledger was not evaluated for this run. |
 | Controlled gradient validation | ✅ Passed | A controlled quiescent SAGE16 step has a logarithmic parameter response that agrees with symmetric finite differences; this is not yet an SMF response. |
+| Does the continuous SAGE16 subset converge in time? | ✅ Passed | The isolated rates match their upstream SAGE16 budgets, the reservoir ledger closes, and every tested method reaches its expected temporal order. |
 | Stellar-mass-function parameter response | ⬚ Not evaluated | A validated differentiable estimator for hard stellar-mass-function bin membership has not yet been run on this partition. No raw or zero-almost-everywhere histogram gradient is shown. |
 | Population timestep convergence | ⬚ Not evaluated | The stellar mass function has not yet been recomputed at refined Mini-Millennium substeps. The controlled central refinement remains technical API evidence only. |
 
@@ -59,6 +60,7 @@ These statements are generated from the committed JSON/NPZ products rather than 
 - Ejected gas is the largest modeled share of the universal baryon allotment over 10.50 ≤ log10(Mvir/Msun) < 11.50 in bins containing at least ten FoF groups.
 - Hot gas is the largest modeled share of the universal baryon allotment over 11.50 ≤ log10(Mvir/Msun) < 12.75 in bins containing at least ten FoF groups.
 - The complete all-snapshot field gate retains 20 residuals among 794,136 comparisons (0.002518%, maximum relative difference 5.26e-05). These are negligible for the science observables shown, while remaining visible in technical validation.
+- For the fixed-halo, smooth quiescent reservoir subset, the repeated upstream-order update and forward Euler converge at first order, Heun at second order, and RK4 at fourth order; this is a controlled time-integration result, not yet a population-level Mini-Millennium convergence claim.
 
 ## Does mimic-jax reproduce familiar SAGE16?
 
@@ -143,9 +145,46 @@ Epoch-binned cooling and AGN perturbations were not evaluated for this catalogue
 
 ## How accurately are these histories being integrated?
 
-Population-level convergence must be expressed through familiar observables. It has not yet been run for this partition; the controlled fixed-forcing refinement is retained below as scoped technical evidence.
+The exact upstream-sequential path remains the SAGE16 reference. Separately, a fixed-halo continuous reservoir experiment now demonstrates genuine convergence in time: upstream-order splitting and Euler are first order, Heun is second order, and RK4 is fourth order. The wider hybrid formulation treats prepared infall as external forcing, makes AGN memory Markovian with stored `Rheat`, represents stripping as a group flow, and retains projections and mergers as events. Population-level convergence must still be tested through familiar observables and is not inferred from this controlled experiment.
 
-Related: [Numerical integration contract](../../docs/numerical_integration.md)
+Related: [Numerical integration contract](../../docs/numerical_integration.md) · [Complete SAGE16 hybrid classification](../../docs/sage16_hybrid_system.md)
+
+### Does the continuous SAGE16 subset converge in time?
+
+**Status:** ✅ Passed
+
+The isolated rates match their upstream SAGE16 budgets, the reservoir ledger closes, and every tested method reaches its expected temporal order.
+
+**Method:** fixed-forcing upstream split, Euler, Heun RK2, and RK4
+
+**Acceptance criterion:** rate relative difference <= 2e-14; baryon residual <= 2e-12; observed orders within 0.15
+
+| Quantity | Value | Interpretation |
+| --- | ---: | --- |
+| Largest isolated rate mismatch | 1.32386e-16 | continuous rate versus the matching upstream finite budget divided by dt |
+| Largest integrated baryon residual | 7.10543e-15 1e10 Msun/h | across the float64 continuous integrators and refinement levels |
+| Largest upstream-split storage residual | 8.52346e-06 1e10 Msun/h | includes SAGE16 float32 reservoir writes at every sequential step |
+| upstream_rate_subset observed order | 1.00364 | median of the final two maximum-error ratios |
+| upstream_rate_subset finest maximum relative error | 0.000972632 | at 128 steps |
+| forward_euler observed order | 1.00613 | median of the final two maximum-error ratios |
+| forward_euler finest maximum relative error | 0.00111903 | at 128 steps |
+| heun_rk2 observed order | 2.00933 | median of the final two maximum-error ratios |
+| heun_rk2 finest maximum relative error | 2.16775e-06 | at 128 steps |
+| rk4 observed order | 4.00992 | median of the final two maximum-error ratios |
+| rk4 finest maximum relative error | 3.54542e-12 | at 128 steps |
+
+- The independent reference is `rk4` with 4,096 fixed steps.
+- Halo forcing interpolation: `piecewise_constant`.
+- `upstream_rate_subset` approaches order 1.004; the expected order is 1.
+- `forward_euler` approaches order 1.006; the expected order is 1.
+- `heun_rk2` approaches order 2.009; the expected order is 2.
+- `rk4` approaches order 4.010; the expected order is 4.
+
+![Temporal convergence of the continuous SAGE16 rate subset](assets/OdeTimeConvergence.svg)
+
+*The left panel measures the largest relative error among four baryon and four metal reservoirs against an independent fine RK4 reference. The right panel shows that the upstream split and Euler are first order, Heun is second order, and RK4 is fourth order for this smooth fixed-forcing interval.*
+
+[Continuous-subset convergence arrays](assets/ode_time_convergence.npz) — Methods, step sizes, eight reservoir histories, independent-reference errors, measured orders, and method metadata.
 
 ### Population timestep convergence
 
@@ -310,8 +349,8 @@ At least one tested symmetric finite-difference step agrees with automatic diffe
 
 | Item | Value |
 | --- | --- |
-| Generated | 2026-08-18T10:10:51Z |
-| Git commit | `e58faf0ee137e07709e53ace3119810cc54d5eac` (clean working tree) |
+| Generated | 2026-08-18T12:43:45Z |
+| Git commit | `a6f5bf42c25e37633ac920e8793d5bf160921846` (dirty working tree) |
 | Git branch | main |
 
 ### Rerun command

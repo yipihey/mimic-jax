@@ -6,7 +6,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/StellarMassFunctionComparison.svg",
       "role": "figure",
-      "sha256": "28b6982bbe285b9719cfe8964fe85da287a4b8524217acdcd610c6e900f219e6",
+      "sha256": "80f45f9a6c187b49f813433498c5a4a2e5e423ef7e0aa54dd24cc4880399bef0",
       "size_bytes": 39068,
       "title": "MIMIC and mimic-jax stellar mass functions for a complete input partition"
     }
@@ -215,6 +215,123 @@
       "summary": "A controlled quiescent SAGE16 step has a logarithmic parameter response that agrees with symmetric finite differences; this is not yet an SMF response.",
       "title": "Controlled gradient validation",
       "tolerance": "best tested maximum absolute error <= 2e-05"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "The left panel measures the largest relative error among four baryon and four metal reservoirs against an independent fine RK4 reference. The right panel shows that the upstream split and Euler are first order, Heun is second order, and RK4 is fourth order for this smooth fixed-forcing interval.",
+          "key": "ode_time_convergence",
+          "media_type": "image/svg+xml",
+          "path": "assets/OdeTimeConvergence.svg",
+          "role": "figure",
+          "sha256": "af7b02358612709d46b99eea4dff40829004e70a770e2ec4418c989954e0d941",
+          "size_bytes": 35401,
+          "title": "Temporal convergence of the continuous SAGE16 rate subset"
+        },
+        {
+          "description": "Methods, step sizes, eight reservoir histories, independent-reference errors, measured orders, and method metadata.",
+          "key": "ode_convergence_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/ode_time_convergence.npz",
+          "role": "scientific_array",
+          "sha256": "41cc33473261f7bd35f2b401019fae17a0c883e77e65c41864407a42ecc943a5",
+          "size_bytes": 9506,
+          "title": "Continuous-subset convergence arrays"
+        }
+      ],
+      "key": "ode_convergence",
+      "method": "fixed-forcing upstream split, Euler, Heun RK2, and RK4",
+      "metrics": [
+        {
+          "description": "continuous rate versus the matching upstream finite budget divided by dt",
+          "key": "maximum_rate_relative_difference",
+          "label": "Largest isolated rate mismatch",
+          "unit": "",
+          "value": 1.3238641430336593e-16
+        },
+        {
+          "description": "across the float64 continuous integrators and refinement levels",
+          "key": "maximum_baryon_residual",
+          "label": "Largest integrated baryon residual",
+          "unit": "1e10 Msun/h",
+          "value": 7.105427357601002e-15
+        },
+        {
+          "description": "includes SAGE16 float32 reservoir writes at every sequential step",
+          "key": "maximum_upstream_storage_baryon_residual",
+          "label": "Largest upstream-split storage residual",
+          "unit": "1e10 Msun/h",
+          "value": 8.52346420288086e-06
+        },
+        {
+          "description": "median of the final two maximum-error ratios",
+          "key": "upstream_rate_subset_observed_order",
+          "label": "upstream_rate_subset observed order",
+          "unit": "",
+          "value": 1.0036417273032712
+        },
+        {
+          "description": "at 128 steps",
+          "key": "upstream_rate_subset_finest_relative_error",
+          "label": "upstream_rate_subset finest maximum relative error",
+          "unit": "",
+          "value": 0.0009726315018114584
+        },
+        {
+          "description": "median of the final two maximum-error ratios",
+          "key": "forward_euler_observed_order",
+          "label": "forward_euler observed order",
+          "unit": "",
+          "value": 1.0061264609805085
+        },
+        {
+          "description": "at 128 steps",
+          "key": "forward_euler_finest_relative_error",
+          "label": "forward_euler finest maximum relative error",
+          "unit": "",
+          "value": 0.001119028982086166
+        },
+        {
+          "description": "median of the final two maximum-error ratios",
+          "key": "heun_rk2_observed_order",
+          "label": "heun_rk2 observed order",
+          "unit": "",
+          "value": 2.0093322714932187
+        },
+        {
+          "description": "at 128 steps",
+          "key": "heun_rk2_finest_relative_error",
+          "label": "heun_rk2 finest maximum relative error",
+          "unit": "",
+          "value": 2.167753516360779e-06
+        },
+        {
+          "description": "median of the final two maximum-error ratios",
+          "key": "rk4_observed_order",
+          "label": "rk4 observed order",
+          "unit": "",
+          "value": 4.009916742268993
+        },
+        {
+          "description": "at 128 steps",
+          "key": "rk4_finest_relative_error",
+          "label": "rk4 finest maximum relative error",
+          "unit": "",
+          "value": 3.545423245889716e-12
+        }
+      ],
+      "notes": [
+        "The independent reference is `rk4` with 4,096 fixed steps.",
+        "Halo forcing interpolation: `piecewise_constant`.",
+        "`upstream_rate_subset` approaches order 1.004; the expected order is 1.",
+        "`forward_euler` approaches order 1.006; the expected order is 1.",
+        "`heun_rk2` approaches order 2.009; the expected order is 2.",
+        "`rk4` approaches order 4.010; the expected order is 4."
+      ],
+      "status": "passed",
+      "summary": "The isolated rates match their upstream SAGE16 budgets, the reservoir ledger closes, and every tested method reaches its expected temporal order.",
+      "title": "Does the continuous SAGE16 subset converge in time?",
+      "tolerance": "rate relative difference <= 2e-14; baryon residual <= 2e-12; observed orders within 0.15"
     },
     {
       "artifacts": [],
@@ -530,10 +647,10 @@
         "size_bytes": 14410
       }
     ],
-    "generated_at": "2026-08-18T10:10:51Z",
+    "generated_at": "2026-08-18T12:43:45Z",
     "git_branch": "main",
-    "git_commit": "e58faf0ee137e07709e53ace3119810cc54d5eac",
-    "git_dirty": false,
+    "git_commit": "a6f5bf42c25e37633ac920e8793d5bf160921846",
+    "git_dirty": true,
     "hardware": {
       "jax_backend": "cpu",
       "jax_devices": [
@@ -581,7 +698,8 @@
         "Cold gas is the largest modeled share of the universal baryon allotment over 9.75 ≤ log10(Mvir/Msun) < 10.50 in bins containing at least ten FoF groups.",
         "Ejected gas is the largest modeled share of the universal baryon allotment over 10.50 ≤ log10(Mvir/Msun) < 11.50 in bins containing at least ten FoF groups.",
         "Hot gas is the largest modeled share of the universal baryon allotment over 11.50 ≤ log10(Mvir/Msun) < 12.75 in bins containing at least ten FoF groups.",
-        "The complete all-snapshot field gate retains 20 residuals among 794,136 comparisons (0.002518%, maximum relative difference 5.26e-05). These are negligible for the science observables shown, while remaining visible in technical validation."
+        "The complete all-snapshot field gate retains 20 residuals among 794,136 comparisons (0.002518%, maximum relative difference 5.26e-05). These are negligible for the science observables shown, while remaining visible in technical validation.",
+        "For the fixed-halo, smooth quiescent reservoir subset, the repeated upstream-order update and forward Euler converge at first order, Heun at second order, and RK4 at fourth order; this is a controlled time-integration result, not yet a population-level Mini-Millennium convergence claim."
       ],
       "summary": "These statements are generated from the committed JSON/NPZ products rather than being hand-maintained narrative claims.",
       "title": "What did this larger run teach us?"
@@ -594,7 +712,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/StellarMassFunction.svg",
           "role": "figure",
-          "sha256": "a791219a7af7fb1767d11a81ea97b37178b144c3fc1c69c213f463cc38757bd8",
+          "sha256": "4a30408e9ba2861fb1149d3c61d6fc851216992e2fafb01127071e6eabf26000",
           "size_bytes": 55019,
           "title": "Upstream MIMIC z=0 stellar mass function"
         }
@@ -695,7 +813,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/BaryonInventory.svg",
           "role": "figure",
-          "sha256": "be68f4edaa1a39cec7076993102545870461120db50bf409e2acce16d243ede1",
+          "sha256": "a015a6dcdac182dcbae7d80eb454c45066b8fae082eb20adb680b5e910ac758f",
           "size_bytes": 26905,
           "title": "Where SAGE16 stores the baryons across halo mass"
         }
@@ -756,7 +874,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/BlackHoleBulgeRelation.svg",
           "role": "figure",
-          "sha256": "39f75129f1fe5b35f31ff44413faaa31defe376f2de8c07fd5fc95bc8c3d6c77",
+          "sha256": "4b314a8b96db7806db271cdb27fd7c92cf3e9c590876bd9596a4ee4cd85e93a2",
           "size_bytes": 992371,
           "title": "Upstream MIMIC black-hole–bulge relation"
         }
@@ -788,6 +906,123 @@
     {
       "artifacts": [],
       "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "The left panel measures the largest relative error among four baryon and four metal reservoirs against an independent fine RK4 reference. The right panel shows that the upstream split and Euler are first order, Heun is second order, and RK4 is fourth order for this smooth fixed-forcing interval.",
+              "key": "ode_time_convergence",
+              "media_type": "image/svg+xml",
+              "path": "assets/OdeTimeConvergence.svg",
+              "role": "figure",
+              "sha256": "af7b02358612709d46b99eea4dff40829004e70a770e2ec4418c989954e0d941",
+              "size_bytes": 35401,
+              "title": "Temporal convergence of the continuous SAGE16 rate subset"
+            },
+            {
+              "description": "Methods, step sizes, eight reservoir histories, independent-reference errors, measured orders, and method metadata.",
+              "key": "ode_convergence_arrays",
+              "media_type": "application/x-npz",
+              "path": "assets/ode_time_convergence.npz",
+              "role": "scientific_array",
+              "sha256": "41cc33473261f7bd35f2b401019fae17a0c883e77e65c41864407a42ecc943a5",
+              "size_bytes": 9506,
+              "title": "Continuous-subset convergence arrays"
+            }
+          ],
+          "key": "ode_convergence",
+          "method": "fixed-forcing upstream split, Euler, Heun RK2, and RK4",
+          "metrics": [
+            {
+              "description": "continuous rate versus the matching upstream finite budget divided by dt",
+              "key": "maximum_rate_relative_difference",
+              "label": "Largest isolated rate mismatch",
+              "unit": "",
+              "value": 1.3238641430336593e-16
+            },
+            {
+              "description": "across the float64 continuous integrators and refinement levels",
+              "key": "maximum_baryon_residual",
+              "label": "Largest integrated baryon residual",
+              "unit": "1e10 Msun/h",
+              "value": 7.105427357601002e-15
+            },
+            {
+              "description": "includes SAGE16 float32 reservoir writes at every sequential step",
+              "key": "maximum_upstream_storage_baryon_residual",
+              "label": "Largest upstream-split storage residual",
+              "unit": "1e10 Msun/h",
+              "value": 8.52346420288086e-06
+            },
+            {
+              "description": "median of the final two maximum-error ratios",
+              "key": "upstream_rate_subset_observed_order",
+              "label": "upstream_rate_subset observed order",
+              "unit": "",
+              "value": 1.0036417273032712
+            },
+            {
+              "description": "at 128 steps",
+              "key": "upstream_rate_subset_finest_relative_error",
+              "label": "upstream_rate_subset finest maximum relative error",
+              "unit": "",
+              "value": 0.0009726315018114584
+            },
+            {
+              "description": "median of the final two maximum-error ratios",
+              "key": "forward_euler_observed_order",
+              "label": "forward_euler observed order",
+              "unit": "",
+              "value": 1.0061264609805085
+            },
+            {
+              "description": "at 128 steps",
+              "key": "forward_euler_finest_relative_error",
+              "label": "forward_euler finest maximum relative error",
+              "unit": "",
+              "value": 0.001119028982086166
+            },
+            {
+              "description": "median of the final two maximum-error ratios",
+              "key": "heun_rk2_observed_order",
+              "label": "heun_rk2 observed order",
+              "unit": "",
+              "value": 2.0093322714932187
+            },
+            {
+              "description": "at 128 steps",
+              "key": "heun_rk2_finest_relative_error",
+              "label": "heun_rk2 finest maximum relative error",
+              "unit": "",
+              "value": 2.167753516360779e-06
+            },
+            {
+              "description": "median of the final two maximum-error ratios",
+              "key": "rk4_observed_order",
+              "label": "rk4 observed order",
+              "unit": "",
+              "value": 4.009916742268993
+            },
+            {
+              "description": "at 128 steps",
+              "key": "rk4_finest_relative_error",
+              "label": "rk4 finest maximum relative error",
+              "unit": "",
+              "value": 3.545423245889716e-12
+            }
+          ],
+          "notes": [
+            "The independent reference is `rk4` with 4,096 fixed steps.",
+            "Halo forcing interpolation: `piecewise_constant`.",
+            "`upstream_rate_subset` approaches order 1.004; the expected order is 1.",
+            "`forward_euler` approaches order 1.006; the expected order is 1.",
+            "`heun_rk2` approaches order 2.009; the expected order is 2.",
+            "`rk4` approaches order 4.010; the expected order is 4."
+          ],
+          "status": "passed",
+          "summary": "The isolated rates match their upstream SAGE16 budgets, the reservoir ledger closes, and every tested method reaches its expected temporal order.",
+          "title": "Does the continuous SAGE16 subset converge in time?",
+          "tolerance": "rate relative difference <= 2e-14; baryon residual <= 2e-12; observed orders within 0.15"
+        },
         {
           "artifacts": [],
           "key": "population_timestep_convergence",
@@ -845,10 +1080,14 @@
         {
           "target": "../../docs/numerical_integration.md",
           "title": "Numerical integration contract"
+        },
+        {
+          "target": "../../docs/sage16_hybrid_system.md",
+          "title": "Complete SAGE16 hybrid classification"
         }
       ],
       "notes": [],
-      "summary": "Population-level convergence must be expressed through familiar observables. It has not yet been run for this partition; the controlled fixed-forcing refinement is retained below as scoped technical evidence.",
+      "summary": "The exact upstream-sequential path remains the SAGE16 reference. Separately, a fixed-halo continuous reservoir experiment now demonstrates genuine convergence in time: upstream-order splitting and Euler are first order, Heun is second order, and RK4 is fourth order. The wider hybrid formulation treats prepared infall as external forcing, makes AGN memory Markovian with stored `Rheat`, represents stripping as a group flow, and retains projections and mergers as events. Population-level convergence must still be tested through familiar observables and is not inferred from this controlled experiment.",
       "title": "How accurately are these histories being integrated?"
     },
     {
@@ -977,7 +1216,7 @@
               "media_type": "image/svg+xml",
               "path": "assets/PartitionFieldResiduals.svg",
               "role": "figure",
-              "sha256": "40461522ac884576efa2c74170313b4bea23d57dd1dd438107d932c92ce188b4",
+              "sha256": "06793d796c3ac0406bcebe7879dc707243409eae089cfd8d69d5a5a1e99d44f9",
               "size_bytes": 15460,
               "title": "Largest per-field residuals in the complete-partition comparison"
             }
