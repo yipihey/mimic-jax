@@ -10,6 +10,7 @@ writes the report manifest. It never reruns the Mini-Millennium model itself.
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -218,7 +219,13 @@ def generate_familiar_plots(arguments, assets: Path):
         "--format=.svg",
         "--quiet",
     ]
-    subprocess.run(command, cwd=REPOSITORY, check=True)
+    cache_root = REPOSITORY / "build/report-matplotlib-cache"
+    cache_root.mkdir(parents=True, exist_ok=True)
+    environment = os.environ.copy()
+    environment["MPLBACKEND"] = "Agg"
+    environment["MPLCONFIGDIR"] = str(cache_root / "matplotlib")
+    environment["XDG_CACHE_HOME"] = str(cache_root / "xdg")
+    subprocess.run(command, cwd=REPOSITORY, check=True, env=environment)
     expected = (assets / "StellarMassFunction.svg", assets / "BlackHoleBulgeRelation.svg")
     missing = [path for path in expected if not path.is_file()]
     if missing:
