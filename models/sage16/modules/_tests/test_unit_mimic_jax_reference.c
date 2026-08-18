@@ -33,6 +33,9 @@ extern int sage_calculate_cooling_budget_init(void);
 extern int sage_calculate_cooling_budget_process(struct ModuleContext *ctx, struct Halo *halos,
                                                  int ngal);
 extern int sage_calculate_cooling_budget_cleanup(void);
+extern int sage_disk_instability_init(void);
+extern int sage_disk_instability_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_disk_instability_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
@@ -50,6 +53,12 @@ extern int sage_prepare_infall_budget_cleanup(void);
 extern int sage_radio_mode_heating_init(void);
 extern int sage_radio_mode_heating_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_radio_mode_heating_cleanup(void);
+extern int sage_quasar_mode_init(void);
+extern int sage_quasar_mode_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_quasar_mode_cleanup(void);
+extern int sage_starburst_feedback_init(void);
+extern int sage_starburst_feedback_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_starburst_feedback_cleanup(void);
 extern int sage_calculate_star_formation_init(void);
 extern int sage_calculate_star_formation_process(struct ModuleContext *ctx, struct Halo *halos,
                                                  int ngal);
@@ -88,9 +97,12 @@ static void configure_fiducial_slice(void) {
   add_parameter("ReIncorporationFactor", "0.15");
   add_parameter("AGNrecipe", "2");
   add_parameter("RadioModeEfficiency", "0.08");
+  add_parameter("BlackHoleGrowthRate", "0.015");
+  add_parameter("QuasarModeEfficiency", "0.005");
   add_parameter("RecycleFraction", "0.43");
   add_parameter("Yield", "0.025");
   add_parameter("FracZleaveDisk", "0.0");
+  add_parameter("ThresholdMajorMerger", "0.3");
 
   test_pre_timestep_add("sage_reionization", PROCESSING_MODE_FULL_HALO);
   test_pre_timestep_add("sage_prepare_infall_budget", PROCESSING_MODE_FULL_HALO);
@@ -104,6 +116,9 @@ static void configure_fiducial_slice(void) {
   test_phase_add("galaxy_physics", "sage_calculate_supernova_feedback", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_star_formation_supernova",
                  PROCESSING_MODE_BY_GALAXY);
+  test_phase_add("galaxy_physics", "sage_disk_instability", PROCESSING_MODE_BY_GALAXY);
+  test_phase_add("galaxy_physics", "sage_quasar_mode", PROCESSING_MODE_BY_GALAXY);
+  test_phase_add("galaxy_physics", "sage_starburst_feedback", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_metal_enrichment", PROCESSING_MODE_BY_GALAXY);
 }
 
@@ -150,6 +165,9 @@ static int test_emit_reference_cases(void) {
   TEST_ASSERT(sage_calculate_star_formation_init() == 0, "SF init should succeed");
   TEST_ASSERT(sage_calculate_supernova_feedback_init() == 0, "SN init should succeed");
   TEST_ASSERT(sage_apply_star_formation_supernova_init() == 0, "SF/SN apply init should succeed");
+  TEST_ASSERT(sage_disk_instability_init() == 0, "Disk-instability init should succeed");
+  TEST_ASSERT(sage_quasar_mode_init() == 0, "Quasar-mode init should succeed");
+  TEST_ASSERT(sage_starburst_feedback_init() == 0, "Starburst init should succeed");
   TEST_ASSERT(sage_apply_metal_enrichment_init() == 0, "Metal enrichment init should succeed");
 
   const double log_z_sun = log10(0.02);
@@ -298,6 +316,69 @@ static int test_emit_reference_cases(void) {
          (double)galaxy.HotGas, (double)galaxy.EjectedGas, (double)galaxy.MetalsHotGas,
          (double)galaxy.MetalsEjectedGas);
 
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.1);
+  setup_context(&context, &halo, 10);
+  halo.Vmax = 200.0f;
+  galaxy.ColdGas = 5.0f;
+  galaxy.StellarMass = 10.0f;
+  galaxy.BulgeMass = 2.0f;
+  galaxy.MetalsStellarMass = 0.2f;
+  galaxy.MetalsBulgeMass = 0.04f;
+  galaxy.DiskScaleRadius = 0.003f;
+  TEST_ASSERT(sage_disk_instability_process(&context, &halo, 1) == 0,
+              "Disk-instability reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=disk_instability BulgeMass=%.17g "
+         "MetalsBulgeMass=%.17g UnstableDiskGasFraction=%.17g\n",
+         (double)galaxy.BulgeMass, (double)galaxy.MetalsBulgeMass, galaxy.UnstableDiskGasFraction);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 300.0, 0.1);
+  setup_context(&context, &halo, 10);
+  galaxy.ColdGas = 10.0f;
+  galaxy.HotGas = 5.0f;
+  galaxy.EjectedGas = 1.0f;
+  galaxy.MetalsColdGas = 0.2f;
+  galaxy.MetalsHotGas = 0.1f;
+  galaxy.MetalsEjectedGas = 0.02f;
+  galaxy.BlackHoleMass = 0.01f;
+  galaxy.UnstableDiskGasFraction = 0.5;
+  TEST_ASSERT(sage_quasar_mode_process(&context, &halo, 1) == 0,
+              "Quasar-mode reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=quasar_mode ColdGas=%.17g HotGas=%.17g "
+         "EjectedGas=%.17g MetalsColdGas=%.17g MetalsHotGas=%.17g "
+         "MetalsEjectedGas=%.17g BlackHoleMass=%.17g "
+         "QuasarModeBHaccretionMass=%.17g UnstableDiskGasFraction=%.17g\n",
+         (double)galaxy.ColdGas, (double)galaxy.HotGas, (double)galaxy.EjectedGas,
+         (double)galaxy.MetalsColdGas, (double)galaxy.MetalsHotGas, (double)galaxy.MetalsEjectedGas,
+         (double)galaxy.BlackHoleMass, (double)galaxy.QuasarModeBHaccretionMass,
+         galaxy.UnstableDiskGasFraction);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 300.0, 0.1);
+  setup_context(&context, &halo, 10);
+  galaxy.ColdGas = 10.0f;
+  galaxy.HotGas = 5.0f;
+  galaxy.EjectedGas = 1.0f;
+  galaxy.StellarMass = 5.0f;
+  galaxy.BulgeMass = 1.0f;
+  galaxy.MetalsColdGas = 0.2f;
+  galaxy.MetalsHotGas = 0.1f;
+  galaxy.MetalsEjectedGas = 0.02f;
+  galaxy.MetalsStellarMass = 0.1f;
+  galaxy.MetalsBulgeMass = 0.02f;
+  galaxy.UnstableDiskGasFraction = 0.2;
+  TEST_ASSERT(sage_starburst_feedback_process(&context, &halo, 1) == 0,
+              "Starburst reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=starburst ColdGas=%.17g HotGas=%.17g EjectedGas=%.17g "
+         "StellarMass=%.17g BulgeMass=%.17g MetalsColdGas=%.17g MetalsHotGas=%.17g "
+         "MetalsEjectedGas=%.17g MetalsStellarMass=%.17g MetalsBulgeMass=%.17g "
+         "StarFormationRate=%.17g SupernovaOutflowRate=%.17g "
+         "UnstableDiskGasFraction=%.17g\n",
+         (double)galaxy.ColdGas, (double)galaxy.HotGas, (double)galaxy.EjectedGas,
+         (double)galaxy.StellarMass, (double)galaxy.BulgeMass, (double)galaxy.MetalsColdGas,
+         (double)galaxy.MetalsHotGas, (double)galaxy.MetalsEjectedGas,
+         (double)galaxy.MetalsStellarMass, (double)galaxy.MetalsBulgeMass,
+         (double)galaxy.StarFormationRate, (double)galaxy.SupernovaOutflowRate,
+         galaxy.UnstableDiskGasFraction);
+
   setup_halo(&halo, &galaxy, 100.0, 0.2, 150.0, 0.0001);
   setup_context(&context, &halo, 1);
   galaxy.ColdGas = 10.0f;
@@ -330,7 +411,51 @@ static int test_emit_reference_cases(void) {
          (double)galaxy.StarFormationRate, (double)galaxy.SupernovaOutflowRate,
          galaxy.NewStellarMass);
 
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 150.0, 0.0001);
+  setup_context(&context, &halo, 1);
+  halo.Vmax = 150.0f;
+  galaxy.ColdGas = 10.0f;
+  galaxy.HotGas = 5.0f;
+  galaxy.EjectedGas = 1.0f;
+  galaxy.StellarMass = 2.0f;
+  galaxy.BulgeMass = 0.5f;
+  galaxy.MetalsColdGas = 0.2f;
+  galaxy.MetalsHotGas = 0.1f;
+  galaxy.MetalsEjectedGas = 0.01f;
+  galaxy.MetalsStellarMass = 0.04f;
+  galaxy.MetalsBulgeMass = 0.01f;
+  galaxy.DiskScaleRadius = 0.0001f;
+  TEST_ASSERT(sage_calculate_star_formation_process(&context, &halo, 1) == 0,
+              "Composed SF reference case should succeed");
+  TEST_ASSERT(sage_calculate_supernova_feedback_process(&context, &halo, 1) == 0,
+              "Composed SN reference case should succeed");
+  TEST_ASSERT(sage_apply_star_formation_supernova_process(&context, &halo, 1) == 0,
+              "Composed SF/SN apply reference case should succeed");
+  TEST_ASSERT(sage_disk_instability_process(&context, &halo, 1) == 0,
+              "Composed disk-instability reference case should succeed");
+  TEST_ASSERT(sage_quasar_mode_process(&context, &halo, 1) == 0,
+              "Composed quasar-mode reference case should succeed");
+  TEST_ASSERT(sage_starburst_feedback_process(&context, &halo, 1) == 0,
+              "Composed starburst reference case should succeed");
+  TEST_ASSERT(sage_apply_metal_enrichment_process(&context, &halo, 1) == 0,
+              "Composed metal-enrichment reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=post_quiescent_chain ColdGas=%.17g HotGas=%.17g "
+         "EjectedGas=%.17g StellarMass=%.17g BulgeMass=%.17g BlackHoleMass=%.17g "
+         "MetalsColdGas=%.17g MetalsHotGas=%.17g MetalsEjectedGas=%.17g "
+         "MetalsStellarMass=%.17g MetalsBulgeMass=%.17g NewStellarMass=%.17g "
+         "UnstableDiskGasFraction=%.17g StarFormationRate=%.17g "
+         "SupernovaOutflowRate=%.17g QuasarModeBHaccretionMass=%.17g\n",
+         (double)galaxy.ColdGas, (double)galaxy.HotGas, (double)galaxy.EjectedGas,
+         (double)galaxy.StellarMass, (double)galaxy.BulgeMass, (double)galaxy.BlackHoleMass,
+         (double)galaxy.MetalsColdGas, (double)galaxy.MetalsHotGas, (double)galaxy.MetalsEjectedGas,
+         (double)galaxy.MetalsStellarMass, (double)galaxy.MetalsBulgeMass, galaxy.NewStellarMass,
+         galaxy.UnstableDiskGasFraction, (double)galaxy.StarFormationRate,
+         (double)galaxy.SupernovaOutflowRate, (double)galaxy.QuasarModeBHaccretionMass);
+
   sage_apply_metal_enrichment_cleanup();
+  sage_starburst_feedback_cleanup();
+  sage_quasar_mode_cleanup();
+  sage_disk_instability_cleanup();
   sage_apply_star_formation_supernova_cleanup();
   sage_calculate_supernova_feedback_cleanup();
   sage_calculate_star_formation_cleanup();

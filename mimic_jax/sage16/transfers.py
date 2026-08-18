@@ -86,6 +86,64 @@ class SatelliteStrippingResult(NamedTuple):
     transfer: SatelliteStrippingTransfer
 
 
+class DiskInstabilityTransfer(NamedTuple):
+    """Structural disk response and same-step unstable-gas trigger."""
+
+    disk_mass: Array
+    critical_mass: Array
+    unstable_gas: Array
+    unstable_gas_fraction: Array
+    disk_stars_to_bulge: Array
+    disk_metals_to_bulge: Array
+
+
+class DiskInstabilityResult(NamedTuple):
+    state: GalaxyState
+    transfer: DiskInstabilityTransfer
+
+
+class QuasarModeTransfer(NamedTuple):
+    """Cold-gas BH growth and thresholded quasar-wind transfers."""
+
+    trigger_efficiency: Array
+    requested_black_hole_accretion: Array
+    black_hole_accreted: Array
+    cold_metals_accreted: Array
+    quasar_energy: Array
+    cold_to_ejected: Array
+    cold_metals_to_ejected: Array
+    hot_to_ejected: Array
+    hot_metals_to_ejected: Array
+
+
+class QuasarModeResult(NamedTuple):
+    state: GalaxyState
+    transfer: QuasarModeTransfer
+
+
+class StarburstTransfer(NamedTuple):
+    """Finite burst, recycling, SN transport, and immediate yield source."""
+
+    trigger_efficiency: Array
+    burst_efficiency: Array
+    formed_stars: Array
+    locked_stars: Array
+    cold_to_hot: Array
+    hot_to_ejected: Array
+    cold_metals_to_stars: Array
+    cold_metals_to_hot: Array
+    hot_metals_to_ejected: Array
+    produced_metals: Array
+    new_metals_to_cold: Array
+    new_metals_to_hot: Array
+
+
+class StarburstResult(NamedTuple):
+    galaxy: GalaxyState
+    central: GalaxyState
+    transfer: StarburstTransfer
+
+
 class RadioModeHeatingTransfer(NamedTuple):
     """Coupled cooling suppression, BH growth, and heating from radio-mode AGN."""
 
@@ -190,6 +248,9 @@ class UpstreamCentralStepDiagnostics(NamedTuple):
     cooling: CoolingTransfer
     reincorporation: ReincorporationTransfer
     star_formation: StarFormationTransfer
+    disk_instability: DiskInstabilityTransfer
+    quasar_mode: QuasarModeTransfer
+    starburst: StarburstTransfer
     enrichment: MetalEnrichmentTransfer
 
 

@@ -13,9 +13,13 @@ import jax.numpy as jnp
 jax.config.update("jax_enable_x64", True)
 
 from mimic_jax.sage16 import (  # noqa: E402
+    apply_collisional_starburst,
     apply_cooling,
+    apply_disk_instability,
+    apply_disk_instability_starburst,
     apply_infall,
     apply_metal_enrichment,
+    apply_quasar_mode,
     apply_radio_mode_heating,
     apply_reincorporation,
     apply_reionization,
@@ -30,6 +34,7 @@ from mimic_jax.sage16 import (  # noqa: E402
     load_cooling_tables,
     metal_dependent_cooling_rate,
     prepare_infall_budget,
+    process_perturbations,
     sage16_units,
     step_context,
 )
@@ -79,6 +84,7 @@ def parse_c_reference(path: Path):
         "cooling",
         "cooling_budget",
         "cooling_interpolation",
+        "disk_instability",
         "infall_budget",
         "infall_negative",
         "infall_positive",
@@ -86,6 +92,9 @@ def parse_c_reference(path: Path):
         "radio_mode",
         "reionization",
         "satellite_stripping",
+        "post_quiescent_chain",
+        "quasar_mode",
+        "starburst",
         "star_formation_budget",
         "star_formation_final",
     }
@@ -239,6 +248,67 @@ def calculate_jax_reference():
         parameters,
     ).state
 
+    disk_instability_state = initial_galaxy_state(
+        ColdGas=5.0,
+        StellarMass=10.0,
+        BulgeMass=2.0,
+        MetalsStellarMass=0.2,
+        MetalsBulgeMass=0.04,
+        DiskScaleRadius=0.003,
+    )
+    disk_instability_halo = initial_halo_forcing(
+        Mvir=100.0,
+        Rvir=0.2,
+        Vvir=200.0,
+        Vmax=200.0,
+        dT=0.1,
+    )
+    disk_instability = apply_disk_instability(
+        disk_instability_state,
+        disk_instability_halo,
+        parameters,
+        units,
+    )
+
+    quasar_state = initial_galaxy_state(
+        ColdGas=10.0,
+        HotGas=5.0,
+        EjectedGas=1.0,
+        MetalsColdGas=0.2,
+        MetalsHotGas=0.1,
+        MetalsEjectedGas=0.02,
+        BlackHoleMass=0.01,
+        UnstableDiskGasFraction=0.5,
+    )
+    quasar_halo = initial_halo_forcing(Mvir=100.0, Rvir=0.2, Vvir=300.0, dT=0.1)
+    quasar = apply_quasar_mode(quasar_state, quasar_halo, parameters, units)
+
+    starburst_state = initial_galaxy_state(
+        ColdGas=10.0,
+        HotGas=5.0,
+        EjectedGas=1.0,
+        StellarMass=5.0,
+        BulgeMass=1.0,
+        MetalsColdGas=0.2,
+        MetalsHotGas=0.1,
+        MetalsEjectedGas=0.02,
+        MetalsStellarMass=0.1,
+        MetalsBulgeMass=0.02,
+        UnstableDiskGasFraction=0.2,
+    )
+    starburst_halo = initial_halo_forcing(Mvir=100.0, Rvir=0.2, Vvir=300.0, dT=0.1)
+    starburst = apply_collisional_starburst(
+        starburst_state,
+        starburst_state,
+        starburst_halo,
+        starburst_halo,
+        starburst_state.UnstableDiskGasFraction,
+        1,
+        starburst_halo.dT,
+        parameters,
+        units,
+    )
+
     star_formation_state = initial_galaxy_state(
         ColdGas=10.0,
         HotGas=5.0,
@@ -281,6 +351,76 @@ def calculate_jax_reference():
         applied.galaxy,
         applied.central,
         star_formation_halo,
+        True,
+        parameters,
+    ).galaxy
+
+    composed_state = initial_galaxy_state(
+        ColdGas=10.0,
+        HotGas=5.0,
+        EjectedGas=1.0,
+        StellarMass=2.0,
+        BulgeMass=0.5,
+        MetalsColdGas=0.2,
+        MetalsHotGas=0.1,
+        MetalsEjectedGas=0.01,
+        MetalsStellarMass=0.04,
+        MetalsBulgeMass=0.01,
+        DiskScaleRadius=0.0001,
+    )
+    composed_halo = initial_halo_forcing(
+        Mvir=100.0,
+        Rvir=0.2,
+        Vvir=150.0,
+        Vmax=150.0,
+        dT=0.0001,
+    )
+    composed_context = step_context(time_interval=0.0001)
+    composed_sf = calculate_star_formation_budget(
+        composed_state,
+        composed_halo,
+        composed_context,
+        parameters,
+    )
+    composed_sn = calculate_supernova_feedback_budget(
+        composed_state,
+        composed_halo,
+        parameters,
+        units,
+        composed_sf,
+    )
+    composed_applied = apply_star_formation_supernova(
+        composed_state,
+        composed_state,
+        composed_halo,
+        parameters,
+        composed_sn,
+    )
+    composed_instability = apply_disk_instability(
+        composed_applied.galaxy,
+        composed_halo,
+        parameters,
+        units,
+    )
+    composed_quasar = apply_quasar_mode(
+        composed_instability.state,
+        composed_halo,
+        parameters,
+        units,
+    )
+    composed_starburst = apply_disk_instability_starburst(
+        composed_quasar.state,
+        composed_quasar.state,
+        composed_halo,
+        composed_halo,
+        parameters,
+        units,
+        process_perturbations(),
+    )
+    composed = apply_metal_enrichment(
+        composed_starburst.galaxy,
+        composed_starburst.central,
+        composed_halo,
         True,
         parameters,
     ).galaxy
@@ -335,6 +475,42 @@ def calculate_jax_reference():
             reincorporated,
             ("HotGas", "EjectedGas", "MetalsHotGas", "MetalsEjectedGas"),
         ),
+        "disk_instability": select(
+            disk_instability.state,
+            ("BulgeMass", "MetalsBulgeMass", "UnstableDiskGasFraction"),
+        ),
+        "quasar_mode": select(
+            quasar.state,
+            (
+                "ColdGas",
+                "HotGas",
+                "EjectedGas",
+                "MetalsColdGas",
+                "MetalsHotGas",
+                "MetalsEjectedGas",
+                "BlackHoleMass",
+                "QuasarModeBHaccretionMass",
+                "UnstableDiskGasFraction",
+            ),
+        ),
+        "starburst": select(
+            starburst.galaxy,
+            (
+                "ColdGas",
+                "HotGas",
+                "EjectedGas",
+                "StellarMass",
+                "BulgeMass",
+                "MetalsColdGas",
+                "MetalsHotGas",
+                "MetalsEjectedGas",
+                "MetalsStellarMass",
+                "MetalsBulgeMass",
+                "StarFormationRate",
+                "SupernovaOutflowRate",
+                "UnstableDiskGasFraction",
+            ),
+        ),
         "star_formation_budget": select(
             budget,
             ("NewStellarMass", "SupernovaReheatedMass", "SupernovaEjectedMass"),
@@ -353,6 +529,27 @@ def calculate_jax_reference():
                 "StarFormationRate",
                 "SupernovaOutflowRate",
                 "NewStellarMass",
+            ),
+        ),
+        "post_quiescent_chain": select(
+            composed,
+            (
+                "ColdGas",
+                "HotGas",
+                "EjectedGas",
+                "StellarMass",
+                "BulgeMass",
+                "BlackHoleMass",
+                "MetalsColdGas",
+                "MetalsHotGas",
+                "MetalsEjectedGas",
+                "MetalsStellarMass",
+                "MetalsBulgeMass",
+                "NewStellarMass",
+                "UnstableDiskGasFraction",
+                "StarFormationRate",
+                "SupernovaOutflowRate",
+                "QuasarModeBHaccretionMass",
             ),
         ),
     }

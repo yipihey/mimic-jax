@@ -8,10 +8,19 @@ from mimic_jax.sage16.perturbations import log_fractionally_perturb, process_per
 from mimic_jax.sage16.precision import as_float64
 from mimic_jax.sage16.processes.cooling import apply_cooling
 from mimic_jax.sage16.processes.cooling_budget import calculate_cooling_budget
+from mimic_jax.sage16.processes.disk_instability import apply_disk_instability
 from mimic_jax.sage16.processes.infall import apply_infall
+from mimic_jax.sage16.processes.quasar_mode import apply_quasar_mode
 from mimic_jax.sage16.processes.radio_mode_heating import apply_radio_mode_heating
 from mimic_jax.sage16.processes.reincorporation import apply_reincorporation
-from mimic_jax.sage16.processes.star_formation import quiescent_disk_step
+from mimic_jax.sage16.processes.star_formation import (
+    apply_metal_enrichment,
+    apply_star_formation_supernova,
+    calculate_star_formation_budget,
+    calculate_supernova_feedback_budget,
+    quiescent_disk_step,
+)
+from mimic_jax.sage16.processes.starburst import apply_disk_instability_starburst
 from mimic_jax.sage16.transfers import (
     CentralHistoryResult,
     CentralStepDiagnostics,
@@ -103,6 +112,9 @@ def evolve_central_history(
             agn_heating=0.0 * cooling_gas,
             infall=0.0 * cooling_gas,
             satellite_stripping=0.0 * cooling_gas,
+            disk_instability=0.0 * cooling_gas,
+            quasar_mode=0.0 * cooling_gas,
+            starburst=0.0 * cooling_gas,
         )
 
     def scan_step(state, inputs):
@@ -139,9 +151,10 @@ def upstream_sequential_central_step(
 
     This reference update is an explicit sequence of finite process maps:
     infall application, reincorporation, cooling-budget calculation, radio-mode
-    heating, cooling application, and the quiescent SF/SN/enrichment chain. It
-    is not replaced by an ODE integrator. Snapshot-level infall preparation and
-    the later instability/event modules remain outside this per-central map.
+    heating, cooling application, quiescent SF/SN, disk instability, quasar
+    mode, starburst feedback, and delayed disk enrichment. It is not replaced
+    by an ODE integrator. Snapshot-level infall preparation and merger events
+    remain outside this per-central map.
     """
 
     if perturbations is None:
@@ -176,15 +189,59 @@ def upstream_sequential_central_step(
         perturbations.agn_heating,
     )
     cooled = apply_cooling(radio_mode.state, halo)
-    quiescent = quiescent_disk_step(
+    star_formation_budget = calculate_star_formation_budget(
         cooled.state,
-        cooled.state,
-        halo,
         halo,
         context,
         parameters,
+        perturbations.star_formation,
+    )
+    supernova_budget = calculate_supernova_feedback_budget(
+        cooled.state,
+        halo,
+        parameters,
+        units,
+        star_formation_budget,
+        perturbations.sn_reheating,
+        perturbations.sn_ejection,
+    )
+    quiescent = apply_star_formation_supernova(
+        cooled.state,
+        cooled.state,
+        halo,
+        parameters,
+        supernova_budget,
+    )
+    instability = apply_disk_instability(
+        quiescent.galaxy,
+        halo,
+        parameters,
+        units,
+        perturbations.disk_instability,
+    )
+    quasar = apply_quasar_mode(
+        instability.state,
+        halo,
+        parameters,
+        units,
+        None,
+        perturbations.quasar_mode,
+    )
+    starburst = apply_disk_instability_starburst(
+        quasar.state,
+        quasar.state,
+        halo,
+        halo,
+        parameters,
         units,
         perturbations,
+    )
+    enriched = apply_metal_enrichment(
+        starburst.galaxy,
+        starburst.central,
+        halo,
+        True,
+        parameters,
     )
     diagnostics = UpstreamCentralStepDiagnostics(
         infall=infall.transfer,
@@ -193,9 +250,12 @@ def upstream_sequential_central_step(
         cooling=cooled.transfer,
         reincorporation=reincorporated.transfer,
         star_formation=quiescent.transfer,
-        enrichment=quiescent.enrichment,
+        disk_instability=instability.transfer,
+        quasar_mode=quasar.transfer,
+        starburst=starburst.transfer,
+        enrichment=enriched.transfer,
     )
-    return quiescent.galaxy, diagnostics
+    return enriched.galaxy, diagnostics
 
 
 def evolve_upstream_sequential_central_history(
@@ -220,6 +280,9 @@ def evolve_upstream_sequential_central_history(
             agn_heating=zero,
             infall=zero,
             satellite_stripping=zero,
+            disk_instability=zero,
+            quasar_mode=zero,
+            starburst=zero,
         )
 
     def scan_step(state, inputs):
@@ -274,6 +337,9 @@ def subcycle_upstream_sequential_central(
             agn_heating=zero,
             infall=zero,
             satellite_stripping=zero,
+            disk_instability=zero,
+            quasar_mode=zero,
+            starburst=zero,
         )
 
     def expand(value):

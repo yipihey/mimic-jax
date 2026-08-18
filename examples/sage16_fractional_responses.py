@@ -137,6 +137,9 @@ def history_example():
             baseline.diagnostics.radio_mode.heating_mass,
             baseline.diagnostics.infall.requested,
             jnp.zeros_like(baseline.diagnostics.infall.requested),
+            baseline.diagnostics.disk_instability.unstable_gas,
+            baseline.diagnostics.quasar_mode.black_hole_accreted,
+            baseline.diagnostics.starburst.formed_stars,
         ]
     )
     response = process_response_tensor(
@@ -202,8 +205,9 @@ def main() -> int:
         history_response.save(arguments.output_dir / "historical_process_response.npz")
         print(f"\nSaved response archives to {arguments.output_dir}")
     print(
-        "\nScope: controlled cooling/radio-mode/quiescent subset; "
-        "this is not a Mini-Millennium science result."
+        "\nScope: controlled implemented central chain; shared-central satellite "
+        "evolution and merger events are excluded, and this is not a "
+        "Mini-Millennium science result."
     )
     return 0
 

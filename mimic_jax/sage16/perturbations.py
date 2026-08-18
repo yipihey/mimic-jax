@@ -17,6 +17,9 @@ PROCESS_NAMES = (
     "agn_heating",
     "infall",
     "satellite_stripping",
+    "disk_instability",
+    "quasar_mode",
+    "starburst",
 )
 
 
@@ -31,6 +34,9 @@ class ProcessPerturbations(NamedTuple):
     agn_heating: Array
     infall: Array
     satellite_stripping: Array
+    disk_instability: Array
+    quasar_mode: Array
+    starburst: Array
 
 
 def process_perturbations(**overrides) -> ProcessPerturbations:

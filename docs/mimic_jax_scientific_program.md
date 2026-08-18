@@ -4,7 +4,7 @@ The first application program asks familiar SAGE questions with direct fractiona
 
 ## Readiness gate
 
-Applications begin only after the complete fiducial SAGE16 pipeline, tree inheritance, shared-central ordering, and merger event maps reproduce the relevant upstream Mini-Millennium catalog fields and histories at recorded tolerances. Process-level C oracle agreement for the initial quiescent slice is necessary evidence but does not discharge this gate.
+Applications begin only after the complete fiducial SAGE16 pipeline, tree inheritance, shared-central ordering, and merger event maps reproduce the relevant upstream Mini-Millennium catalog fields and histories at recorded tolerances. Process-level C oracle agreement for the implemented non-merger slices is necessary evidence but does not discharge this gate.
 
 Figure 1 reproduces upstream selections, units, bins, and definitions for the existing Mini-Millennium example plots and reports quantitative residuals.
 

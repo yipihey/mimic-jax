@@ -8,7 +8,7 @@ The fiducial Mini-Millennium configuration sets `SubSteps: 10`. At the start of 
 
 This is best described as an explicit sequential or operator-split update, not simply as one forward-Euler evaluation. For the currently implemented central slice, one substep is
 
-`fixed-budget infall application -> reincorporation -> cooling budget -> stored-AGN suppression and new radio-mode heating -> cooling application -> star formation -> SN feedback -> reservoir application -> enrichment`.
+`fixed-budget infall application -> reincorporation -> cooling budget -> stored-AGN suppression and new radio-mode heating -> cooling application -> star formation -> SN feedback -> reservoir application -> disk instability -> quasar mode -> starburst feedback -> delayed disk enrichment`.
 
 The prescriptions have different numerical meanings:
 
@@ -22,6 +22,8 @@ The prescriptions have different numerical meanings:
 | Discrete event/jump map | merger or disruption and its immediate consumers | preserves event order and tree identity; it is not passed to a continuous integrator |
 
 `halo.dT` is the per-object tree-interval duration. `mimic_object_substep_dt` divides it by the configured substep count. Diagnostic rates such as SFR, cooling energy rate, and heating energy rate may divide committed amounts by the full `halo.dT`; those diagnostics should not be mistaken for the timestep used to calculate each transfer.
+
+The disk-instability burst is a concrete example: the structural trigger is recomputed each substep, but its `StarFormationRate` and `SupernovaOutflowRate` increments divide by the full `halo.dT`, not the substep duration. The burst mass is a finite trigger-driven transfer. It must not be treated as a rate-times-`dt` term in a higher-order integrator.
 
 ## Reference API and forcing resolution
 
@@ -37,7 +39,7 @@ Satellite stripping supplies an especially important numerical counterexample to
 
 `conservation_residual` evaluates `delta(total) - (sources - sinks)`. `step_to_timescale_ratio` evaluates the dimensionless finite-step diagnostic `|transfer| / source`, equivalent to `dt / tau` when `tau = source / |rate|`. Large values identify process/reservoir pairs that deserve timestep-refinement attention. Empty sources with nonzero transfers return infinity rather than hiding an invalid ledger.
 
-Tests already exercise `1, 2, 4, 8` substeps on the controlled cooling/AGN/quiescent central slice, require nonnegative stored reservoirs, check the baryon ledger, preserve JIT execution, and differentiate through the subcycled path. These tests establish the machinery, not Mini-Millennium convergence.
+Tests already exercise `1, 2, 4, 8` substeps on the controlled implemented central chain, require nonnegative stored reservoirs, check the baryon ledger, preserve JIT execution, and differentiate through the subcycled path. These tests establish the machinery, not Mini-Millennium convergence.
 
 ## Alternative integrators: strict boundary
 

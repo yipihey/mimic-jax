@@ -2,7 +2,9 @@
 
 from mimic_jax.sage16.processes.cooling import apply_cooling
 from mimic_jax.sage16.processes.cooling_budget import calculate_cooling_budget
+from mimic_jax.sage16.processes.disk_instability import apply_disk_instability
 from mimic_jax.sage16.processes.infall import apply_infall, prepare_infall_budget
+from mimic_jax.sage16.processes.quasar_mode import apply_quasar_mode
 from mimic_jax.sage16.processes.radio_mode_heating import apply_radio_mode_heating
 from mimic_jax.sage16.processes.reincorporation import apply_reincorporation
 from mimic_jax.sage16.processes.reionization import (
@@ -17,14 +19,22 @@ from mimic_jax.sage16.processes.star_formation import (
     calculate_supernova_feedback_budget,
     quiescent_disk_step,
 )
+from mimic_jax.sage16.processes.starburst import (
+    apply_collisional_starburst,
+    apply_disk_instability_starburst,
+)
 
 __all__ = [
     "apply_cooling",
+    "apply_collisional_starburst",
+    "apply_disk_instability",
+    "apply_disk_instability_starburst",
     "apply_infall",
     "calculate_cooling_budget",
     "apply_metal_enrichment",
     "apply_reincorporation",
     "apply_reionization",
+    "apply_quasar_mode",
     "apply_satellite_stripping",
     "apply_radio_mode_heating",
     "apply_star_formation_supernova",

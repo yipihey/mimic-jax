@@ -18,12 +18,14 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Star-formation critical cold-gas test | thresholded | each branch is differentiable; the threshold itself is not |
 | SN nonnegative clamp and cold-gas renormalization | piecewise smooth | gradients describe the active local branch |
 | Metallicity zero/floor guards | thresholded | derivatives can be discontinuous at empty-reservoir boundaries |
-| Disk-instability criterion | thresholded | exact branch behavior must precede any optional approximation |
-| Quasar and starburst prescriptions after a trigger | piecewise smooth | continuous within the selected event branch |
+| Disk-instability criterion and stellar/gas split | thresholded/piecewise smooth | exact stable/unstable decision and caps are retained; fractional response is local to the active unstable branch |
+| Quasar BH growth before wind thresholds | piecewise smooth | low-velocity suppression and cold-gas cap are differentiable on each active branch |
+| Quasar cold/hot wind decisions | thresholded | the all-reservoir ejection decisions are exact and are not smoothed |
+| Starburst formation, recycling, and SN transport | piecewise smooth | responses are local to the active trigger, balance, ejection-cap, and yield branches |
 | Merger/disruption choice and major/minor classification | discrete event | preserve as an ordered jump map; do not replace with a sigmoid for equivalence |
 | Merger-tree topology and galaxy identity | discrete | not differentiated by the initial model |
 
-The current baryon-supply/satellite-stripping/cooling/radio-mode/quiescent slice is compatible with `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev` at its pure-process boundary. Tests evaluate derivatives away from thresholds and compare them with symmetric finite differences at several perturbation sizes. A derivative near a branch boundary should be reported with the active branch and, when scientifically relevant, a finite perturbation study across the boundary.
+The current baryon-supply/satellite-stripping/cooling/radio-mode/quiescent/instability/quasar/starburst slice is compatible with `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev` at its pure-process boundary. Tests evaluate derivatives away from thresholds and compare them with symmetric finite differences at several perturbation sizes. A derivative near a branch boundary should be reported with the active branch and, when scientifically relevant, a finite perturbation study across the boundary.
 
 Persistent SAGE reservoirs are float32 for parity. JAX can differentiate through a float64 calculation followed by a float32 write, but finite differences of the stored value eventually hit float32 resolution. This is one reason validation uses several perturbation sizes rather than declaring the smallest step the most accurate.
 
