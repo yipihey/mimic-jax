@@ -7,6 +7,7 @@ project:
     - docs/reporting.md
     - docs/mini_millennium_equivalence.md
     - docs/conservation.md
+    - docs/sage16_hybrid_system.md
     - docs/numerical_integration.md
     - docs/sensitivity.md
     - docs/performance.md
@@ -33,6 +34,8 @@ website:
         text: Fractional responses
       - href: docs/numerical_integration.md
         text: Numerics
+      - href: docs/sage16_hybrid_system.md
+        text: Hybrid SAGE16
   page-footer:
     left: "Faithful, differentiable SAGE16 diagnostics"
     right: "Built from durable Markdown reports"
