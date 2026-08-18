@@ -280,7 +280,7 @@ def main():
     # Capture source state before generating or updating report artifacts.
     provenance = capture_provenance(
         repository=REPOSITORY,
-        command=(sys.executable, *sys.argv),
+        command=("mimic_venv/bin/python", *sys.argv),
         configuration_paths=(arguments.run_file, DEFAULT_SCALE_FACTORS),
         input_paths=(
             arguments.upstream_output / "model.hdf5",
