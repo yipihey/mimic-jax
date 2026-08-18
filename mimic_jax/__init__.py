@@ -1,6 +1,6 @@
 """JAX-native physics kernels that preserve MIMIC model semantics."""
 
-from mimic_jax import sage16
+from mimic_jax import reporting, sage16
 from mimic_jax.numerics import (
     TimestepRefinementResult,
     conservation_residual,
@@ -40,6 +40,7 @@ __all__ = [
     "process_response_tensor",
     "redshift_from_ln_scale_factor",
     "response_similarity",
+    "reporting",
     "sage16",
     "step_to_timescale_ratio",
     "timestep_refinement_study",
