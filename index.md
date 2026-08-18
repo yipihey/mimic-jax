@@ -10,7 +10,7 @@ Mimic-jax reports connect familiar SAGE results to the evidence needed to trust 
 
 ## Published reference reports
 
-- [SAGE16 Mini-Millennium: initial mimic-jax run report](reports/mini-millennium-sage16-initial/index.md) — familiar upstream plots, selected-tree equivalence, controlled conservation and timestep diagnostics, a validated fractional parameter response, performance, and complete provenance.
+- [SAGE16 Mini-Millennium: from equivalence to baryon-cycle insight](reports/mini-millennium-sage16-initial/index.md) — a complete input-partition stellar mass function, explicit FoF baryon inventory, quantified object-level residuals, larger-sample performance, controlled derivative evidence, and complete provenance.
 
 ## How to read a report
 

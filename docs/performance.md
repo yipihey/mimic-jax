@@ -31,17 +31,20 @@ These development measurements were made on an Apple arm64 CPU under macOS 26.6.
 | Workload | Shapes | First evolution | Same-process warm evolution | Warm JAX batches | Warm host driver | Catalogue | Peak RSS |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | trees 1500--1599: 2,932 input halos, 2,929 FoF updates | 2 | 45.6 s | 0.53 s | 0.20 s | 0.33 s | 0.48 s | 2.9 GB |
+| trees 1500--2499: 24,885 input halos, 24,854 FoF updates | 3 | 93.8 s | 4.77 s | 1.25 s | 3.52 s | 1.01 s | 4.0 GB |
 | tree 0: 4,569 input halos, 3,397 FoF updates, power-of-two members | 7 | 172.8 s | 3.01 s | 2.54 s | 0.47 s | 0.018 s | 7.5 GB |
 
 Exact and power-of-two member binning produced identical catalogue digests on the 100-tree control. Reducing the member budget from 4,096 to 512 left the tree-0 cold time essentially unchanged but reduced its warm evolution from 8.11 s to 3.01 s. An earlier 20-tree diagnostic compiled 11 padded executable shapes, took 268 s cold, and reached about 11.3 GB peak RSS. After removing batch-size specialization, tree 0 by itself requires 7 shapes, takes 173 s cold, and reaches about 7.5 GB; because the workloads differ, this is evidence about specialization count rather than a direct runtime or memory speedup ratio.
 
 A two-shape 100-tree run took 50.6 s in a fresh process while populating a persistent cache, 28.4 s in another fresh process using the 3.9 MB cache, and about 0.53 s when reused inside one process. Persistent compilation therefore helps but does not remove the tracing/lowering boundary.
 
+The report's complete-partition artifact run evolved all 2,864 trees and 151,216 halos in input partition 1 in 147 seconds with the persistent compilation cache enabled and reached 7.54 GiB peak RSS. A separate all-snapshot field-comparison process took 195 seconds for the evolution portion while discovering padded FoF shapes up to 128 members. Both remain below ten minutes on this machine, but neither is labeled a same-process warm benchmark.
+
 The upstream executable evolved all eight Mini-Millennium partitions in about 1.9--2.1 s on this machine. A prior exact-shape cold JAX run of partition 0 alone took 975 s. Those workloads and output scopes are not yet a fair speedup ratio, but they establish the practical conclusion unambiguously: the current cold catalogue path is much slower than upstream and must be improved. No end-to-end JAX speedup is claimed.
 
 ## Scientific gate
 
-Performance is accepted only for paths that pass equivalence checks. The optimized path passed 9,408 public-field comparisons for trees 1500--1599 across all configured output snapshots. A complex tree-0 check retained one failure among 33,306 comparisons: `SupernovaOutflowRate` at snapshot 32 differed by `1.26e-5` relatively after a near-threshold SFR difference was multiplied by the reheating factor. The same failure occurs on the exact-size path, so inactive padding is not its cause. Full-population equivalence remains open; tolerances have not been widened to turn the performance run green.
+Performance is accepted only for paths with an explicit equivalence verdict. The optimized 1,000-tree path passed 74,172 public-field comparisons across all configured output snapshots. The complete partition-1 path retained 20 failures among 794,136 comparisons; its 32 resolved z=0 stellar-mass-function bins nevertheless have identical counts. A complex tree-0 check retained one failure among 33,306 comparisons: `SupernovaOutflowRate` at snapshot 32 differed by `1.26e-5` relatively after a near-threshold SFR difference was multiplied by the reheating factor. The same failure occurs on the exact-size path, so inactive padding is not its cause. Full-volume equivalence remains open; tolerances have not been widened to turn the performance run green.
 
 ## Earlier process benchmark
 

@@ -43,18 +43,24 @@ This establishes complete process, inheritance, schedule, and selected real-tree
 
 `evolve_lhalo_partition` batches independent same-snapshot FoF groups while the host retains ragged tree ownership. The exact mode specializes on live member count. The optional power-of-two mode appends inactive Type-3 slots and accepts the central index as batched data, reducing the number of compiled array shapes without reordering live galaxies. Infall totals use the same sequential member accumulation as upstream, so trailing zero/inactive slots do not change the floating-point reduction tree. Unit tests compare every live state and halo leaf bitwise between exact and padded group kernels.
 
-On partition-0 trees 1500--1599, the power-of-two path evolved 2,932 input halos and 2,929 FoF intervals and passed all 9,408 public-field comparisons over the eight configured output snapshots. Its catalogue digest also matched the exact-member path. This is a useful multi-tree gate, not full-population evidence.
+On partition-0 trees 1500--2499, the power-of-two path evolved 24,885 input halos and 24,854 FoF intervals and passed all 74,172 public-field comparisons over the eight configured output snapshots. This 1,000-tree gate is ten times the original report sample and retains zero comparisons outside the stated tolerances.
+
+A larger gate evolves every one of the 2,864 trees in input partition 1, with 151,216 input halos and 133,708 FoF intervals. Across 18,908 catalogue records at the eight configured output snapshots, 20 of 794,136 strict field comparisons exceed tolerance. The largest resolved relative differences are `5.26e-5` in `ColdGas`, `3.94e-5` in `MetalsColdGas`, and about `3.00e-5` in the star-formation and supernova-outflow rates. For the population science in the current report, MIMIC and mimic-jax are scientifically indistinguishable. The unchanged strict gate remains a technical warning so that this conclusion is not confused with bitwise equality.
+
+The same complete partition provides a defined one-eighth Mini-Millennium volume for a z=0 population comparison. All 32 stellar-mass-function bins containing at least five upstream galaxies have identical 0.1-dex counts. This does not erase the per-object residuals: 175 of 3,595 matched z=0 stellar masses are not bit-identical, with a largest resolved relative difference of `3.31e-6`, but none crosses a histogram edge. The report therefore calls the outputs identical for the scientific purposes demonstrated while preserving the stricter object-level result in technical validation.
 
 A deliberately complex tree-0 check currently has one failure among 33,306 comparisons: snapshot-32 `SupernovaOutflowRate` differs by `1.26e-5` relatively. The underlying SFR differs by about `1e-6` in absolute output units near a threshold, then the fiducial reheating factor of three amplifies the diagnostic-rate difference. The same field failed in the earlier exact-member full-partition diagnostic, so member padding is not responsible. A cold exact-member pass over partition 0 found 26 comparisons outside the declared tolerances among 890,274 fields, with the largest relative reservoir difference about `4.4e-4`. These discrepancies remain under investigation; the tolerances are not silently broadened and all-tree equivalence is not claimed.
 
-Run the batched gate with:
+Run the zero-failure control with:
 
 ```bash
 JAX_ENABLE_X64=1 mimic_venv/bin/python \
   scripts/check_mini_millennium_partition_equivalence.py \
-  --tree-start 1500 --tree-count 100 \
+  --tree-start 1500 --tree-count 1000 \
   --member-binning power_of_two --max-batch-members 512
 ```
+
+The complete-partition comparison and population-artifact commands are recorded in [`reporting.md`](reporting.md#practitioner-workflow).
 
 See [`performance.md`](performance.md) for cold/warm timing and memory measurements from the same path.
 

@@ -58,34 +58,59 @@ New diagnostics integrate by producing a diagnostic summary and, where necessary
 
 ## Practitioner workflow
 
-The initial Mini-Millennium report deliberately separates expensive computation from presentation. First create machine-readable benchmark and equivalence products in the gitignored `benchmarks/` workspace:
+The Mini-Millennium report deliberately separates expensive computation from presentation. The current reference uses two complementary gates: a zero-failure 1,000-tree control and a complete input-partition comparison that exposes rarer residuals. Put temporary products and the persistent compilation cache in a gitignored workspace:
 
 ```bash
-mkdir -p benchmarks
+mkdir -p archive/jax-cache
 
-JAX_ENABLE_X64=1 mimic_venv/bin/python \
-    scripts/check_mini_millennium_partition_equivalence.py \
-    --tree-start 1500 --tree-count 100 --member-binning=power_of_two \
-    --output benchmarks/mini-millennium-equivalence.json
+JAX_ENABLE_X64=1 JAX_COMPILATION_CACHE_DIR=archive/jax-cache \
+    mimic_venv/bin/python scripts/check_mini_millennium_partition_equivalence.py \
+    --tree-start 1500 --tree-count 1000 --member-binning power_of_two \
+    --output archive/mini-millennium-equivalence-1000.json
 
 JAX_ENABLE_X64=1 mimic_venv/bin/python \
     scripts/benchmark_mini_millennium_partition.py \
-    --tree-start 1500 --tree-count 100 --repeats 2 \
-    --output benchmarks/mini-millennium-benchmark.json
+    --tree-start 1500 --tree-count 1000 --repeats 2 \
+    --member-binning power_of_two --compilation-cache-dir archive/jax-cache \
+    --output archive/mini-millennium-benchmark-1000.json
 ```
 
-Then build the report. The builder stages the two JSON products, saves its controlled response and refinement arrays, asks the existing model-local plotting registry for familiar figures, and writes Markdown plus JSON:
+The science sample is every tree in input partition 1. `global-tree-offset=3432` preserves the run-wide `UniqueGalaxyID` encoding because partition 0 contains 3,432 trees. The field comparison retains every configured output snapshot; the population analysis retains z=0 summaries and uses one eighth of the Mini-Millennium volume, matching the plotting registry's file-fraction convention:
+
+```bash
+JAX_ENABLE_X64=1 JAX_COMPILATION_CACHE_DIR=archive/jax-cache \
+    mimic_venv/bin/python scripts/check_mini_millennium_partition_equivalence.py \
+    --trees simulations/mini-millennium/snapshots/trees_063.1 \
+    --upstream output/sage16-mini-millennium/model_001.hdf5 \
+    --tree-start 0 --tree-count 2864 --global-tree-offset 3432 \
+    --member-binning power_of_two \
+    --output archive/mini-millennium-equivalence-partition-1.json
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_partition.py \
+    --compilation-cache-dir archive/jax-cache \
+    --equivalence-json archive/mini-millennium-equivalence-partition-1.json \
+    --output-json archive/mini-millennium-partition-1-science.json \
+    --output-arrays archive/mini-millennium-partition-1-science.npz
+```
+
+Then build the report. The builder stages the durable products, renders the SMF and baryon-inventory figures from the NPZ arrays, saves its controlled response and refinement arrays, asks the existing model-local plotting registry for familiar figures, and writes Markdown plus JSON. It does not rerun Mini-Millennium:
 
 ```bash
 JAX_ENABLE_X64=1 mimic_venv/bin/python \
     examples/build_mini_millennium_report.py \
-    --equivalence-json benchmarks/mini-millennium-equivalence.json \
-    --benchmark-json benchmarks/mini-millennium-benchmark.json
+    --equivalence-json archive/mini-millennium-equivalence-1000.json \
+    --partition-equivalence-json archive/mini-millennium-equivalence-partition-1.json \
+    --benchmark-json archive/mini-millennium-benchmark-1000.json \
+    --science-json archive/mini-millennium-partition-1-science.json \
+    --science-arrays archive/mini-millennium-partition-1-science.npz
 
 mimic_venv/bin/python scripts/check_reports.py
 ```
 
-The resulting `reports/mini-millennium-sage16-initial/index.md` opens directly in GitHub or Obsidian. `report.json` exposes stable status, diagnostic, observable, parameter, artifact, and provenance fields for programmatic queries. The `.npz` response and refinement products retain the larger arrays and their scientific metadata.
+On the measured Apple-arm64 CPU run, the 1,000-tree benchmark completed in 93.8 seconds for the first call and 4.77 seconds for the same-process warm call. The complete 2,864-tree artifact run completed in 147 seconds with a persistent compilation cache and used 7.54 GiB peak resident memory. These are scoped measurements, not universal performance claims.
+
+The resulting `reports/mini-millennium-sage16-initial/index.md` opens directly in GitHub or Obsidian. `report.json` exposes stable status, diagnostic, observable, parameter, artifact, and provenance fields for programmatic queries. The population, response, and refinement NPZ products retain larger arrays and their scientific metadata.
 
 For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
 
