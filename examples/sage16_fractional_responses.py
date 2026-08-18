@@ -135,6 +135,7 @@ def history_example():
             baseline.diagnostics.star_formation.hot_to_ejected,
             baseline.diagnostics.reincorporation.gas,
             baseline.diagnostics.radio_mode.heating_mass,
+            baseline.diagnostics.infall.requested,
         ]
     )
     response = process_response_tensor(

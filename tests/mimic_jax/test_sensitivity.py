@@ -212,6 +212,7 @@ def test_finite_epoch_process_response_is_dimensionless_and_fd_validated():
             baseline.diagnostics.star_formation.hot_to_ejected,
             baseline.diagnostics.reincorporation.gas,
             jnp.zeros_like(baseline.diagnostics.cooling.gas),
+            jnp.zeros_like(baseline.diagnostics.cooling.gas),
         ]
     )
     response = process_response_tensor(

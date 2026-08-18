@@ -8,7 +8,7 @@ The fiducial Mini-Millennium configuration sets `SubSteps: 10`. At the start of 
 
 This is best described as an explicit sequential or operator-split update, not simply as one forward-Euler evaluation. For the currently implemented central slice, one substep is
 
-`reincorporation -> cooling budget -> stored-AGN suppression and new radio-mode heating -> cooling application -> star formation -> SN feedback -> reservoir application -> enrichment`.
+`fixed-budget infall application -> reincorporation -> cooling budget -> stored-AGN suppression and new radio-mode heating -> cooling application -> star formation -> SN feedback -> reservoir application -> enrichment`.
 
 The prescriptions have different numerical meanings:
 
@@ -25,7 +25,7 @@ The prescriptions have different numerical meanings:
 
 ## Reference API and forcing resolution
 
-`upstream_sequential_central_step` implements the exact module order for the currently ported central-galaxy subset. `subcycle_upstream_sequential_central(..., num_substeps=N)` holds the halo forcing fixed over one tree interval and repeats that reference map `N` times, while each rate-based module uses `halo.dT / N`. This is the initial, explicitly labeled `piecewise_constant` forcing assumption.
+`upstream_sequential_central_step` implements the exact module order for the currently ported per-central subset. The FoF-wide `prepare_infall_budget` operation runs once before it, not inside the substep map. `subcycle_upstream_sequential_central(..., num_substeps=N)` holds the halo forcing and prepared infall budget fixed over one tree interval and repeats the reference map `N` times, while each rate-based module uses `halo.dT / N` and infall applies one `InfallingGas / N` partition. This is the initial, explicitly labeled `piecewise_constant` forcing assumption.
 
 The merger-tree sampling and baryonic integration resolution are separate concepts. Future forcing interpolation must be selected explicitly and recorded in outputs. Piecewise-constant and linear interpolation will be compared before anything more elaborate is considered. Interpolation must not alter event times or invent smooth tree topology.
 

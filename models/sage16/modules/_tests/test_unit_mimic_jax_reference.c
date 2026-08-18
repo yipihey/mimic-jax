@@ -26,6 +26,9 @@
 #include "modules/_tests/sage_test_fixtures.h"
 
 extern int sage_apply_cooling_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_apply_infall_init(void);
+extern int sage_apply_infall_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_apply_infall_cleanup(void);
 extern int sage_calculate_cooling_budget_init(void);
 extern int sage_calculate_cooling_budget_process(struct ModuleContext *ctx, struct Halo *halos,
                                                  int ngal);
@@ -33,6 +36,13 @@ extern int sage_calculate_cooling_budget_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
+extern int sage_reionization_init(void);
+extern int sage_reionization_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_reionization_cleanup(void);
+extern int sage_prepare_infall_budget_init(void);
+extern int sage_prepare_infall_budget_process(struct ModuleContext *ctx, struct Halo *halos,
+                                              int ngal);
+extern int sage_prepare_infall_budget_cleanup(void);
 extern int sage_radio_mode_heating_init(void);
 extern int sage_radio_mode_heating_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_radio_mode_heating_cleanup(void);
@@ -66,6 +76,7 @@ static void configure_fiducial_slice(void) {
   MimicConfig.SubSteps = 1;
   set_units();
 
+  add_parameter("GlobalBaryonFraction", "0.17");
   add_parameter("SfrEfficiency", "0.05");
   add_parameter("StarFormingDiskFactor", "3.0");
   add_parameter("FeedbackReheatingEpsilon", "3.0");
@@ -77,6 +88,9 @@ static void configure_fiducial_slice(void) {
   add_parameter("Yield", "0.025");
   add_parameter("FracZleaveDisk", "0.0");
 
+  test_pre_timestep_add("sage_reionization", PROCESSING_MODE_FULL_HALO);
+  test_pre_timestep_add("sage_prepare_infall_budget", PROCESSING_MODE_FULL_HALO);
+  test_phase_add("galaxy_physics", "sage_apply_infall", PROCESSING_MODE_FULL_HALO);
   test_phase_add("galaxy_physics", "sage_calculate_cooling_budget", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_radio_mode_heating", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_cooling", PROCESSING_MODE_BY_GALAXY);
@@ -122,6 +136,9 @@ static int test_emit_reference_cases(void) {
   configure_fiducial_slice();
 
   TEST_ASSERT(sage_calculate_cooling_budget_init() == 0, "Cooling-budget init should succeed");
+  TEST_ASSERT(sage_reionization_init() == 0, "Reionization init should succeed");
+  TEST_ASSERT(sage_prepare_infall_budget_init() == 0, "Infall-budget init should succeed");
+  TEST_ASSERT(sage_apply_infall_init() == 0, "Infall-application init should succeed");
   TEST_ASSERT(sage_reincorporation_init() == 0, "Reincorporation init should succeed");
   TEST_ASSERT(sage_radio_mode_heating_init() == 0, "Radio-mode init should succeed");
   TEST_ASSERT(sage_calculate_star_formation_init() == 0, "SF init should succeed");
@@ -136,6 +153,68 @@ static int test_emit_reference_cases(void) {
          get_metaldependent_cooling_rate(3.0, log_z_sun),
          get_metaldependent_cooling_rate(9.0, log_z_sun),
          get_metaldependent_cooling_rate(5.5, -10.0));
+
+  setup_halo(&halo, &galaxy, 1.0, 0.1, 100.0, 0.01);
+  setup_context(&context, &halo, 10);
+  context.redshift = 2.0;
+  TEST_ASSERT(sage_reionization_process(&context, &halo, 1) == 0,
+              "Reionization reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=reionization HaloBaryonFraction=%.17g\n",
+         galaxy.HaloBaryonFraction);
+
+  struct Halo infall_halos[2];
+  struct GalaxyData infall_galaxies[2];
+  setup_halo(&infall_halos[0], &infall_galaxies[0], 100.0, 0.2, 200.0, 0.01);
+  setup_halo(&infall_halos[1], &infall_galaxies[1], 0.0, 0.1, 100.0, 0.01);
+  infall_halos[1].Type = 2;
+  setup_context(&context, &infall_halos[0], 10);
+  infall_galaxies[0].HaloBaryonFraction = 0.17;
+  infall_galaxies[0].StellarMass = 5.0f;
+  infall_galaxies[0].ColdGas = 3.0f;
+  infall_galaxies[0].HotGas = 8.0f;
+  infall_galaxies[0].EjectedGas = 1.0f;
+  infall_galaxies[0].ICS = 0.5f;
+  infall_galaxies[0].BlackHoleMass = 0.1f;
+  infall_galaxies[0].MetalsEjectedGas = 0.02f;
+  infall_galaxies[0].MetalsICS = 0.01f;
+  infall_galaxies[1].HaloBaryonFraction = 0.17;
+  infall_galaxies[1].HotGas = 3.0f;
+  infall_galaxies[1].EjectedGas = 2.0f;
+  infall_galaxies[1].ICS = 1.5f;
+  infall_galaxies[1].MetalsHotGas = 0.06f;
+  infall_galaxies[1].MetalsEjectedGas = 0.04f;
+  infall_galaxies[1].MetalsICS = 0.03f;
+  TEST_ASSERT(sage_prepare_infall_budget_process(&context, infall_halos, 2) == 0,
+              "Infall-budget reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=infall_budget InfallingGas=%.17g EjectedGas=%.17g "
+         "MetalsEjectedGas=%.17g ICS=%.17g MetalsICS=%.17g SatelliteEjectedGas=%.17g "
+         "SatelliteICS=%.17g SatelliteHotGas=%.17g\n",
+         infall_galaxies[0].InfallingGas, (double)infall_galaxies[0].EjectedGas,
+         (double)infall_galaxies[0].MetalsEjectedGas, (double)infall_galaxies[0].ICS,
+         (double)infall_galaxies[0].MetalsICS, (double)infall_galaxies[1].EjectedGas,
+         (double)infall_galaxies[1].ICS, (double)infall_galaxies[1].HotGas);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
+  setup_context(&context, &halo, 4);
+  galaxy.InfallingGas = 12.0;
+  galaxy.HotGas = 5.0f;
+  TEST_ASSERT(sage_apply_infall_process(&context, &halo, 1) == 0,
+              "Positive-infall reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=infall_positive HotGas=%.17g\n", (double)galaxy.HotGas);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
+  setup_context(&context, &halo, 1);
+  galaxy.InfallingGas = -8.0;
+  galaxy.EjectedGas = 3.0f;
+  galaxy.MetalsEjectedGas = 0.06f;
+  galaxy.HotGas = 10.0f;
+  galaxy.MetalsHotGas = 0.2f;
+  TEST_ASSERT(sage_apply_infall_process(&context, &halo, 1) == 0,
+              "Negative-infall reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=infall_negative EjectedGas=%.17g MetalsEjectedGas=%.17g "
+         "HotGas=%.17g MetalsHotGas=%.17g\n",
+         (double)galaxy.EjectedGas, (double)galaxy.MetalsEjectedGas, (double)galaxy.HotGas,
+         (double)galaxy.MetalsHotGas);
 
   setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
   setup_context(&context, &halo, 10);
@@ -227,9 +306,13 @@ static int test_emit_reference_cases(void) {
   sage_calculate_supernova_feedback_cleanup();
   sage_calculate_star_formation_cleanup();
   sage_reincorporation_cleanup();
+  sage_apply_infall_cleanup();
+  sage_prepare_infall_budget_cleanup();
+  sage_reionization_cleanup();
   sage_radio_mode_heating_cleanup();
   sage_calculate_cooling_budget_cleanup();
   test_free_substep_phases();
+  test_free_pre_timestep();
   check_memory_leaks();
   return TEST_PASS;
 }

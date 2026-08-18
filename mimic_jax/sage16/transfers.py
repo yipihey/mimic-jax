@@ -32,6 +32,45 @@ class CoolingBudgetResult(NamedTuple):
     budget: CoolingBudget
 
 
+class ReionizationResult(NamedTuple):
+    state: GalaxyState
+    modifier: Array
+
+
+class InfallBudgetTransfer(NamedTuple):
+    """Snapshot budget and ownership changes from ``sage_prepare_infall_budget``."""
+
+    satellite_ejected_to_central: Array
+    satellite_ejected_metals_to_central: Array
+    satellite_ics_to_central: Array
+    satellite_ics_metals_to_central: Array
+    target_baryons: Array
+    group_baryons: Array
+    infalling_gas: Array
+
+
+class InfallBudgetResult(NamedTuple):
+    states: GalaxyState
+    transfer: InfallBudgetTransfer
+
+
+class InfallTransfer(NamedTuple):
+    """External source/sink and reservoir removals from one infall substep."""
+
+    requested: Array
+    external_to_hot: Array
+    ejected_to_external: Array
+    hot_to_external: Array
+    ejected_metals_to_external: Array
+    hot_metals_to_external: Array
+    unfulfilled_removal: Array
+
+
+class InfallResult(NamedTuple):
+    state: GalaxyState
+    transfer: InfallTransfer
+
+
 class RadioModeHeatingTransfer(NamedTuple):
     """Coupled cooling suppression, BH growth, and heating from radio-mode AGN."""
 
@@ -130,6 +169,7 @@ class CentralHistoryResult(NamedTuple):
 class UpstreamCentralStepDiagnostics(NamedTuple):
     """Ordered diagnostics for the implemented upstream central-galaxy slice."""
 
+    infall: InfallTransfer
     cooling_budget: CoolingBudget
     radio_mode: RadioModeHeatingTransfer
     cooling: CoolingTransfer

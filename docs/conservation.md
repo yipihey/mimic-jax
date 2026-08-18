@@ -6,6 +6,10 @@ The closed baryonic total used by the initial slice is `M_b = M_cold + M_hot + M
 
 | Operation | Baryonic behavior | Metal behavior |
 | --- | --- | --- |
+| Reionization | no immediate reservoir change; changes a later baryon target | unchanged |
+| Infall-budget consolidation | conserved across the complete FoF group | conserved for ejected gas and ICS transfers, subject to upstream validity clamps |
+| Positive infall application | explicit external baryon source to hot gas | pristine source; no metals added |
+| Negative infall application | explicit external sink from ejected then hot gas | removes metals at each source reservoir's metallicity |
 | Cooling-budget calculation | unchanged; writes transport/diagnostic fields only | unchanged |
 | Cooling application | conserved, hot to cold | conserved, hot to cold at hot-gas metallicity |
 | Radio-mode BH accretion | conserved, hot gas to BH | decreases tracked metals by explicit `hot_metals_accreted`; SAGE has no BH-metal reservoir |
@@ -16,7 +20,7 @@ The closed baryonic total used by the initial slice is `M_b = M_cold + M_hot + M
 
 Tests assert both the invariants and the source term. Central and satellite cases are separate because satellite reheating and ejection mutate the FoF central. Tolerances reflect sequential writes into upstream-compatible float32 reservoirs: current controlled tests use absolute baryonic tolerance `2e-6` per galaxy and metal tolerance `2e-7` per galaxy. The compiled C oracle uses exact equality for its controlled CPU cases.
 
-Future infall, stripping, BH radiation, disruption, and merger slices must label external sources, sinks, or ownership changes rather than weakening the ledger. A failing invariant is evidence of either a coding error or an incomplete system boundary; it is not fixed by increasing a tolerance without a numerical explanation.
+Future stripping, quasar feedback, disruption, and merger slices must label external sources, sinks, or ownership changes rather than weakening the ledger. A failing invariant is evidence of either a coding error or an incomplete system boundary; it is not fixed by increasing a tolerance without a numerical explanation.
 
 Conservation is also tested after differentiation. For the radio-mode hot-to-BH transfer, the derivative of `delta HotGas + delta BlackHoleMass` with respect to `RadioModeEfficiency` is zero on the controlled smooth branch. Numerical refinement studies use the same ledgers through [`mimic_jax/numerics.py`](../mimic_jax/numerics.py), so integration error, declared sources/sinks, and parameter response remain separate quantities.
 

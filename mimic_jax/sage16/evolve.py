@@ -8,6 +8,7 @@ from mimic_jax.sage16.perturbations import log_fractionally_perturb, process_per
 from mimic_jax.sage16.precision import as_float64
 from mimic_jax.sage16.processes.cooling import apply_cooling
 from mimic_jax.sage16.processes.cooling_budget import calculate_cooling_budget
+from mimic_jax.sage16.processes.infall import apply_infall
 from mimic_jax.sage16.processes.radio_mode_heating import apply_radio_mode_heating
 from mimic_jax.sage16.processes.reincorporation import apply_reincorporation
 from mimic_jax.sage16.processes.star_formation import quiescent_disk_step
@@ -100,6 +101,7 @@ def evolve_central_history(
             sn_ejection=0.0 * cooling_gas,
             reincorporation=0.0 * cooling_gas,
             agn_heating=0.0 * cooling_gas,
+            infall=0.0 * cooling_gas,
         )
 
     def scan_step(state, inputs):
@@ -135,16 +137,17 @@ def upstream_sequential_central_step(
     """Run the implemented central subset in exact Mini-Millennium module order.
 
     This reference update is an explicit sequence of finite process maps:
-    reincorporation, cooling-budget calculation, radio-mode heating, cooling
-    application, and the quiescent SF/SN/enrichment chain. It is not replaced
-    by an ODE integrator. Infall and the later instability/event modules remain
-    outside this currently implemented subset.
+    infall application, reincorporation, cooling-budget calculation, radio-mode
+    heating, cooling application, and the quiescent SF/SN/enrichment chain. It
+    is not replaced by an ODE integrator. Snapshot-level infall preparation and
+    the later instability/event modules remain outside this per-central map.
     """
 
     if perturbations is None:
         perturbations = process_perturbations()
+    infall = apply_infall(state, context, perturbations.infall)
     reincorporated = apply_reincorporation(
-        state,
+        infall.state,
         halo,
         context,
         parameters,
@@ -183,6 +186,7 @@ def upstream_sequential_central_step(
         perturbations,
     )
     diagnostics = UpstreamCentralStepDiagnostics(
+        infall=infall.transfer,
         cooling_budget=cooling_budget.budget,
         radio_mode=radio_mode.transfer,
         cooling=cooled.transfer,
@@ -213,6 +217,7 @@ def evolve_upstream_sequential_central_history(
             sn_ejection=zero,
             reincorporation=zero,
             agn_heating=zero,
+            infall=zero,
         )
 
     def scan_step(state, inputs):
@@ -265,6 +270,7 @@ def subcycle_upstream_sequential_central(
             sn_ejection=zero,
             reincorporation=zero,
             agn_heating=zero,
+            infall=zero,
         )
 
     def expand(value):

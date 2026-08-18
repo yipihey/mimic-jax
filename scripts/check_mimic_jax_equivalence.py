@@ -8,14 +8,17 @@ import subprocess
 from pathlib import Path
 
 import jax
+import jax.numpy as jnp
 
 jax.config.update("jax_enable_x64", True)
 
 from mimic_jax.sage16 import (  # noqa: E402
     apply_cooling,
+    apply_infall,
     apply_metal_enrichment,
     apply_radio_mode_heating,
     apply_reincorporation,
+    apply_reionization,
     apply_star_formation_supernova,
     calculate_cooling_budget,
     calculate_star_formation_budget,
@@ -25,6 +28,7 @@ from mimic_jax.sage16 import (  # noqa: E402
     initial_halo_forcing,
     load_cooling_tables,
     metal_dependent_cooling_rate,
+    prepare_infall_budget,
     sage16_units,
     step_context,
 )
@@ -34,6 +38,7 @@ REFERENCE_TEST = "models/sage16/modules/_tests/test_unit_mimic_jax_reference.c"
 REFERENCE_LOG = "tests/unit/build/test_unit_mimic_jax_reference.run.log"
 CASE_TOLERANCES = {
     "cooling_budget": (1.0e-13, 0.0),
+    "infall_budget": (1.0e-15, 0.0),
     "radio_mode": (1.0e-13, 0.0),
 }
 
@@ -73,8 +78,12 @@ def parse_c_reference(path: Path):
         "cooling",
         "cooling_budget",
         "cooling_interpolation",
+        "infall_budget",
+        "infall_negative",
+        "infall_positive",
         "reincorporation",
         "radio_mode",
+        "reionization",
         "star_formation_budget",
         "star_formation_final",
     }
@@ -100,6 +109,56 @@ def calculate_jax_reference():
         "high_temperature": float(metal_dependent_cooling_rate(9.0, log_z_sun, cooling_tables)),
         "primordial": float(metal_dependent_cooling_rate(5.5, -10.0, cooling_tables)),
     }
+
+    reionization_state = apply_reionization(
+        initial_galaxy_state(),
+        initial_halo_forcing(Mvir=1.0, Rvir=0.1, Vvir=100.0, dT=0.01),
+        step_context(redshift=2.0, num_substeps=10, time_interval=0.01),
+        parameters,
+        units,
+    ).state
+
+    central = initial_galaxy_state(
+        HaloBaryonFraction=0.17,
+        StellarMass=5.0,
+        ColdGas=3.0,
+        HotGas=8.0,
+        EjectedGas=1.0,
+        ICS=0.5,
+        BlackHoleMass=0.1,
+        MetalsEjectedGas=0.02,
+        MetalsICS=0.01,
+    )
+    satellite = initial_galaxy_state(
+        HaloBaryonFraction=0.17,
+        HotGas=3.0,
+        EjectedGas=2.0,
+        ICS=1.5,
+        MetalsHotGas=0.06,
+        MetalsEjectedGas=0.04,
+        MetalsICS=0.03,
+    )
+    infall_states = jax.tree_util.tree_map(lambda *values: jnp.stack(values), central, satellite)
+    infall_halos = jax.tree_util.tree_map(
+        lambda *values: jnp.stack(values),
+        initial_halo_forcing(Type=0, Mvir=100.0, Rvir=0.2, Vvir=200.0, dT=0.01),
+        initial_halo_forcing(Type=2, Mvir=0.0, Rvir=0.1, Vvir=100.0, dT=0.01),
+    )
+    infall_budget = prepare_infall_budget(infall_states, infall_halos, 0, parameters).states
+    positive_infall = apply_infall(
+        initial_galaxy_state(InfallingGas=12.0, HotGas=5.0),
+        step_context(num_substeps=4),
+    ).state
+    negative_infall = apply_infall(
+        initial_galaxy_state(
+            InfallingGas=-8.0,
+            EjectedGas=3.0,
+            MetalsEjectedGas=0.06,
+            HotGas=10.0,
+            MetalsHotGas=0.2,
+        ),
+        step_context(),
+    ).state
 
     cooling_budget_state = initial_galaxy_state(HotGas=8.0, MetalsHotGas=0.16)
     cooling_budget_halo = initial_halo_forcing(Rvir=0.2, Vvir=200.0, dT=0.01)
@@ -208,6 +267,22 @@ def calculate_jax_reference():
     ).galaxy
 
     return {
+        "reionization": select(reionization_state, ("HaloBaryonFraction",)),
+        "infall_budget": {
+            "InfallingGas": float(infall_budget.InfallingGas[0]),
+            "EjectedGas": float(infall_budget.EjectedGas[0]),
+            "MetalsEjectedGas": float(infall_budget.MetalsEjectedGas[0]),
+            "ICS": float(infall_budget.ICS[0]),
+            "MetalsICS": float(infall_budget.MetalsICS[0]),
+            "SatelliteEjectedGas": float(infall_budget.EjectedGas[1]),
+            "SatelliteICS": float(infall_budget.ICS[1]),
+            "SatelliteHotGas": float(infall_budget.HotGas[1]),
+        },
+        "infall_positive": select(positive_infall, ("HotGas",)),
+        "infall_negative": select(
+            negative_infall,
+            ("EjectedGas", "MetalsEjectedGas", "HotGas", "MetalsHotGas"),
+        ),
         "cooling_interpolation": interpolation,
         "cooling_budget": select(
             cooling_budget,
@@ -291,7 +366,7 @@ def compare_records(c_reference, jax_reference) -> None:
     print(f"MIMIC-JAX equivalence: {compared} fields match compiled SAGE16 " f"({exact} exactly)")
     print(
         "Tolerances: cooling budget and radio mode rtol=1e-13; "
-        "every other controlled field exact"
+        "group infall budget rtol=1e-15; every other controlled field exact"
     )
 
 
