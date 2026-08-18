@@ -269,15 +269,23 @@ def main():
     )
     equivalence = load_json(equivalence_source)
     benchmark = load_json(benchmark_source)
+    upstream_partitions = tuple(
+        sorted(arguments.upstream_output.glob("model_[0-9][0-9][0-9].hdf5"))
+    )
+    if not upstream_partitions:
+        raise SystemExit(
+            f"No upstream MIMIC partition files found under {arguments.upstream_output}"
+        )
 
     # Capture source state before generating or updating report artifacts.
     provenance = capture_provenance(
         repository=REPOSITORY,
-        command=tuple(sys.argv),
+        command=(sys.executable, *sys.argv),
         configuration_paths=(arguments.run_file, DEFAULT_SCALE_FACTORS),
         input_paths=(
             arguments.upstream_output / "model.hdf5",
             arguments.upstream_output / "metadata/version_info.json",
+            *upstream_partitions,
         ),
         upstream_version_info=arguments.upstream_output / "metadata/version_info.json",
     )
