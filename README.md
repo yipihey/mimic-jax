@@ -59,6 +59,8 @@ Any other model + simulation pairing runs the same way — build with `make MODE
 
 ## Where to Go Next
 
+This fork is also developing an additive, JAX-native formalization of fiducial SAGE16 under [`mimic_jax/`](mimic_jax/). The current milestone covers the complete immutable SAGE16 state plus an upstream-verified quiescent cooling/reincorporation/star-formation/SN/enrichment slice, conservation ledgers, and physically normalized fractional responses. It does not yet claim complete tree or Mini-Millennium equivalence. Start with [SAGE16 state](docs/sage16_state.md), [reservoirs and transfers](docs/reservoirs_and_transfers.md), [sensitivity](docs/sensitivity.md), and the gated [first scientific application program](docs/mimic_jax_scientific_program.md).
+
 The documentation follows your journey:
 
 | You're asking | Read |

@@ -1,6 +1,6 @@
 # Mimic-JAX Initial SAGE16 Implementation Plan
 
-**Status:** Active fork-local implementation plan.
+**Status:** Active fork-local implementation plan; initial quiescent slice implemented and gated 2026-08-18.
 **Baseline:** MIMIC `69590cc60dcb7b8b6510ee0b16b1ed921a6c4853` (the fork and upstream were identical when this plan was written).
 **Scope:** An additive JAX physics package; no changes to MIMIC's C core, model metadata, tree readers, or runtime module ABI.
 
@@ -20,9 +20,19 @@ The prescriptions are not all one mathematical kind. Cooling, star formation, fe
 6. Demonstrate `jax.jit`, `jax.vmap`, and `jax.grad` on the faithful subset. Validate an automatic derivative of final `StellarMass` with respect to `SfrEfficiency` against a centred finite difference away from thresholds.
 7. Add a small `lax.scan` history driver for independent galaxies and expose exact discrete reverse-mode sensitivities to per-step process budgets. Do not imply that shared-central galaxy-major coupling or merger events are vectorised until their scatter/event maps are implemented and tested.
 
+## Fractional Responses as a Core Data Product
+
+Public parameter sensitivities default to `d ln(O) / d ln(theta)`, with explicit validity masks and an opt-in reference-scale convention for zero, signed, or otherwise non-logarithmic quantities. Historical sensitivities perturb faithful finite-substep transfers as `r -> r exp(epsilon)` and report finite-epoch `d ln(O) / d epsilon`, using explicit `ln(a)` and redshift edges. Response results carry names, units, fiducial values, normalization, sign, and derivative method and can be saved without reconstructing metadata in a notebook.
+
+The first scientific application program is [`../mimic_jax_scientific_program.md`](../mimic_jax_scientific_program.md). It remains gated on complete Mini-Millennium equivalence; controlled-subset response examples must not be presented as population conclusions.
+
 ## Deferred Fidelity Work
 
 The next slices, in order, are the Sutherland-Dopita cooling-table interpolation and cooling budget, radio-mode AGN heating, infall/reionization, shared-central satellite stripping, disk instability/quasar/starburst, and finally ordered merger/disruption event maps plus tree inheritance. Full-tree and final-catalogue equivalence is not claimed until these processes and the C tree interface are present.
+
+## Initial Milestone Evidence
+
+The first slice landed in commits `9f6d27d2` and `1ce7a135`. Twenty-one Python tests cover the complete state, process formulas, conservation, transforms, normalization safety, scan histories, and finite-difference validation. Seven relevant upstream C suites pass, including an executable oracle that compares 23 fields from cooling, reincorporation, and quiescent SF/SN/enrichment cases at `rtol=0`, `atol=0` on the controlled CPU fixtures. These are process-level results, not full-tree or Mini-Millennium equivalence.
 
 ## Gates
 
