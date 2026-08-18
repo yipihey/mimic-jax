@@ -21,6 +21,8 @@ sage-code
 build/
 *.o
 *.d
+/.quarto/
+/_site/
 
 # Generated files
 src/include/generated/

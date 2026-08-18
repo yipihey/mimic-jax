@@ -1,0 +1,55 @@
+{
+  "backend": "cpu",
+  "batch_size": 128,
+  "benchmark": "mini_millennium_partition",
+  "devices": [
+    "TFRT_CPU_0"
+  ],
+  "first_to_best_warm_ratio": 45.728831060540685,
+  "input_halos": 2932,
+  "jax_compilation_cache_dir": null,
+  "jax_version": "0.4.30",
+  "machine": "arm64",
+  "max_batch_members": 512,
+  "member_binning": "power_of_two",
+  "output_snapshots": [
+    63
+  ],
+  "platform": "macOS-26.6.1-arm64-arm-64bit",
+  "processor": "arm",
+  "python": "3.9.6",
+  "repeat_catalogues_identical": true,
+  "runs": [
+    {
+      "batch_calls": 44,
+      "batch_seconds": 45.67666308400002,
+      "catalogue_seconds": 0.5509399999999971,
+      "catalogue_sha256": "f8e977ebf20e009a1f0ac79763c22fc052ea333f05075bb3cddd4e8acaee54f0",
+      "evolution_seconds": 46.461243042,
+      "executable_shapes": 2,
+      "groups": 2929,
+      "host_seconds": 0.7845799579999806,
+      "peak_resident_bytes": 2900934656,
+      "records": 101,
+      "repeat": 1,
+      "success": true
+    },
+    {
+      "batch_calls": 44,
+      "batch_seconds": 0.21626862099998334,
+      "catalogue_seconds": 0.4414932500000006,
+      "catalogue_sha256": "f8e977ebf20e009a1f0ac79763c22fc052ea333f05075bb3cddd4e8acaee54f0",
+      "evolution_seconds": 1.0160164159999994,
+      "executable_shapes": 2,
+      "groups": 2929,
+      "host_seconds": 0.799747795000016,
+      "peak_resident_bytes": 2900934656,
+      "records": 101,
+      "repeat": 2,
+      "success": true
+    }
+  ],
+  "setup_seconds": 0.059683708999999974,
+  "tree_count": 100,
+  "tree_start": 1500
+}

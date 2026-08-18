@@ -46,6 +46,16 @@ jobs:
       run: |
         make check-docs
 
+    - name: Validate published run reports
+      run: |
+        python scripts/check_reports.py
+
+    - name: Run mimic-jax reporting tests
+      env:
+        JAX_ENABLE_X64: "1"
+      run: |
+        python -m pytest -q tests/mimic_jax/test_reporting.py
+
     - name: Validate module metadata
       run: |
         make validate-modules

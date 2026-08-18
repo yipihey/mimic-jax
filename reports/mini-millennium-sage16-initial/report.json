@@ -1,0 +1,787 @@
+{
+  "headline_artifacts": [
+    {
+      "description": "The familiar SAGE diagnostic is sourced from the upstream MIMIC catalogue. It is context, not a claim of full mimic-jax population equivalence.",
+      "key": "stellar_mass_function",
+      "media_type": "image/svg+xml",
+      "path": "assets/StellarMassFunction.svg",
+      "role": "figure",
+      "sha256": "00977af14ee279d74a0cc490f637858dd7f72eaf12be8e46b2b17f9396ee1caf",
+      "size_bytes": 55019,
+      "title": "Upstream MIMIC z=0 stellar mass function"
+    }
+  ],
+  "health": [
+    {
+      "artifacts": [
+        {
+          "description": "Exact evaluated scope, comparison count, tolerances, and residual summary.",
+          "key": "selected_tree_equivalence",
+          "media_type": "application/json",
+          "path": "assets/equivalence.json",
+          "role": "diagnostic",
+          "sha256": "79e4068526cc262100a0fe23269413be7dc02cddf2e948cf63a8a2a86a932eb2",
+          "size_bytes": 1095,
+          "title": "Selected-tree equivalence JSON"
+        }
+      ],
+      "key": "upstream_equivalence",
+      "method": "field-by-field catalogue comparison",
+      "metrics": [
+        {
+          "description": "Mini-Millennium trees 1500–1599",
+          "key": "comparisons",
+          "label": "Field comparisons",
+          "unit": "",
+          "value": 9408
+        },
+        {
+          "description": "zero is required for a passing equivalence check",
+          "key": "mismatches",
+          "label": "Comparisons outside tolerance",
+          "unit": "",
+          "value": 0
+        }
+      ],
+      "notes": [
+        "This warning prevents a selected-tree pass from being presented as Mini-Millennium population equivalence."
+      ],
+      "status": "warning",
+      "summary": "The selected 100-tree control passes, but full-population equivalence is not yet established and the separate complex tree-0 gate retains one known mismatch.",
+      "title": "Upstream equivalence",
+      "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
+    },
+    {
+      "artifacts": [],
+      "key": "baryon_conservation",
+      "method": "controlled central source/sink ledger over 1, 2, 4, and 8 substeps",
+      "metrics": [
+        {
+          "description": "ledger delta minus explicit sources plus sinks",
+          "key": "maximum_absolute_residual",
+          "label": "Maximum absolute residual",
+          "unit": "1e10 Msun/h",
+          "value": 2.4372711777687073e-06
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "Baryon mass conservation satisfies the stated ledger tolerance.",
+      "title": "Baryon conservation",
+      "tolerance": "maximum absolute residual <= 3e-06 1e10 Msun/h"
+    },
+    {
+      "artifacts": [],
+      "key": "metal_conservation",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "A report-level Mini-Millennium metal ledger was not evaluated for this run.",
+      "title": "Metal conservation",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Values, validity mask, normalization, names, units, and derivative method.",
+          "key": "controlled_parameter_response",
+          "media_type": "application/x-npz",
+          "path": "assets/controlled_parameter_response.npz",
+          "role": "scientific_array",
+          "sha256": "3e9d54e449e489a115341b684c63bdd7f92abca0437d8749079aede3a0c53e40",
+          "size_bytes": 3557,
+          "title": "Controlled fractional parameter response arrays"
+        }
+      ],
+      "key": "parameter_responses",
+      "method": "jax.jacrev",
+      "metrics": [
+        {
+          "description": "out of 4 observable-parameter entries",
+          "key": "valid_entries",
+          "label": "Valid response entries",
+          "unit": "",
+          "value": 4
+        },
+        {
+          "description": "largest magnitude in the response matrix",
+          "key": "maximum_absolute_response",
+          "label": "Largest absolute fractional response",
+          "unit": "",
+          "value": 0.08887284622637333
+        },
+        {
+          "description": "symmetric multiplicative step 0.01",
+          "key": "best_fd_max_absolute_error",
+          "label": "Best finite-difference maximum absolute error",
+          "unit": "",
+          "value": 1.7483433584347674e-06
+        },
+        {
+          "description": "largest error across all tested perturbation sizes",
+          "key": "worst_fd_max_absolute_error",
+          "label": "Worst finite-difference maximum absolute error",
+          "unit": "",
+          "value": 4.631531789538179e-05
+        }
+      ],
+      "notes": [
+        "A 1% increase in `SfrEfficiency` decreases `final_cold_gas` by approximately 0.0889%.",
+        "A 1% increase in `FeedbackReheatingEpsilon` decreases `final_cold_gas` by approximately 0.0747%.",
+        "A 1% increase in `SfrEfficiency` increases `final_stellar_mass` by approximately 0.0612%.",
+        "A 1% increase in `FeedbackReheatingEpsilon` does not change `final_stellar_mass` by approximately 0%."
+      ],
+      "status": "passed",
+      "summary": "At least one tested symmetric finite-difference step agrees with automatic differentiation within the stated tolerance.",
+      "title": "Fractional parameter responses",
+      "tolerance": "best tested maximum absolute error <= 2e-05"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Substeps, observables, provisional errors, and empirical orders.",
+          "key": "controlled_timestep_refinement",
+          "media_type": "application/x-npz",
+          "path": "assets/controlled_timestep_refinement.npz",
+          "role": "scientific_array",
+          "sha256": "7a757783185f4d90bf505bdf36a36742be4a1886ffb42a03285a1a5b432ca656",
+          "size_bytes": 2200,
+          "title": "Controlled timestep-refinement arrays"
+        }
+      ],
+      "key": "timestep_refinement",
+      "method": "upstream_sequential",
+      "metrics": [
+        {
+          "description": "reported only for observables with nonzero finest values",
+          "key": "maximum_relative_difference",
+          "label": "Maximum coarsest-to-finest relative difference",
+          "unit": "",
+          "value": 0.3225990093927403
+        },
+        {
+          "description": "in the underlying observable units",
+          "key": "maximum_absolute_difference",
+          "label": "Maximum coarsest-to-finest absolute difference",
+          "unit": "",
+          "value": 0.6307525634765625
+        }
+      ],
+      "notes": [
+        "The finest requested run is a provisional reference, not an exact solution.",
+        "Halo forcing interpolation: `piecewise_constant`."
+      ],
+      "status": "not_evaluated",
+      "summary": "Timestep refinement was evaluated, but no acceptance threshold was supplied.",
+      "title": "Timestep refinement",
+      "tolerance": ""
+    }
+  ],
+  "identity": {
+    "dataset": "Mini-Millennium, selected trees 1500–1599",
+    "integration_method": "upstream_sequential, 10 configured substeps",
+    "model": "fiducial SAGE16",
+    "parameter_set": "sage16_mini-millennium fiducial",
+    "run_id": "mini-millennium-sage16-initial",
+    "summary": "This report combines familiar upstream MIMIC figures with the current selected-tree mimic-jax equivalence gate and controlled conservation, timestep, gradient, and performance diagnostics. It deliberately does not claim full-population equivalence.",
+    "title": "SAGE16 Mini-Millennium: initial mimic-jax run report"
+  },
+  "kind": "run",
+  "links": [
+    {
+      "target": "../../docs/reporting.md",
+      "title": "Report architecture"
+    },
+    {
+      "target": "../../docs/mimic_jax_scientific_program.md",
+      "title": "Scientific application program"
+    }
+  ],
+  "overview_metrics": [
+    {
+      "description": "",
+      "key": "trees",
+      "label": "Trees in selected gate",
+      "unit": "",
+      "value": 100
+    },
+    {
+      "description": "",
+      "key": "input_halos",
+      "label": "Input halos",
+      "unit": "",
+      "value": 2932
+    },
+    {
+      "description": "",
+      "key": "catalogue_records",
+      "label": "Catalogue records compared",
+      "unit": "",
+      "value": 224
+    },
+    {
+      "description": "",
+      "key": "cold_evolution_seconds",
+      "label": "First evolution call",
+      "unit": "s",
+      "value": 46.461243042
+    },
+    {
+      "description": "",
+      "key": "warm_evolution_seconds",
+      "label": "Best warm evolution call",
+      "unit": "s",
+      "value": 1.0160164159999994
+    },
+    {
+      "description": "",
+      "key": "backend",
+      "label": "JAX backend",
+      "unit": "",
+      "value": "cpu"
+    }
+  ],
+  "parameters": [
+    {
+      "description": "",
+      "name": "GlobalBaryonFraction",
+      "unit": "dimensionless",
+      "value": 0.17
+    },
+    {
+      "description": "",
+      "name": "SfrEfficiency",
+      "unit": "dimensionless",
+      "value": 0.05
+    },
+    {
+      "description": "",
+      "name": "StarFormingDiskFactor",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "",
+      "name": "FeedbackReheatingEpsilon",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "",
+      "name": "FeedbackEjectionEfficiency",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "",
+      "name": "ReIncorporationFactor",
+      "unit": "dimensionless",
+      "value": 0.15
+    },
+    {
+      "description": "",
+      "name": "AGNrecipe",
+      "unit": "dimensionless",
+      "value": 2
+    },
+    {
+      "description": "",
+      "name": "RadioModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.08
+    },
+    {
+      "description": "",
+      "name": "BlackHoleGrowthRate",
+      "unit": "dimensionless",
+      "value": 0.015
+    },
+    {
+      "description": "",
+      "name": "QuasarModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.005
+    },
+    {
+      "description": "",
+      "name": "RecycleFraction",
+      "unit": "dimensionless",
+      "value": 0.43
+    },
+    {
+      "description": "",
+      "name": "Yield",
+      "unit": "dimensionless",
+      "value": 0.025
+    },
+    {
+      "description": "",
+      "name": "FracZleaveDisk",
+      "unit": "dimensionless",
+      "value": 0.0
+    },
+    {
+      "description": "",
+      "name": "ThresholdMajorMerger",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "",
+      "name": "ThresholdSatDisruption",
+      "unit": "dimensionless",
+      "value": 1.0
+    }
+  ],
+  "provenance": {
+    "command": [
+      "mimic_venv/bin/python",
+      "examples/build_mini_millennium_report.py",
+      "--equivalence-json",
+      "benchmarks/mini-millennium-equivalence.json",
+      "--benchmark-json",
+      "benchmarks/mini-millennium-benchmark.json"
+    ],
+    "files": [
+      {
+        "path": "models/sage16/input/sage16_mini-millennium.yaml",
+        "role": "configuration",
+        "sha256": "9e1e5212817ee324a9c13e3b1faa86aec1b2979571c0655f070cd6c234e39cf1",
+        "size_bytes": 3747
+      },
+      {
+        "path": "simulations/mini-millennium/mini-millennium.a_list",
+        "role": "configuration",
+        "sha256": "2866412ae276939c625afef8a92a1da442fcc4bd8490dda191f38a0f5028164f",
+        "size_bytes": 577
+      },
+      {
+        "path": "output/sage16-mini-millennium/model.hdf5",
+        "role": "input",
+        "sha256": "13611c1bb0081abc543746599793255fd0bd6adde35a56a6672384b6d78de3b9",
+        "size_bytes": 177932
+      },
+      {
+        "path": "output/sage16-mini-millennium/metadata/version_info.json",
+        "role": "input",
+        "sha256": "62b52f374e61ab4ee9289ecfaf818b538ca7e0c30acee45f11b793263ac73237",
+        "size_bytes": 392
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_000.hdf5",
+        "role": "input",
+        "sha256": "5a379968075170672ba7a45b191f4527cde70a3ef4a5dac98e3bf3a4e8821e95",
+        "size_bytes": 7176983
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_001.hdf5",
+        "role": "input",
+        "sha256": "059d2243b37409da2e2399cd700b43509a98ba5efa3932e2d3972c839c17eda7",
+        "size_bytes": 6366807
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_002.hdf5",
+        "role": "input",
+        "sha256": "08c22c6ce8014da859fd3d8cee78a9337a942681b541da565893dae5c9b18060",
+        "size_bytes": 9322359
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_003.hdf5",
+        "role": "input",
+        "sha256": "2e1731d6a175cb8efbffdb01031a4fe2d733addccfccc6e1e83e194c414f72f7",
+        "size_bytes": 11976855
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_004.hdf5",
+        "role": "input",
+        "sha256": "cbd810a2b926fc89a0d9cf32a7a72a2bb9842cd9ded98810b8f08e65972fbb67",
+        "size_bytes": 6651415
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_005.hdf5",
+        "role": "input",
+        "sha256": "d2c1fbaee8e6d381ef5b0527ba34dd9ba4cc54e24548bb2fa806dea826ae84c9",
+        "size_bytes": 7189815
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_006.hdf5",
+        "role": "input",
+        "sha256": "5d1cc3180a87c1ad445bf28a16732dcd7002a2642f1175b64c09e411a9677041",
+        "size_bytes": 5846967
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_007.hdf5",
+        "role": "input",
+        "sha256": "18e810dc839da64e84bbb2439b22255f64819ba472f7af315d93b00c8a8443f7",
+        "size_bytes": 5856791
+      }
+    ],
+    "generated_at": "2026-08-18T09:08:43Z",
+    "git_branch": "main",
+    "git_commit": "56d9da55fa26c1433c74d3ae534eb5a6ccb808fb",
+    "git_dirty": false,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "PyYAML": "6.0.3",
+      "h5py": "3.14.0",
+      "jax": "0.4.30",
+      "jaxlib": "0.4.30",
+      "matplotlib": "3.9.4",
+      "numpy": "2.0.2",
+      "python": "3.9.6"
+    },
+    "upstream_run": {
+      "build_date": "Aug 18 2026",
+      "compiler": "gcc 4.2.1",
+      "git_branch": "main",
+      "git_commit": "0e8af407f1ee8fde83ea23103abba4e131072232",
+      "parameters": {
+        "file_path": "models/sage16/input/sage16_mini-millennium.yaml",
+        "parameter_md5_checksum": "3687eee7e3c9012562d0b57eefe98110"
+      },
+      "run_date": "2026-08-18T07:37:12Z",
+      "system": "macOS 26.6.1 arm64",
+      "user": "tabel"
+    }
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [
+        {
+          "description": "The familiar SAGE diagnostic is sourced from the upstream MIMIC catalogue. It is context, not a claim of full mimic-jax population equivalence.",
+          "key": "stellar_mass_function",
+          "media_type": "image/svg+xml",
+          "path": "assets/StellarMassFunction.svg",
+          "role": "figure",
+          "sha256": "00977af14ee279d74a0cc490f637858dd7f72eaf12be8e46b2b17f9396ee1caf",
+          "size_bytes": 55019,
+          "title": "Upstream MIMIC z=0 stellar mass function"
+        },
+        {
+          "description": "An existing model-local SAGE16 plot generated without report-specific logic.",
+          "key": "black_hole_bulge_relation",
+          "media_type": "image/svg+xml",
+          "path": "assets/BlackHoleBulgeRelation.svg",
+          "role": "figure",
+          "sha256": "1cca11a822629aa80d9e186e7ea5bafddb6fd7fdd447acea444474cd29481844",
+          "size_bytes": 992371,
+          "title": "Upstream MIMIC black-hole–bulge relation"
+        }
+      ],
+      "diagnostics": [],
+      "key": "familiar_science",
+      "links": [
+        {
+          "target": "../../plot/mimic-plot/README.md",
+          "title": "SAGE16 plotting manual"
+        }
+      ],
+      "notes": [],
+      "summary": "These figures come directly from the existing SAGE16 plot registry and the upstream MIMIC catalogue. They establish the practitioner-facing context before new diagnostics are introduced.",
+      "title": "Familiar SAGE science"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Exact evaluated scope, comparison count, tolerances, and residual summary.",
+              "key": "selected_tree_equivalence",
+              "media_type": "application/json",
+              "path": "assets/equivalence.json",
+              "role": "diagnostic",
+              "sha256": "79e4068526cc262100a0fe23269413be7dc02cddf2e948cf63a8a2a86a932eb2",
+              "size_bytes": 1095,
+              "title": "Selected-tree equivalence JSON"
+            }
+          ],
+          "key": "upstream_equivalence",
+          "method": "field-by-field catalogue comparison",
+          "metrics": [
+            {
+              "description": "Mini-Millennium trees 1500–1599",
+              "key": "comparisons",
+              "label": "Field comparisons",
+              "unit": "",
+              "value": 9408
+            },
+            {
+              "description": "zero is required for a passing equivalence check",
+              "key": "mismatches",
+              "label": "Comparisons outside tolerance",
+              "unit": "",
+              "value": 0
+            }
+          ],
+          "notes": [],
+          "status": "passed",
+          "summary": "All requested comparisons passed for Mini-Millennium trees 1500–1599.",
+          "title": "Upstream equivalence",
+          "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
+        }
+      ],
+      "key": "equivalence",
+      "links": [
+        {
+          "target": "../../docs/mini_millennium_equivalence.md",
+          "title": "Mini-Millennium equivalence evidence"
+        }
+      ],
+      "notes": [],
+      "summary": "The evaluated sample compares catalogue fields by `UniqueGalaxyID` over every configured output snapshot. Its scope is stated explicitly.",
+      "title": "What has been matched upstream?"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "baryon_conservation",
+          "method": "controlled central source/sink ledger over 1, 2, 4, and 8 substeps",
+          "metrics": [
+            {
+              "description": "ledger delta minus explicit sources plus sinks",
+              "key": "maximum_absolute_residual",
+              "label": "Maximum absolute residual",
+              "unit": "1e10 Msun/h",
+              "value": 2.4372711777687073e-06
+            }
+          ],
+          "notes": [],
+          "status": "passed",
+          "summary": "Baryon mass conservation satisfies the stated ledger tolerance.",
+          "title": "Baryon conservation",
+          "tolerance": "maximum absolute residual <= 3e-06 1e10 Msun/h"
+        },
+        {
+          "artifacts": [],
+          "key": "metal_conservation",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "not_evaluated",
+          "summary": "A report-level Mini-Millennium metal ledger was not evaluated for this run.",
+          "title": "Metal conservation",
+          "tolerance": ""
+        }
+      ],
+      "key": "conservation",
+      "links": [
+        {
+          "target": "../../docs/conservation.md",
+          "title": "Conservation contract"
+        }
+      ],
+      "notes": [],
+      "summary": "Executable ledgers make closed transfers and explicit sources or sinks visible. This first report includes a controlled baryon check only.",
+      "title": "Conservation"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Substeps, observables, provisional errors, and empirical orders.",
+              "key": "controlled_timestep_refinement",
+              "media_type": "application/x-npz",
+              "path": "assets/controlled_timestep_refinement.npz",
+              "role": "scientific_array",
+              "sha256": "7a757783185f4d90bf505bdf36a36742be4a1886ffb42a03285a1a5b432ca656",
+              "size_bytes": 2200,
+              "title": "Controlled timestep-refinement arrays"
+            }
+          ],
+          "key": "timestep_refinement",
+          "method": "upstream_sequential",
+          "metrics": [
+            {
+              "description": "reported only for observables with nonzero finest values",
+              "key": "maximum_relative_difference",
+              "label": "Maximum coarsest-to-finest relative difference",
+              "unit": "",
+              "value": 0.3225990093927403
+            },
+            {
+              "description": "in the underlying observable units",
+              "key": "maximum_absolute_difference",
+              "label": "Maximum coarsest-to-finest absolute difference",
+              "unit": "",
+              "value": 0.6307525634765625
+            }
+          ],
+          "notes": [
+            "The finest requested run is a provisional reference, not an exact solution.",
+            "Halo forcing interpolation: `piecewise_constant`."
+          ],
+          "status": "not_evaluated",
+          "summary": "Timestep refinement was evaluated, but no acceptance threshold was supplied.",
+          "title": "Timestep refinement",
+          "tolerance": ""
+        }
+      ],
+      "key": "numerical_integration",
+      "links": [
+        {
+          "target": "../../docs/numerical_integration.md",
+          "title": "Numerical integration contract"
+        }
+      ],
+      "notes": [],
+      "summary": "The faithful upstream-sequential method is refined on a controlled fixed-forcing central. This is API evidence, not Mini-Millennium convergence.",
+      "title": "Numerical integration"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Values, validity mask, normalization, names, units, and derivative method.",
+              "key": "controlled_parameter_response",
+              "media_type": "application/x-npz",
+              "path": "assets/controlled_parameter_response.npz",
+              "role": "scientific_array",
+              "sha256": "3e9d54e449e489a115341b684c63bdd7f92abca0437d8749079aede3a0c53e40",
+              "size_bytes": 3557,
+              "title": "Controlled fractional parameter response arrays"
+            }
+          ],
+          "key": "parameter_responses",
+          "method": "jax.jacrev",
+          "metrics": [
+            {
+              "description": "out of 4 observable-parameter entries",
+              "key": "valid_entries",
+              "label": "Valid response entries",
+              "unit": "",
+              "value": 4
+            },
+            {
+              "description": "largest magnitude in the response matrix",
+              "key": "maximum_absolute_response",
+              "label": "Largest absolute fractional response",
+              "unit": "",
+              "value": 0.08887284622637333
+            },
+            {
+              "description": "symmetric multiplicative step 0.01",
+              "key": "best_fd_max_absolute_error",
+              "label": "Best finite-difference maximum absolute error",
+              "unit": "",
+              "value": 1.7483433584347674e-06
+            },
+            {
+              "description": "largest error across all tested perturbation sizes",
+              "key": "worst_fd_max_absolute_error",
+              "label": "Worst finite-difference maximum absolute error",
+              "unit": "",
+              "value": 4.631531789538179e-05
+            }
+          ],
+          "notes": [
+            "A 1% increase in `SfrEfficiency` decreases `final_cold_gas` by approximately 0.0889%.",
+            "A 1% increase in `FeedbackReheatingEpsilon` decreases `final_cold_gas` by approximately 0.0747%.",
+            "A 1% increase in `SfrEfficiency` increases `final_stellar_mass` by approximately 0.0612%.",
+            "A 1% increase in `FeedbackReheatingEpsilon` does not change `final_stellar_mass` by approximately 0%."
+          ],
+          "status": "passed",
+          "summary": "At least one tested symmetric finite-difference step agrees with automatic differentiation within the stated tolerance.",
+          "title": "Fractional parameter responses",
+          "tolerance": "best tested maximum absolute error <= 2e-05"
+        }
+      ],
+      "key": "parameter_responses",
+      "links": [
+        {
+          "target": "../../docs/sensitivity.md",
+          "title": "Fractional-response API"
+        }
+      ],
+      "notes": [],
+      "summary": "The first validated derivative is shown as a fractional response: percentage change in the observable per 1% parameter change. The example is a controlled quiescent disk step, not a population response.",
+      "title": "How does familiar SAGE physics change the result?"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Cold/warm timing, backend, device, memory, shapes, and catalogue digest.",
+              "key": "partition_benchmark",
+              "media_type": "application/json",
+              "path": "assets/benchmark.json",
+              "role": "benchmark",
+              "sha256": "e9213b8640d8a55312cef456263b90028c4b4b28288c0acaff217b206242938c",
+              "size_bytes": 1539,
+              "title": "Selected-tree benchmark JSON"
+            }
+          ],
+          "key": "performance",
+          "method": "wall-clock benchmark",
+          "metrics": [
+            {
+              "description": "includes cold compilation and execution in this benchmark process",
+              "key": "first_evolution_seconds",
+              "label": "First evolution time",
+              "unit": "s",
+              "value": 46.461243042
+            },
+            {
+              "description": "best repeat after the first invocation",
+              "key": "best_warm_evolution_seconds",
+              "label": "Best warm evolution time",
+              "unit": "s",
+              "value": 1.0160164159999994
+            },
+            {
+              "description": "",
+              "key": "tree_count",
+              "label": "Trees",
+              "unit": "",
+              "value": 100
+            },
+            {
+              "description": "",
+              "key": "input_halos",
+              "label": "Input halos",
+              "unit": "",
+              "value": 2932
+            }
+          ],
+          "notes": [
+            "Compilation cost and warmed execution are reported separately."
+          ],
+          "status": "warning",
+          "summary": "Warmed execution is much faster than the first call, but the cold catalogue path is currently much slower than upstream MIMIC; no JAX speedup is claimed.",
+          "title": "Performance",
+          "tolerance": ""
+        }
+      ],
+      "key": "performance",
+      "links": [
+        {
+          "target": "../../docs/performance.md",
+          "title": "Current performance evidence"
+        }
+      ],
+      "notes": [],
+      "summary": "Compilation, first execution, warmed execution, host work, catalogue conversion, and memory are kept distinct.",
+      "title": "Performance"
+    }
+  ]
+}

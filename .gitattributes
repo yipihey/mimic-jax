@@ -1,0 +1,3 @@
+# Matplotlib SVG files are generated scientific figures. Treat them as assets so
+# Git does not apply source-code whitespace checks or produce unusable line diffs.
+reports/**/*.svg binary

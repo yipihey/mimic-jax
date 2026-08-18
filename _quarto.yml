@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.md
+    - reports/*/index.md
+    - docs/reporting.md
+    - docs/mini_millennium_equivalence.md
+    - docs/conservation.md
+    - docs/numerical_integration.md
+    - docs/sensitivity.md
+    - docs/performance.md
+    - docs/mimic_jax_scientific_program.md
+    - plot/mimic-plot/README.md
+  resources:
+    - reports/**/*.json
+    - reports/**/assets/**
+
+website:
+  title: "mimic-jax reports"
+  site-url: https://yipihey.github.io/mimic-jax/
+  repo-url: https://github.com/yipihey/mimic-jax
+  repo-actions: [source, issue]
+  navbar:
+    left:
+      - href: index.md
+        text: Reports
+      - href: docs/reporting.md
+        text: Report design
+      - href: docs/mini_millennium_equivalence.md
+        text: Equivalence
+      - href: docs/sensitivity.md
+        text: Fractional responses
+      - href: docs/numerical_integration.md
+        text: Numerics
+  page-footer:
+    left: "Faithful, differentiable SAGE16 diagnostics"
+    right: "Built from durable Markdown reports"
+
+execute:
+  enabled: false
+
+format:
+  html:
+    theme: cosmo
+    css: reports/styles.css
+    toc: true
+    code-copy: true
+    link-external-newwindow: true

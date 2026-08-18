@@ -1,0 +1,41 @@
+:root {
+  --mimic-ink: #16242f;
+  --mimic-blue: #276b8f;
+  --mimic-gold: #d69e2e;
+  --mimic-paper: #f7f9fa;
+}
+
+body {
+  color: var(--mimic-ink);
+}
+
+.navbar {
+  border-bottom: 3px solid var(--mimic-blue);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--mimic-ink);
+}
+
+h2 {
+  border-bottom: 1px solid #d9e2e8;
+  padding-bottom: 0.3rem;
+}
+
+table {
+  font-size: 0.94rem;
+}
+
+blockquote {
+  background: var(--mimic-paper);
+  border-left-color: var(--mimic-gold);
+}
+
+img {
+  background: white;
+  border: 1px solid #d9e2e8;
+  border-radius: 0.35rem;
+  padding: 0.4rem;
+}
