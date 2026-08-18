@@ -23,6 +23,7 @@ mimic-jax keeps upstream SAGE16 prescriptions recognizable and separates two que
 | Quasar mode | [`sage_quasar_mode.c`](../models/sage16/modules/sage_quasar_mode/sage_quasar_mode.c) | `QuasarModeTransfer` | cold gas to BH, then thresholded cold/hot gas and metals to ejected gas |
 | Collisional starburst | [`sage_starburst_feedback.c`](../models/sage16/modules/sage_starburst_feedback/sage_starburst_feedback.c) | `StarburstTransfer` | cold gas to bulge stars, central hot/ejected gas, and immediate new-metal source |
 | Disk-SF enrichment | [`sage_apply_metal_enrichment.c`](../models/sage16/modules/sage_apply_metal_enrichment/sage_apply_metal_enrichment.c) | `MetalEnrichmentTransfer` | explicit new-metal source to cold/hot gas |
+| Merger/disruption resolution | [`sage_resolve_mergers_and_disruption.c`](../models/sage16/modules/sage_resolve_mergers_and_disruption/sage_resolve_mergers_and_disruption.c) | `MergerOwnershipTransfer` plus immediate consumer transfers | live ordered ownership changes, disruption BH sink, and discrete event history |
 
 For quiescent star formation, SAGE uses `r_eff = StarFormingDiskFactor * DiskScaleRadius`, `M_cold,crit = 0.19 V_vir r_eff`, and `dot(M)_star = SfrEfficiency (M_cold - M_cold,crit) / (r_eff / V_vir)` above the threshold. The calculated finite-substep stellar mass is then passed to SN feedback, which renormalizes star formation and reheating together if their sum exceeds the available cold gas. mimic-jax preserves that calculation/apply order and the intermediate double-precision budgets.
 
@@ -49,3 +50,5 @@ Shared-central ownership, galaxy-major ordering, and the exact substep dependenc
 The structural trigger, quasar wind, burst feedback, and delayed-yield ordering are documented in [`disk_instability_quasar_starburst.md`](disk_instability_quasar_starburst.md).
 
 Pre-timestep disk structure, clock sentinels, and dynamical-friction timing are documented in [`disk_radius_and_merger_clock.md`](disk_radius_and_merger_clock.md).
+
+Live event ordering, ownership maps, disruption sinks, and immediate consumers are documented in [`mergers_and_disruption.md`](mergers_and_disruption.md).

@@ -1,5 +1,7 @@
 """Explicit finite-time transfer records emitted by SAGE16 process kernels."""
 
+from __future__ import annotations
+
 from typing import Any, NamedTuple
 
 from mimic_jax.sage16.types import GalaxyState
@@ -108,6 +110,57 @@ class MergerClockDiagnostics(NamedTuple):
 class MergerClockResult(NamedTuple):
     states: GalaxyState
     diagnostics: MergerClockDiagnostics
+
+
+class MergerOwnershipTransfer(NamedTuple):
+    """Reservoir destinations for one merger or disruption ownership change."""
+
+    cold_to_cold: Array
+    cold_to_hot: Array
+    hot_to_hot: Array
+    ejected_to_ejected: Array
+    stellar_to_stellar: Array
+    stellar_to_ics: Array
+    ics_to_ics: Array
+    black_hole_to_black_hole: Array
+    black_hole_sink: Array
+    cold_metals_to_cold: Array
+    cold_metals_to_hot: Array
+    hot_metals_to_hot: Array
+    ejected_metals_to_ejected: Array
+    stellar_metals_to_stellar: Array
+    stellar_metals_to_ics: Array
+    ics_metals_to_ics: Array
+    stellar_to_bulge_component: Array
+    stellar_metals_to_bulge_component: Array
+
+
+class MergerResolutionDiagnostics(NamedTuple):
+    """Per-source decisions and immediate event-consumer transfers."""
+
+    action: Array
+    error: Array
+    status: Array
+    target_index: Array
+    eligible: Array
+    current_mvir: Array
+    virial_to_baryons: Array
+    mass_ratio: Array
+    source_dt: Array
+    source_time: Array
+    ownership: MergerOwnershipTransfer
+    merger_quasar: QuasarModeTransfer
+    merger_starburst: StarburstTransfer
+    post_instability: DiskInstabilityTransfer
+    post_quasar: QuasarModeTransfer
+    post_starburst: StarburstTransfer
+
+
+class MergerResolutionResult(NamedTuple):
+    states: GalaxyState
+    halos: Any
+    diagnostics: MergerResolutionDiagnostics
+    success: Array
 
 
 class DiskInstabilityTransfer(NamedTuple):

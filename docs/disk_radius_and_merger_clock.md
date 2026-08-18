@@ -37,6 +37,6 @@ The clock calculation moves no mass or metals. Its formula is smooth on a fixed 
 
 The compiled C oracle exercises a Type-0 disk radius and a four-member group containing a reset central, initialized Type-1 satellite, immediate Type-2 orphan, and skipped Type-3 entry. All five controlled fields match exactly. Python tests additionally cover the float fallback, frozen satellite radius, JIT/VMAP execution, a halo-spin gradient, under-resolved immediate clocks, the `998.0` ceiling, and the no-central behavior.
 
-This is pre-timestep process equivalence, not yet merger-event, full-tree, or Mini-Millennium equivalence. Clock decrement, disruption/merger selection, event payloads, immediate quasar/starburst consumers, and descendant inheritance remain separate ordered maps.
+This is pre-timestep process equivalence, not full-tree or Mini-Millennium equivalence. Clock decrement, disruption/merger selection, event payloads, and immediate quasar/starburst consumers are implemented as the separate ordered map in [`mergers_and_disruption.md`](mergers_and_disruption.md); descendant inheritance and complete tree orchestration remain outstanding.
 
 Current code: [`disk_radius.py`](../mimic_jax/sage16/processes/disk_radius.py) and [`merger_clock.py`](../mimic_jax/sage16/processes/merger_clock.py). Tests: [`test_disk_radius_merger_clock.py`](../tests/mimic_jax/test_disk_radius_merger_clock.py).

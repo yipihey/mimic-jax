@@ -1,6 +1,6 @@
 # Mimic-JAX Initial SAGE16 Implementation Plan
 
-**Status:** Active fork-local implementation plan; all non-merger-event galaxy-physics slices implemented and process-gated 2026-08-18.
+**Status:** Active fork-local implementation plan; all fiducial process modules and the isolated merger-event phase implemented and process-gated 2026-08-18.
 **Baseline:** MIMIC `69590cc60dcb7b8b6510ee0b16b1ed921a6c4853` (the fork and upstream were identical when this plan was written).
 **Scope:** An additive JAX physics package; no changes to MIMIC's C core, model metadata, tree readers, or runtime module ABI.
 
@@ -34,11 +34,11 @@ The controlled central slice now exposes piecewise-constant halo forcing with in
 
 ## Deferred Fidelity Work
 
-The Sutherland-Dopita cooling table/budget, fiducial Bondi radio-mode heating, reionization, group infall preparation, disk-radius setup, merger-clock initialization, signed infall application, shared-central Type-1 satellite stripping, disk instability, disk-triggered quasar mode, collisional starburst, and correctly delayed disk enrichment are now implemented. The next slice is clock decrement and the ordered merger/disruption event map, including merger-triggered quasar/starburst consumers and tree inheritance. Full-tree and final-catalogue equivalence is not claimed until that event path and the C tree interface are present.
+The Sutherland-Dopita cooling table/budget, fiducial Bondi radio-mode heating, reionization, group infall preparation, disk-radius setup, merger-clock initialization, signed infall application, shared-central Type-1 satellite stripping, disk instability, disk-triggered quasar mode, collisional starburst, correctly delayed disk enrichment, clock decrement, and the ordered merger/disruption event map with immediate consumers are now implemented. The next slice is tree inheritance and the complete group/timestep orchestration that interleaves shared-central galaxy-major writes with the event phase. Full-tree and final-catalogue equivalence is not claimed until that driver and the C tree interface are present.
 
 ## Initial Milestone Evidence
 
-The executable oracle now compares 101 fields from reionization/infall, disk-radius and merger-clock setup, satellite stripping, cooling-table, cooling-budget/radio-mode/application, reincorporation, quiescent SF/SN, disk instability, quasar mode, starburst feedback, delayed enrichment, and a composed post-quiescent chain. Ninety-four controlled CPU fields are exact; cooling-budget and composed radio-mode fields use `rtol=1e-13`, while the FoF group infall sum uses `rtol=1e-15`, all with `atol=0`. Python tests additionally cover disk-radius precision and satellite freezing; clock sentinel, ceiling, and particle-floor behavior; group ownership transfer; stripping's geometric substep dependence; signed source/sink ledgers and derivatives; quasar/starburst conservation and fractional responses; exact sequential scan; substep refinement metadata; positivity; and derivative-level baryon conservation. These are process-level results, not full-tree or Mini-Millennium equivalence.
+The executable oracle now compares 124 fields from reionization/infall, disk-radius and merger-clock setup, satellite stripping, cooling-table, cooling-budget/radio-mode/application, reincorporation, quiescent SF/SN, disk instability, quasar mode, starburst feedback, delayed enrichment, the composed post-quiescent chain, and a disruption-plus-merger event chain. One hundred seventeen controlled CPU fields are exact; cooling-budget and composed radio-mode fields use `rtol=1e-13`, while the FoF group infall sum uses `rtol=1e-15`, all with `atol=0`. Python tests additionally cover disk-radius precision and satellite freezing; clock sentinel, ceiling, and particle-floor behavior; live event order and target redirection; ownership transfer and the explicit disruption BH sink; group conservation and its derivative; stripping's geometric substep dependence; signed source/sink ledgers and derivatives; quasar/starburst conservation and fractional responses; exact sequential scan; substep refinement metadata; and positivity. These are process-level results, not full-tree or Mini-Millennium equivalence.
 
 ## Gates
 

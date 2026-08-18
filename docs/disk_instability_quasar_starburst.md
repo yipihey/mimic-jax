@@ -46,7 +46,7 @@ For each galaxy in the fiducial galaxy-major pass, the post-cooling portion is
 
 Delaying the quiescent yield matters: quasar accretion/winds and the burst see the pre-yield metallicities, while the disk yield is deposited into whatever cold/hot reservoirs remain afterward. The compiled oracle includes a composed case specifically to guard this order.
 
-Merger-triggered calls use the same quasar and starburst kernels, but their ordered event dispatch and post-minor-merger instability recheck remain part of the next merger/event milestone.
+Merger-triggered calls use the same quasar and starburst kernels. Their immediate dispatch and post-minor-merger instability recheck are now composed by the ordered event map documented in [`mergers_and_disruption.md`](mergers_and_disruption.md).
 
 ## Conservation, differentiation, and evidence
 

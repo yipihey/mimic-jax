@@ -1,6 +1,11 @@
 """Fiducial SAGE16 state, parameters, transfers, and physics kernels."""
 
-from mimic_jax.sage16.conservation import baryonic_mass, metal_mass
+from mimic_jax.sage16.conservation import (
+    active_group_baryonic_mass,
+    active_group_metal_mass,
+    baryonic_mass,
+    metal_mass,
+)
 from mimic_jax.sage16.cooling_tables import (
     CoolingTables,
     load_cooling_tables,
@@ -40,6 +45,7 @@ from mimic_jax.sage16.processes import (
     prepare_infall_budget,
     quiescent_disk_step,
     reionization_modifier,
+    resolve_mergers_and_disruption,
     set_disk_scale_radius,
 )
 from mimic_jax.sage16.transfers import (
@@ -57,6 +63,9 @@ from mimic_jax.sage16.transfers import (
     InfallTransfer,
     MergerClockDiagnostics,
     MergerClockResult,
+    MergerOwnershipTransfer,
+    MergerResolutionDiagnostics,
+    MergerResolutionResult,
     MetalEnrichmentTransfer,
     QuasarModeResult,
     QuasarModeTransfer,
@@ -109,6 +118,9 @@ __all__ = [
     "MetalEnrichmentTransfer",
     "MergerClockDiagnostics",
     "MergerClockResult",
+    "MergerOwnershipTransfer",
+    "MergerResolutionDiagnostics",
+    "MergerResolutionResult",
     "QuiescentStepResult",
     "QuasarModeResult",
     "QuasarModeTransfer",
@@ -139,6 +151,8 @@ __all__ = [
     "apply_satellite_stripping",
     "apply_radio_mode_heating",
     "apply_star_formation_supernova",
+    "active_group_baryonic_mass",
+    "active_group_metal_mass",
     "baryonic_mass",
     "calculate_star_formation_budget",
     "calculate_cooling_budget",
@@ -158,6 +172,7 @@ __all__ = [
     "process_perturbations",
     "quiescent_disk_step",
     "reionization_modifier",
+    "resolve_mergers_and_disruption",
     "sage16_units",
     "set_disk_scale_radius",
     "step_context",

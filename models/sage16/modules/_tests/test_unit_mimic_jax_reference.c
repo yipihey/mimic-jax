@@ -15,6 +15,7 @@
 #include "include/globals.h"
 #include "include/proto.h"
 #include "include/types.h"
+#include "module_system/generated/event_contracts.h"
 #include "../sage_calculate_cooling_budget/cooling_tables.h"
 #include "util/error.h"
 #include "util/memory.h"
@@ -44,6 +45,10 @@ extern int sage_initialise_merger_clock_init(void);
 extern int sage_initialise_merger_clock_process(struct ModuleContext *ctx, struct Halo *halos,
                                                 int ngal);
 extern int sage_initialise_merger_clock_cleanup(void);
+extern int sage_resolve_mergers_and_disruption_init(void);
+extern int sage_resolve_mergers_and_disruption_process(struct ModuleContext *ctx,
+                                                       struct Halo *halos, int ngal);
+extern int sage_resolve_mergers_and_disruption_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
@@ -111,6 +116,7 @@ static void configure_fiducial_slice(void) {
   add_parameter("Yield", "0.025");
   add_parameter("FracZleaveDisk", "0.0");
   add_parameter("ThresholdMajorMerger", "0.3");
+  add_parameter("ThresholdSatDisruption", "1.0");
 
   test_pre_timestep_add("sage_reionization", PROCESSING_MODE_FULL_HALO);
   test_pre_timestep_add("sage_prepare_infall_budget", PROCESSING_MODE_FULL_HALO);
@@ -130,6 +136,10 @@ static void configure_fiducial_slice(void) {
   test_phase_add("galaxy_physics", "sage_quasar_mode", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_starburst_feedback", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_metal_enrichment", PROCESSING_MODE_BY_GALAXY);
+  test_phase_add("satellite_mergers", "sage_resolve_mergers_and_disruption",
+                 PROCESSING_MODE_FULL_HALO);
+  test_phase_add("satellite_mergers", "sage_quasar_mode", PROCESSING_MODE_PER_EVENT);
+  test_phase_add("satellite_mergers", "sage_starburst_feedback", PROCESSING_MODE_PER_EVENT);
 }
 
 static void setup_halo(struct Halo *halo, struct GalaxyData *galaxy, double mvir, double rvir,
@@ -178,6 +188,8 @@ static int test_emit_reference_cases(void) {
   TEST_ASSERT(sage_disk_instability_init() == 0, "Disk-instability init should succeed");
   TEST_ASSERT(sage_set_disk_scale_radius_init() == 0, "Disk-radius init should succeed");
   TEST_ASSERT(sage_initialise_merger_clock_init() == 0, "Merger-clock init should succeed");
+  TEST_ASSERT(sage_resolve_mergers_and_disruption_init() == 0,
+              "Merger resolver init should succeed");
   TEST_ASSERT(sage_quasar_mode_init() == 0, "Quasar-mode init should succeed");
   TEST_ASSERT(sage_starburst_feedback_init() == 0, "Starburst init should succeed");
   TEST_ASSERT(sage_apply_metal_enrichment_init() == 0, "Metal enrichment init should succeed");
@@ -238,6 +250,112 @@ static int test_emit_reference_cases(void) {
          "SatelliteMergTime=%.17g OrphanMergTime=%.17g Type3MergTime=%.17g\n",
          (double)clock_galaxies[0].MergTime, (double)clock_galaxies[1].MergTime,
          (double)clock_galaxies[2].MergTime, (double)clock_galaxies[3].MergTime);
+
+  struct Halo event_halos[3];
+  struct GalaxyData event_galaxies[3];
+  setup_halo(&event_halos[0], &event_galaxies[0], 100.0, 0.2, 300.0, 0.1);
+  setup_halo(&event_halos[1], &event_galaxies[1], 2.0, 0.1, 100.0, 0.1);
+  setup_halo(&event_halos[2], &event_galaxies[2], 1.0, 0.1, 100.0, 0.1);
+  event_halos[0].Len = 1000;
+  event_halos[0].Vmax = 300.0f;
+  event_halos[1].Type = 1;
+  event_halos[1].CentralHalo = 0;
+  event_halos[1].Len = 20;
+  event_halos[1].Vmax = 100.0f;
+  event_halos[2].Type = 1;
+  event_halos[2].CentralHalo = 0;
+  event_halos[2].Len = 20;
+  event_halos[2].Vmax = 100.0f;
+
+  event_galaxies[0].MergTime = 999.9f;
+  event_galaxies[0].ColdGas = 10.0f;
+  event_galaxies[0].HotGas = 5.0f;
+  event_galaxies[0].EjectedGas = 1.0f;
+  event_galaxies[0].StellarMass = 10.0f;
+  event_galaxies[0].BulgeMass = 2.0f;
+  event_galaxies[0].ICS = 0.5f;
+  event_galaxies[0].BlackHoleMass = 0.01f;
+  event_galaxies[0].MetalsColdGas = 0.2f;
+  event_galaxies[0].MetalsHotGas = 0.1f;
+  event_galaxies[0].MetalsEjectedGas = 0.02f;
+  event_galaxies[0].MetalsStellarMass = 0.2f;
+  event_galaxies[0].MetalsBulgeMass = 0.04f;
+  event_galaxies[0].MetalsICS = 0.01f;
+  event_galaxies[0].DiskScaleRadius = 0.0001f;
+  event_galaxies[0].TimeOfLastMajorMerger = -1.0f;
+  event_galaxies[0].TimeOfLastMinorMerger = -1.0f;
+
+  event_galaxies[1].MergTime = 0.4f;
+  event_galaxies[1].ColdGas = 1.0f;
+  event_galaxies[1].HotGas = 1.0f;
+  event_galaxies[1].EjectedGas = 0.2f;
+  event_galaxies[1].StellarMass = 1.0f;
+  event_galaxies[1].BulgeMass = 0.2f;
+  event_galaxies[1].ICS = 0.1f;
+  event_galaxies[1].BlackHoleMass = 0.03f;
+  event_galaxies[1].MetalsColdGas = 0.02f;
+  event_galaxies[1].MetalsHotGas = 0.02f;
+  event_galaxies[1].MetalsEjectedGas = 0.004f;
+  event_galaxies[1].MetalsStellarMass = 0.02f;
+  event_galaxies[1].MetalsBulgeMass = 0.004f;
+  event_galaxies[1].MetalsICS = 0.002f;
+
+  event_galaxies[2].MergTime = -0.1f;
+  event_galaxies[2].ColdGas = 1.0f;
+  event_galaxies[2].HotGas = 0.5f;
+  event_galaxies[2].EjectedGas = 0.1f;
+  event_galaxies[2].StellarMass = 2.0f;
+  event_galaxies[2].BulgeMass = 0.3f;
+  event_galaxies[2].ICS = 0.05f;
+  event_galaxies[2].BlackHoleMass = 0.02f;
+  event_galaxies[2].MetalsColdGas = 0.02f;
+  event_galaxies[2].MetalsHotGas = 0.01f;
+  event_galaxies[2].MetalsEjectedGas = 0.002f;
+  event_galaxies[2].MetalsStellarMass = 0.04f;
+  event_galaxies[2].MetalsBulgeMass = 0.006f;
+  event_galaxies[2].MetalsICS = 0.001f;
+
+  setup_context(&context, &event_halos[0], 1);
+  TEST_ASSERT(sage_resolve_mergers_and_disruption_process(&context, event_halos, 3) == 0,
+              "Merger/disruption reference case should succeed");
+
+  const struct ModuleEvent controlled_merger_event = {
+      .producer_module_id = MODULE_ID_SAGE_RESOLVE_MERGERS_AND_DISRUPTION,
+      .event_id = SAGE_RESOLVE_MERGERS_AND_DISRUPTION_EVENT_MERGER,
+      .source_index = 2,
+      .target_index = 0,
+      .value0 = 0.15,
+      .value1 = 0.1,
+  };
+  context.active_event = &controlled_merger_event;
+  TEST_ASSERT(sage_quasar_mode_process(&context, &event_halos[0], 1) == 0,
+              "Merger quasar consumer reference case should succeed");
+  TEST_ASSERT(sage_starburst_feedback_process(&context, &event_halos[0], 1) == 0,
+              "Merger starburst consumer reference case should succeed");
+  context.active_event = NULL;
+
+  printf("MIMIC_JAX_REFERENCE case=merger_event CentralColdGas=%.17g CentralHotGas=%.17g "
+         "CentralEjectedGas=%.17g CentralStellarMass=%.17g CentralBulgeMass=%.17g "
+         "CentralICS=%.17g CentralBlackHoleMass=%.17g CentralMetalsColdGas=%.17g "
+         "CentralMetalsHotGas=%.17g CentralMetalsEjectedGas=%.17g "
+         "CentralMetalsStellarMass=%.17g CentralMetalsBulgeMass=%.17g "
+         "CentralMetalsICS=%.17g CentralQuasarAccretion=%.17g CentralSFR=%.17g "
+         "CentralOutflowRate=%.17g CentralUnstableFraction=%.17g LastMinor=%.17g "
+         "LastMajor=%.17g DisruptedType=%.17g MergedType=%.17g "
+         "DisruptedClock=%.17g MergedClock=%.17g\n",
+         (double)event_galaxies[0].ColdGas, (double)event_galaxies[0].HotGas,
+         (double)event_galaxies[0].EjectedGas, (double)event_galaxies[0].StellarMass,
+         (double)event_galaxies[0].BulgeMass, (double)event_galaxies[0].ICS,
+         (double)event_galaxies[0].BlackHoleMass, (double)event_galaxies[0].MetalsColdGas,
+         (double)event_galaxies[0].MetalsHotGas, (double)event_galaxies[0].MetalsEjectedGas,
+         (double)event_galaxies[0].MetalsStellarMass, (double)event_galaxies[0].MetalsBulgeMass,
+         (double)event_galaxies[0].MetalsICS, (double)event_galaxies[0].QuasarModeBHaccretionMass,
+         (double)event_galaxies[0].StarFormationRate,
+         (double)event_galaxies[0].SupernovaOutflowRate, event_galaxies[0].UnstableDiskGasFraction,
+         (double)event_galaxies[0].TimeOfLastMinorMerger,
+         (double)event_galaxies[0].TimeOfLastMajorMerger, (double)event_halos[1].Type,
+         (double)event_halos[2].Type, (double)event_galaxies[1].MergTime,
+         (double)event_galaxies[2].MergTime);
 
   struct Halo infall_halos[2];
   struct GalaxyData infall_galaxies[2];
@@ -506,6 +624,7 @@ static int test_emit_reference_cases(void) {
          (double)galaxy.SupernovaOutflowRate, (double)galaxy.QuasarModeBHaccretionMass);
 
   sage_apply_metal_enrichment_cleanup();
+  sage_resolve_mergers_and_disruption_cleanup();
   sage_initialise_merger_clock_cleanup();
   sage_set_disk_scale_radius_cleanup();
   sage_starburst_feedback_cleanup();
