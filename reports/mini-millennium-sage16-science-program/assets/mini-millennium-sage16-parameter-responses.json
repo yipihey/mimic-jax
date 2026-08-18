@@ -1,0 +1,50 @@
+{
+  "arrays": "mini-millennium-sage16-parameter-responses.npz",
+  "backend": "cpu",
+  "convergence_tree_count": 0,
+  "findings": {
+    "dominant_parameter_by_resolved_bin": {
+      "BlackHoleGrowthRate": 0,
+      "FeedbackEjectionEfficiency": 6,
+      "FeedbackReheatingEpsilon": 6,
+      "QuasarModeEfficiency": 0,
+      "RadioModeEfficiency": 0,
+      "ReIncorporationFactor": 15,
+      "SfrEfficiency": 5
+    },
+    "largest_absolute_parameter_response": 4.276342026718439,
+    "maximum_soft_vs_hard_fractional_difference": 0.14170591646077127,
+    "median_soft_vs_hard_fractional_difference": 0.03852822250368962
+  },
+  "history_evolution_seconds": null,
+  "input_halos": 151216,
+  "jax_version": "0.4.30",
+  "num_substeps": 10,
+  "parameter_batch_seconds": 401.26417686700034,
+  "parameter_derivative_method": "jax.linearize forward chain rule",
+  "parameter_evolution_seconds": 433.333007833,
+  "parameter_names": [
+    "SfrEfficiency",
+    "FeedbackReheatingEpsilon",
+    "FeedbackEjectionEfficiency",
+    "ReIncorporationFactor",
+    "RadioModeEfficiency",
+    "BlackHoleGrowthRate",
+    "QuasarModeEfficiency"
+  ],
+  "peak_resident_bytes": 22767828992,
+  "process_derivative_method": "not evaluated",
+  "process_names": [],
+  "records": 3595,
+  "schema_version": "mimic-jax-mini-millennium-science-program/v1",
+  "smf_estimator": {
+    "bandwidth_dex": 0.05,
+    "hard_bin_width_dex": 0.09999999999999964,
+    "kind": "Gaussian-CDF finite-volume estimator"
+  },
+  "snapshot": 63,
+  "tree_count": 2864,
+  "tree_end": 2864,
+  "tree_file": "simulations/mini-millennium/snapshots/trees_063.1",
+  "tree_start": 0
+}

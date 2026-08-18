@@ -162,6 +162,12 @@ detection, target identity, and major/minor classification remain discrete.
 For a fixed merger event, reverse sensitivities can branch to both progenitors
 without pretending that topology is continuous.
 
+## Adaptive integration respects the hybrid boundary
+
+`integrate_sage16_hybrid_flow_adaptive` applies embedded Dormand–Prince 5(4) error control only to the continuous RHS between externally fixed boundaries. The controller also limits the step using a tolerance-scaled state Jacobian. It deliberately leaves the `Rheat` monotone projection, disk instability, quasar/starburst maps, forcing changes, and topology events to the caller's physical schedule; evaluating those maps at rejected or intermediate Runge–Kutta stages would define a different model.
+
+On 27 branch-smooth fixed-forcing intervals drawn from 64 Mini-Millennium trees, all tested tolerances from `1e-3` through `1e-9` complete successfully. At `rtol=1e-7`, the median/maximum reservoir errors against a 4,096-step RK4 reference are `2.10e-9`/`6.00e-7`, the maximum stellar-mass error is `2.54e-9 dex`, and baryon closure is `2.22e-16`. Twenty-five additional candidates cross a reservoir boundary, the star-formation threshold, or the cooling-regime threshold and remain outside this claim until explicit event localization is implemented. See [`numerical_integration.md`](numerical_integration.md) for the method and limitations.
+
 ## Conservation and differentiability
 
 The RHS is assembled from named transfers. Its baryon derivative equals the

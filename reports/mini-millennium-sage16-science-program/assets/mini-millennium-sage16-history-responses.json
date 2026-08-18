@@ -1,0 +1,79 @@
+{
+  "arrays": "mini-millennium-sage16-history-responses.npz",
+  "backend": "cpu",
+  "baseline_evolution_seconds": 145.946589,
+  "derivative_method": "jax.linearize forward chain rule",
+  "epoch_count": 8,
+  "finite_difference_validation": {
+    "agn_heating:epoch_6": {
+      "maximum_absolute_error": 0.011070312358421763,
+      "median_absolute_error": 0.004024019013224661
+    },
+    "cooling:epoch_6": {
+      "maximum_absolute_error": 0.30415241383086433,
+      "median_absolute_error": 0.00948354241918005
+    }
+  },
+  "input_halos": 151216,
+  "jax_version": "0.4.30",
+  "normalization": "d ln(mean final stellar mass) / d finite-epoch epsilon",
+  "peak_resident_bytes": 24167301120,
+  "process_names": [
+    "cooling",
+    "sn_reheating",
+    "sn_ejection",
+    "reincorporation",
+    "agn_heating"
+  ],
+  "process_peaks": {
+    "agn_heating": {
+      "log10_stellar_mass_max": 12.0,
+      "log10_stellar_mass_min": 11.25,
+      "redshift_edge_high": 2.363585661014857,
+      "redshift_edge_low": 0.8340080864093422,
+      "response": -0.1436006032826757
+    },
+    "cooling": {
+      "log10_stellar_mass_max": 12.0,
+      "log10_stellar_mass_min": 11.25,
+      "redshift_edge_high": 2.363585661014857,
+      "redshift_edge_low": 0.8340080864093422,
+      "response": 0.41581742048093895
+    },
+    "reincorporation": {
+      "log10_stellar_mass_max": 9.75,
+      "log10_stellar_mass_min": 9.0,
+      "redshift_edge_high": 2.363585661014857,
+      "redshift_edge_low": 0.8340080864093422,
+      "response": 0.1230727780431461
+    },
+    "sn_ejection": {
+      "log10_stellar_mass_max": 9.75,
+      "log10_stellar_mass_min": 9.0,
+      "redshift_edge_high": 2.363585661014857,
+      "redshift_edge_low": 0.8340080864093422,
+      "response": -0.2811668245475426
+    },
+    "sn_reheating": {
+      "log10_stellar_mass_max": 9.0,
+      "log10_stellar_mass_min": 8.0,
+      "redshift_edge_high": 0.8340080864093422,
+      "redshift_edge_low": 0.0,
+      "response": -0.24126122222618704
+    }
+  },
+  "response_batch_seconds": 758.7726870470004,
+  "response_evolution_seconds": 765.6692672920001,
+  "sample_counts": [
+    12,
+    12,
+    12,
+    12,
+    3
+  ],
+  "schema_version": "mimic-jax-mini-millennium-history/v1",
+  "selected_galaxy_count": 51,
+  "selected_tree_count": 50,
+  "tree_count_used_for_selection": 2864,
+  "tree_file": "simulations/mini-millennium/snapshots/trees_063.1"
+}

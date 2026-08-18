@@ -1,0 +1,1059 @@
+{
+  "headline_artifacts": [
+    {
+      "description": "MIMIC and mimic-jax have identical counts in all 32 resolved hard SMF bins.",
+      "key": "smf",
+      "media_type": "image/svg+xml",
+      "path": "assets/StellarMassFunctionScience.svg",
+      "role": "figure",
+      "sha256": "fb1b93e82bf61fbf5ea91ca0682d71121b406ba5c4c68ce856be8ccacec83dda",
+      "size_bytes": 29048,
+      "title": "StellarMassFunctionScience"
+    },
+    {
+      "description": "Fractional abundance response: percent bin-abundance change per 1% parameter change.",
+      "key": "smf_response",
+      "media_type": "image/svg+xml",
+      "path": "assets/StellarMassFunctionResponses.svg",
+      "role": "figure",
+      "sha256": "1a72d3306d4809976b49ab61ad023f01a41188282b3766e2f0a0192d98a5f27a",
+      "size_bytes": 38456,
+      "title": "StellarMassFunctionResponses"
+    }
+  ],
+  "health": [
+    {
+      "artifacts": [
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "population_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-partition-1-science.json",
+          "role": "diagnostic-summary",
+          "sha256": "137c8b29aa42ac4d7cee031fae3a6b75d490eedf743c48748ea67ea79dd202c4",
+          "size_bytes": 2658,
+          "title": "Population summary"
+        }
+      ],
+      "key": "upstream_equivalence",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "field_comparisons",
+          "label": "Field comparisons",
+          "unit": "",
+          "value": 794136
+        },
+        {
+          "description": "",
+          "key": "smf_bin_mismatches",
+          "label": "Resolved SMF-bin mismatches",
+          "unit": "",
+          "value": 0
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "All 32 resolved z=0 stellar-mass-function bins are identical and the complete partition field gate passes at its stated mixed-precision tolerances.",
+      "title": "Upstream SAGE16 equivalence",
+      "tolerance": "integer fields exact; float tolerances recorded in the linked product"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Automatic fractional responses compared with explicit symmetric 1% parameter reruns.",
+          "key": "gradient_validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/ParameterResponseValidation.svg",
+          "role": "figure",
+          "sha256": "dd9e6cb115987679f0230ce33ce4298b195c68cca5dd0d2500d580c3b2c2ffd1",
+          "size_bytes": 24088,
+          "title": "ParameterResponseValidation"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "parameter_validation_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-response-validation-1000.npz",
+          "role": "scientific-data",
+          "sha256": "886a20ecc87e47f6e18764e18054ca3c0a26f74c4d1814dfeda7306a6390c264",
+          "size_bytes": 13804,
+          "title": "Parameter Validation arrays"
+        }
+      ],
+      "key": "parameter_gradient_validation",
+      "method": "JAX chain-rule tangent versus symmetric multiplicative reruns",
+      "metrics": [
+        {
+          "description": "",
+          "key": "maximum_absolute_error",
+          "label": "Maximum resolved absolute response error",
+          "unit": "",
+          "value": 0.07769716398066828
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "Representative automatic fractional responses agree with explicit symmetric parameter reruns to <=0.078 in resolved bins for the tested 1% perturbations.",
+      "title": "SMF parameter-response validation",
+      "tolerance": "absolute elasticity error <= 0.1 in resolved bins"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Cooling and AGN finite-epoch reruns converge toward the local automatic response as perturbations shrink.",
+          "key": "history_validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/HistoricalResponseValidation.svg",
+          "role": "figure",
+          "sha256": "6e449bf8372775d05ef5c2b77009b0fcd65536946485fe653ff268193f2995b1",
+          "size_bytes": 27336,
+          "title": "HistoricalResponseValidation"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "history_validation_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-history-validation.npz",
+          "role": "scientific-data",
+          "sha256": "327efb3a42975fbd20b4bb8d891e1b33602814f74c8a67099b315024724b56e5",
+          "size_bytes": 2579,
+          "title": "History Validation arrays"
+        }
+      ],
+      "key": "history_gradient_validation",
+      "method": "symmetric finite-epoch reruns at 1%, 0.3%, and 0.1%",
+      "metrics": [
+        {
+          "description": "",
+          "key": "small_step_maximum_error",
+          "label": "0.1% maximum absolute error",
+          "unit": "",
+          "value": 0.005213479580279873
+        },
+        {
+          "description": "",
+          "key": "small_step_median_error",
+          "label": "0.1% median absolute error",
+          "unit": "",
+          "value": 0.0001214939235519713
+        }
+      ],
+      "notes": [
+        "The 1% cooling intervention crosses a non-smooth branch in the strongest bin; it is a finite counterfactual, not a local derivative test."
+      ],
+      "status": "passed",
+      "summary": "Cooling and AGN epoch responses converge toward the automatic local response as the symmetric intervention shrinks; the 0.1% test meets the stated tolerance.",
+      "title": "Historical-response validation",
+      "tolerance": "maximum absolute response error <= 0.01 at the smallest tested step"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Accuracy, stellar-mass convergence, and per-galaxy adaptive work for smooth continuous SAGE16 intervals.",
+          "key": "adaptive",
+          "media_type": "image/svg+xml",
+          "path": "assets/AdaptiveContinuousConvergence.svg",
+          "role": "figure",
+          "sha256": "847f567dfbc1a826cfc01356a49e97989463ac598721ff7efd3283a3b5bd13c4",
+          "size_bytes": 110468,
+          "title": "AdaptiveContinuousConvergence"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "adaptive_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-adaptive-continuous.json",
+          "role": "diagnostic-summary",
+          "sha256": "27bb07a9088694a0f96e53267859f5ef33d59d748df404cf9029fcabeaeed8d4",
+          "size_bytes": 2812,
+          "title": "Adaptive summary"
+        }
+      ],
+      "key": "continuous_adaptive_convergence",
+      "method": "Dormand–Prince 5(4) local error control with a tolerance-scaled Jacobian stability cap",
+      "metrics": [
+        {
+          "description": "",
+          "key": "successful_intervals",
+          "label": "Successful smooth intervals",
+          "unit": "",
+          "value": 27
+        },
+        {
+          "description": "",
+          "key": "maximum_reservoir_error",
+          "label": "Maximum relative reservoir error",
+          "unit": "",
+          "value": 6.003396597348615e-07
+        },
+        {
+          "description": "",
+          "key": "stellar_mass_error",
+          "label": "Maximum stellar-mass error",
+          "unit": "dex",
+          "value": 2.5420369783662672e-09
+        },
+        {
+          "description": "",
+          "key": "baryon_residual",
+          "label": "Maximum baryon residual",
+          "unit": "",
+          "value": 2.220446049250313e-16
+        },
+        {
+          "description": "",
+          "key": "gradient_relative_error",
+          "label": "AD-to-finite-difference relative error",
+          "unit": "",
+          "value": 8.307248581058382e-07
+        }
+      ],
+      "notes": [
+        "The 25 intervals that cross a reservoir boundary or a named RHS threshold are not counted as successes; they require event localization before a full-tree adaptive claim is possible.",
+        "Finite SAGE maps and the Rheat projection remain fixed external boundaries and are never repeated at adaptive internal stages."
+      ],
+      "status": "passed",
+      "summary": "All 27/27 smooth fixed-forcing intervals completed at rtol=1e-7; the maximum reservoir error was 6.00e-07 and the maximum stellar-mass error was 2.54e-09 dex.",
+      "title": "Adaptive continuous-flow convergence",
+      "tolerance": "all cases successful; maximum relative reservoir error <= 1e-5; |Δlog10 Mstar| <= 1e-6 dex; baryon residual <= 1e-12; derivative relative error <= 1e-5"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Population-level timestep effects shown through the SMF and integrated reservoir totals.",
+          "key": "convergence",
+          "media_type": "image/svg+xml",
+          "path": "assets/PopulationTimestepConvergence.svg",
+          "role": "figure",
+          "sha256": "e2f6ad07d8c7d278236b65d6e6e8f7932ca30ba26ad3719ee02e41950495289c",
+          "size_bytes": 44208,
+          "title": "PopulationTimestepConvergence"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "convergence_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-convergence-500.npz",
+          "role": "scientific-data",
+          "sha256": "cfc3e00cbaeac76ad43bdf3c2cb1cd854875b6d1b4051fe0c7905bf27ec9bbd4",
+          "size_bytes": 7472,
+          "title": "Convergence arrays"
+        }
+      ],
+      "key": "population_timestep",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "default_median_smf_difference",
+          "label": "Default-to-80 median SMF difference",
+          "unit": "fraction",
+          "value": 0.048093072284100424
+        },
+        {
+          "description": "",
+          "key": "penultimate_median_smf_difference",
+          "label": "40-to-80 median SMF difference",
+          "unit": "fraction",
+          "value": 0.04232462390327334
+        },
+        {
+          "description": "",
+          "key": "default_stellar_mass_difference",
+          "label": "Default-to-80 total stellar-mass difference",
+          "unit": "fraction",
+          "value": 0.8148564270632794
+        }
+      ],
+      "notes": [
+        "The finest requested run is a provisional reference, not an exact solution.",
+        "Changing SubSteps changes repeated finite maps as well as the resolution of rate-times-dt processes, so this complete schedule is not a clean ODE convergence test."
+      ],
+      "status": "warning",
+      "summary": "At the current 80-substep reference, the default run differs by 4.81% in the median and 57.81% at maximum across resolved SMF bins (8.05–10.55).",
+      "title": "Population timestep convergence",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "metal_history_ledger",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "The complete Mini-Millennium metal source/sink ledger has not yet been accumulated.",
+      "title": "Full-history metal ledger",
+      "tolerance": ""
+    }
+  ],
+  "identity": {
+    "dataset": "Mini-Millennium partition 1; 2,864 trees; 1/8 simulation volume",
+    "integration_method": "upstream sequential update; 10 substeps (reference mode)",
+    "model": "fiducial SAGE16",
+    "parameter_set": "sage16_mini-millennium fiducial",
+    "run_id": "mini-millennium-sage16-science-program",
+    "summary": "A science-first Mini-Millennium experiment: first establish that this is SAGE16, then ask which parameters and baryonic processes shape familiar galaxy predictions, when they matter, and whether the conventional timestep changes the answer.",
+    "title": "What controls galaxies in SAGE16?"
+  },
+  "kind": "run",
+  "links": [
+    {
+      "target": "../mini-millennium-sage16-initial/",
+      "title": "Original validation report"
+    },
+    {
+      "target": "../../docs/mimic_jax_scientific_program.md",
+      "title": "Scientific program"
+    }
+  ],
+  "overview_metrics": [
+    {
+      "description": "",
+      "key": "tree_count",
+      "label": "Trees",
+      "unit": "",
+      "value": 2864
+    },
+    {
+      "description": "",
+      "key": "input_halos",
+      "label": "Input haloes",
+      "unit": "",
+      "value": 151216
+    },
+    {
+      "description": "",
+      "key": "z0_galaxies",
+      "label": "Matched z=0 galaxies",
+      "unit": "",
+      "value": 3595
+    },
+    {
+      "description": "",
+      "key": "parameter_count",
+      "label": "Differentiated parameters",
+      "unit": "",
+      "value": 7
+    },
+    {
+      "description": "",
+      "key": "history_targets",
+      "label": "History targets",
+      "unit": "",
+      "value": 51
+    },
+    {
+      "description": "",
+      "key": "jax_backend",
+      "label": "JAX backend",
+      "unit": "",
+      "value": "cpu"
+    },
+    {
+      "description": "",
+      "key": "response_runtime",
+      "label": "Complete-partition response runtime",
+      "unit": "s",
+      "value": 433.333007833
+    },
+    {
+      "description": "",
+      "key": "response_peak_memory",
+      "label": "Response peak resident memory",
+      "unit": "GiB",
+      "value": 21.204193115234375
+    }
+  ],
+  "parameters": [
+    {
+      "description": "",
+      "name": "GlobalBaryonFraction",
+      "unit": "dimensionless",
+      "value": 0.17
+    },
+    {
+      "description": "Quiescent star-formation efficiency per disk dynamical time.",
+      "name": "SfrEfficiency",
+      "unit": "dimensionless",
+      "value": 0.05
+    },
+    {
+      "description": "",
+      "name": "StarFormingDiskFactor",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "Supernova reheating normalization.",
+      "name": "FeedbackReheatingEpsilon",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "Supernova energy efficiency for halo-gas ejection.",
+      "name": "FeedbackEjectionEfficiency",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "Return rate of ejected gas to the hot halo.",
+      "name": "ReIncorporationFactor",
+      "unit": "dimensionless",
+      "value": 0.15
+    },
+    {
+      "description": "",
+      "name": "AGNrecipe",
+      "unit": "dimensionless",
+      "value": 2
+    },
+    {
+      "description": "Radio-mode black-hole accretion/heating efficiency.",
+      "name": "RadioModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.08
+    },
+    {
+      "description": "Cold-gas black-hole growth efficiency during events.",
+      "name": "BlackHoleGrowthRate",
+      "unit": "dimensionless",
+      "value": 0.015
+    },
+    {
+      "description": "Quasar-mode gas-ejection efficiency.",
+      "name": "QuasarModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.005
+    },
+    {
+      "description": "",
+      "name": "RecycleFraction",
+      "unit": "dimensionless",
+      "value": 0.43
+    },
+    {
+      "description": "",
+      "name": "Yield",
+      "unit": "dimensionless",
+      "value": 0.025
+    },
+    {
+      "description": "",
+      "name": "FracZleaveDisk",
+      "unit": "dimensionless",
+      "value": 0.0
+    },
+    {
+      "description": "",
+      "name": "ThresholdMajorMerger",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "",
+      "name": "ThresholdSatDisruption",
+      "unit": "dimensionless",
+      "value": 1.0
+    }
+  ],
+  "provenance": {
+    "command": [
+      "python",
+      "examples/build_mini_millennium_science_report.py"
+    ],
+    "files": [
+      {
+        "path": "models/sage16/input/sage16_mini-millennium.yaml",
+        "role": "configuration",
+        "sha256": "9e1e5212817ee324a9c13e3b1faa86aec1b2979571c0655f070cd6c234e39cf1",
+        "size_bytes": 3747
+      },
+      {
+        "path": "archive/mini-millennium-partition-1-science.json",
+        "role": "input",
+        "sha256": "137c8b29aa42ac4d7cee031fae3a6b75d490eedf743c48748ea67ea79dd202c4",
+        "size_bytes": 2658
+      },
+      {
+        "path": "archive/mini-millennium-partition-1-science.npz",
+        "role": "input",
+        "sha256": "3d81a5dfd5c79c61725484076319098f5f3a6d8a23eb4dd95ce0921e47f49f5c",
+        "size_bytes": 14410
+      },
+      {
+        "path": "archive/mini-millennium-sage16-parameter-responses.json",
+        "role": "input",
+        "sha256": "f08fcde5f6d706863eddc2fa1156401fb098608a561b7857e83775d09fc6ae1f",
+        "size_bytes": 1619
+      },
+      {
+        "path": "archive/mini-millennium-sage16-parameter-responses.npz",
+        "role": "input",
+        "sha256": "d154cbeee740a2fabf4bbe47a61d3220b0acc25ce1c5c653c024097b586b72fb",
+        "size_bytes": 11947
+      },
+      {
+        "path": "archive/mini-millennium-sage16-response-validation-1000.json",
+        "role": "input",
+        "sha256": "309acb8e6c4c2a0e6591ec546df711cf42081f7f7d1b02fa00211d142fb43ec2",
+        "size_bytes": 1771
+      },
+      {
+        "path": "archive/mini-millennium-sage16-response-validation-1000.npz",
+        "role": "input",
+        "sha256": "886a20ecc87e47f6e18764e18054ca3c0a26f74c4d1814dfeda7306a6390c264",
+        "size_bytes": 13804
+      },
+      {
+        "path": "archive/mini-millennium-sage16-history-responses.json",
+        "role": "input",
+        "sha256": "720a7b4845a83473c7c9ad9e0a881fda85f019561c94ba3d15b3ffe92f653782",
+        "size_bytes": 2393
+      },
+      {
+        "path": "archive/mini-millennium-sage16-history-responses.npz",
+        "role": "input",
+        "sha256": "e3523a4abc9ea529c089e5db852d879136a6fcee82fc1fa69360ab5f6b53b7c6",
+        "size_bytes": 21176
+      },
+      {
+        "path": "archive/mini-millennium-sage16-history-validation.json",
+        "role": "input",
+        "sha256": "24c18426191001e379e41755a5cff2699fee1e4d9d6f4a6ac7b6fe33a05075f1",
+        "size_bytes": 1346
+      },
+      {
+        "path": "archive/mini-millennium-sage16-history-validation.npz",
+        "role": "input",
+        "sha256": "327efb3a42975fbd20b4bb8d891e1b33602814f74c8a67099b315024724b56e5",
+        "size_bytes": 2579
+      },
+      {
+        "path": "archive/mini-millennium-sage16-convergence-500.json",
+        "role": "input",
+        "sha256": "41685b47726567d168a8b6ee65b6442d2c5110f036922b4cc2a3f117b0c37a0d",
+        "size_bytes": 1303
+      },
+      {
+        "path": "archive/mini-millennium-sage16-convergence-500.npz",
+        "role": "input",
+        "sha256": "cfc3e00cbaeac76ad43bdf3c2cb1cd854875b6d1b4051fe0c7905bf27ec9bbd4",
+        "size_bytes": 7472
+      },
+      {
+        "path": "archive/mini-millennium-sage16-timestep-ringing.json",
+        "role": "input",
+        "sha256": "a2bb1890905c92280a5502da947552e7b0e6b0fd0a8e324df2f929f18430a2ed",
+        "size_bytes": 1930
+      },
+      {
+        "path": "archive/mini-millennium-sage16-timestep-ringing.npz",
+        "role": "input",
+        "sha256": "e5bdf32750d5b5012821320b81ffbdec77b02f20079f84213f7701e6c5586309",
+        "size_bytes": 35479
+      },
+      {
+        "path": "archive/mini-millennium-sage16-timestep-module-ablation.json",
+        "role": "input",
+        "sha256": "565d94a00015353f617ca87947adadde0c1716d5daab7c199efe626363a41871",
+        "size_bytes": 1724
+      },
+      {
+        "path": "archive/mini-millennium-sage16-timestep-module-ablation.npz",
+        "role": "input",
+        "sha256": "6e1c360f9322af1bcca4fca7aa3e9af9c14430a01342f43e8720689104e976cb",
+        "size_bytes": 17757
+      },
+      {
+        "path": "archive/mini-millennium-sage16-adaptive-continuous.json",
+        "role": "input",
+        "sha256": "27bb07a9088694a0f96e53267859f5ef33d59d748df404cf9029fcabeaeed8d4",
+        "size_bytes": 2812
+      },
+      {
+        "path": "archive/mini-millennium-sage16-adaptive-continuous.npz",
+        "role": "input",
+        "sha256": "0b60088ac42445d5755e2cdb8e9e430c85d65a338e2d98516a40f2afc09db62f",
+        "size_bytes": 26353
+      },
+      {
+        "path": "simulations/mini-millennium/mini-millennium.a_list",
+        "role": "input",
+        "sha256": "2866412ae276939c625afef8a92a1da442fcc4bd8490dda191f38a0f5028164f",
+        "size_bytes": 577
+      }
+    ],
+    "generated_at": "2026-08-18T16:59:35Z",
+    "git_branch": "main",
+    "git_commit": "cc00febb1ded1a28c9389373375ed92f72eba6c9",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "PyYAML": "6.0.3",
+      "h5py": "3.14.0",
+      "jax": "0.4.30",
+      "jaxlib": "0.4.30",
+      "matplotlib": "3.9.4",
+      "numpy": "2.0.2",
+      "python": "3.9.6"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [],
+      "diagnostics": [],
+      "key": "findings",
+      "links": [],
+      "notes": [
+        "MIMIC and mimic-jax give identical counts in every one of the 32 resolved z=0 stellar-mass-function bins.",
+        "Across those bins, the largest local abundance response is most often associated with Reincorporation (15 bins), SN reheating (6), and SN ejection (6).",
+        "Radio-mode efficiency and black-hole growth have nearly parallel population-response fingerprints, but the BH-mass-density row changes sign and helps separate them.",
+        "The selected histories place the largest cooling and AGN response in the same z≈2.36–0.83 epoch for the most massive bin; that bin contains only 3 galaxies and is explicitly exploratory.",
+        "The default SubSteps setting changes the resolved 500-tree SMF by a median 4.81% relative to the current 80-substep reference, and the 40-to-80 median shift remains 4.23%.",
+        "For 27 smooth continuous-flow intervals, adaptive rtol=1e-7 reaches a maximum reservoir error of 6.00e-07, a maximum stellar-mass error of 2.54e-09 dex, and baryon closure of 2.22e-16."
+      ],
+      "summary": "These statements are computed from the archived arrays; they are not hand-maintained claims.",
+      "title": "What did we learn?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "MIMIC and mimic-jax have identical counts in all 32 resolved hard SMF bins.",
+          "key": "smf",
+          "media_type": "image/svg+xml",
+          "path": "assets/StellarMassFunctionScience.svg",
+          "role": "figure",
+          "sha256": "fb1b93e82bf61fbf5ea91ca0682d71121b406ba5c4c68ce856be8ccacec83dda",
+          "size_bytes": 29048,
+          "title": "StellarMassFunctionScience"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "population_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-partition-1-science.npz",
+          "role": "scientific-data",
+          "sha256": "3d81a5dfd5c79c61725484076319098f5f3a6d8a23eb4dd95ce0921e47f49f5c",
+          "size_bytes": 14410,
+          "title": "Population arrays"
+        }
+      ],
+      "diagnostics": [],
+      "key": "familiar_universe",
+      "links": [
+        {
+          "target": "../../docs/mini_millennium_equivalence.md",
+          "title": "Equivalence protocol"
+        }
+      ],
+      "notes": [],
+      "summary": "Yes for the tested complete Mini-Millennium input partition. The familiar hard-bin stellar mass function is the equivalence observable; smoothing is introduced only later, for the differentiable population estimator.",
+      "title": "Does mimic-jax reproduce SAGE16?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "The physical reservoir inventory and the much smaller MIMIC–mimic-jax catalogue residual.",
+          "key": "baryons",
+          "media_type": "image/svg+xml",
+          "path": "assets/BaryonInventoryScience.svg",
+          "role": "figure",
+          "sha256": "934fbf317606a2b93cf2f25e563134fa26952146fce23fc491f8151b644d0596",
+          "size_bytes": 26063,
+          "title": "BaryonInventoryScience"
+        }
+      ],
+      "diagnostics": [],
+      "key": "baryon_cycle",
+      "links": [
+        {
+          "target": "../../docs/reservoirs_and_transfers.md",
+          "title": "Reservoirs and transfers"
+        }
+      ],
+      "notes": [],
+      "summary": "The reservoir representation turns conservation into a physical inventory: cold gas dominates the smallest resolved haloes, ejected gas the intermediate regime, and hot gas the larger haloes in this partition. The lower panel confirms that mimic-jax and MIMIC close the same z=0 catalogue budget.",
+      "title": "Where are the baryons?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Fractional abundance response: percent bin-abundance change per 1% parameter change.",
+          "key": "smf_response",
+          "media_type": "image/svg+xml",
+          "path": "assets/StellarMassFunctionResponses.svg",
+          "role": "figure",
+          "sha256": "1a72d3306d4809976b49ab61ad023f01a41188282b3766e2f0a0192d98a5f27a",
+          "size_bytes": 38456,
+          "title": "StellarMassFunctionResponses"
+        },
+        {
+          "description": "Signed response heat map with a strip identifying the largest local response magnitude.",
+          "key": "smf_map",
+          "media_type": "image/svg+xml",
+          "path": "assets/StellarMassFunctionResponseMap.svg",
+          "role": "figure",
+          "sha256": "dddeba8b9f3e46da3d79949e3519fdf4377f61f55974f16eb60265e2a37aed87",
+          "size_bytes": 34431,
+          "title": "StellarMassFunctionResponseMap"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "parameters_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-parameter-responses.npz",
+          "role": "scientific-data",
+          "sha256": "d154cbeee740a2fabf4bbe47a61d3220b0acc25ce1c5c653c024097b586b72fb",
+          "size_bytes": 11947,
+          "title": "Parameters arrays"
+        }
+      ],
+      "diagnostics": [],
+      "key": "smf_control",
+      "links": [
+        {
+          "target": "../../docs/sensitivity.md",
+          "title": "Fractional responses"
+        }
+      ],
+      "notes": [
+        "The soft estimator differs from the hard-bin SMF by a median 3.85% in resolved bins.",
+        "QuasarModeEfficiency has no resolved response in these population summaries; this is a result for this sample and observable set, not a claim that quasar-mode physics is generally irrelevant."
+      ],
+      "summary": "Each curve is E=d ln(phi)/d ln(theta): a value of -0.6 means that a 1% parameter increase lowers the estimated abundance in that bin by about 0.6%. A Gaussian-CDF finite-volume estimator (0.05 dex bandwidth) makes catalogue bin transport differentiable; the SAGE evolution itself is unchanged. Adjacent sign changes often mean that galaxies move between bins, not that their total number changes.",
+      "title": "What controls the stellar mass function?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Observable-by-parameter fractional response matrix for familiar population summaries.",
+          "key": "response_matrix",
+          "media_type": "image/svg+xml",
+          "path": "assets/ObservableParameterResponseMatrix.svg",
+          "role": "figure",
+          "sha256": "8aa8bf310836f343da9767ee394975f3409e5c87c478bf568ab0e954263b7389",
+          "size_bytes": 45159,
+          "title": "ObservableParameterResponseMatrix"
+        },
+        {
+          "description": "Cosine similarity between the observable response fingerprints of parameter pairs.",
+          "key": "similarity",
+          "media_type": "image/svg+xml",
+          "path": "assets/ParameterResponseSimilarity.svg",
+          "role": "figure",
+          "sha256": "d3dcf455f18a48e6577135f14c83f36fa05c1fe45196080fe8512ddc506fd0e3",
+          "size_bytes": 43345,
+          "title": "ParameterResponseSimilarity"
+        }
+      ],
+      "diagnostics": [],
+      "key": "response_matrix",
+      "links": [],
+      "notes": [
+        "A similarity near +1 means two parameter changes move the current observables in nearly the same direction; -1 means opposite directions.",
+        "Undefined similarity marks a zero response vector, rather than silently assigning similarity zero."
+      ],
+      "summary": "The response matrix collects familiar population summaries in one view. Influence is not identifiability: a large response says that a parameter matters, while a distinct column pattern says that the available observables can tell it apart from others.",
+      "title": "Which observations constrain which physics?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Finite-epoch process responses of mean present-day stellar mass, stratified by final stellar mass.",
+          "key": "history",
+          "media_type": "image/svg+xml",
+          "path": "assets/HistoricalProcessResponses.svg",
+          "role": "figure",
+          "sha256": "d44c178e6e99cc2e9bde4ea65577d5bd3cf1f629fb7f2b1a45b7c88ca3946875",
+          "size_bytes": 75690,
+          "title": "HistoricalProcessResponses"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "history_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-history-responses.npz",
+          "role": "scientific-data",
+          "sha256": "e3523a4abc9ea529c089e5db852d879136a6fcee82fc1fa69360ab5f6b53b7c6",
+          "size_bytes": 21176,
+          "title": "History arrays"
+        }
+      ],
+      "diagnostics": [],
+      "key": "history",
+      "links": [],
+      "notes": [
+        "The five final-mass bins contain 12, 12, 12, 12, and 3 selected central galaxies; the highest-mass row is exploratory.",
+        "Thresholds, merger/event branches, and finite sample selection make the exact SAGE map piecewise differentiable."
+      ],
+      "summary": "Each cell is the percentage change in mean z=0 stellar mass caused by making one physical transfer 1% stronger during a finite epoch. Epochs are uniform in ln(a) and displayed with redshift labels, so the response is dimensionless and independent of a per-time versus per-redshift plotting convention.",
+      "title": "When does each baryonic process matter?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Paired cooling and AGN-heating responses across final stellar mass and epoch.",
+          "key": "cooling_agn",
+          "media_type": "image/svg+xml",
+          "path": "assets/CoolingAgnTransition.svg",
+          "role": "figure",
+          "sha256": "22b0538f379b75dfdb3ea4525a020901c59f85797dbbecaa7f55e994fb0a4211",
+          "size_bytes": 37191,
+          "title": "CoolingAgnTransition"
+        }
+      ],
+      "diagnostics": [],
+      "key": "cooling_agn",
+      "links": [
+        {
+          "target": "../../docs/radio_mode_heating.md",
+          "title": "Radio-mode heating"
+        }
+      ],
+      "notes": [],
+      "summary": "In the selected massive histories, extra cooling raises final stellar mass while extra AGN heating lowers it, with the largest measured leverage in the z≈2.36–0.83 epoch. This is the desired direct SAGE statement, but the highest-mass sample is small and a 1% cooling intervention can cross a non-smooth branch; the local response is validated by the converged 0.1% test.",
+      "title": "Where does AGN regulation take over from cooling?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Median logarithmic halo and stellar growth rates along selected main histories.",
+          "key": "growth",
+          "media_type": "image/svg+xml",
+          "path": "assets/HaloStellarGrowthDecoupling.svg",
+          "role": "figure",
+          "sha256": "64a77e8235c7a49475784d4480f2d3074a81bf4676773615eb2f1f6493b41ce1",
+          "size_bytes": 29095,
+          "title": "HaloStellarGrowthDecoupling"
+        }
+      ],
+      "diagnostics": [],
+      "key": "growth_decoupling",
+      "links": [],
+      "notes": [],
+      "summary": "Median logarithmic halo and stellar growth rates are followed along the selected main histories. The figure is a measured descriptive diagnostic; connecting each separation causally to AGN, cooling, or mergers requires the adjacent process-response maps.",
+      "title": "When does galaxy growth decouple from halo growth?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Accuracy, stellar-mass convergence, and per-galaxy adaptive work for smooth continuous SAGE16 intervals.",
+          "key": "adaptive",
+          "media_type": "image/svg+xml",
+          "path": "assets/AdaptiveContinuousConvergence.svg",
+          "role": "figure",
+          "sha256": "847f567dfbc1a826cfc01356a49e97989463ac598721ff7efd3283a3b5bd13c4",
+          "size_bytes": 110468,
+          "title": "AdaptiveContinuousConvergence"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "adaptive_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-adaptive-continuous.json",
+          "role": "diagnostic-summary",
+          "sha256": "27bb07a9088694a0f96e53267859f5ef33d59d748df404cf9029fcabeaeed8d4",
+          "size_bytes": 2812,
+          "title": "Adaptive summary"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "adaptive_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-adaptive-continuous.npz",
+          "role": "scientific-data",
+          "sha256": "0b60088ac42445d5755e2cdb8e9e430c85d65a338e2d98516a40f2afc09db62f",
+          "size_bytes": 26353,
+          "title": "Adaptive arrays"
+        }
+      ],
+      "diagnostics": [],
+      "key": "continuous_numerics",
+      "links": [
+        {
+          "target": "../../docs/numerical_integration.md",
+          "title": "Numerical integration"
+        }
+      ],
+      "notes": [
+        "All 27 retained z=0 central-galaxy intervals succeeded at every tested tolerance from 1e-3 to 1e-9; 25 candidates were excluded because the reference trajectory crossed a reservoir boundary, the quiescent-star-formation threshold, or the cooling-regime threshold.",
+        "At rtol=1e-7 the maximum stellar-mass difference is 2.54e-09 dex, the median/maximum relative reservoir errors are 2.10e-09/6.00e-07, and the largest baryon residual is 2.22e-16.",
+        "The SfrEfficiency derivative through the adaptive solve agrees with three symmetric finite differences to 8.31e-07 relative error.",
+        "The raw Jacobian norm is unit-dependent. The controller therefore uses D^-1(∂f/∂x)D, with D set by the same absolute/relative error scales used by the local error estimate.",
+        "This establishes convergence of the separated continuous flows under fixed halo forcing. It does not yet establish full-tree adaptive convergence across threshold crossings, halo-forcing changes, mergers, disk-instability projections, or the history-dependent Rheat projection."
+      ],
+      "summary": "Yes for the tested smooth intervals. The Dormand–Prince 5(4) controller estimates local truncation error and limits each step using the tolerance-scaled state Jacobian. Tightening the tolerance reduces both reservoir and stellar-mass errors against an independent 4,096-step RK4 reference while preserving the baryon transfer invariant.",
+      "title": "Does the continuous framework converge in time?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Population-level timestep effects shown through the SMF and integrated reservoir totals.",
+          "key": "convergence",
+          "media_type": "image/svg+xml",
+          "path": "assets/PopulationTimestepConvergence.svg",
+          "role": "figure",
+          "sha256": "e2f6ad07d8c7d278236b65d6e6e8f7932ca30ba26ad3719ee02e41950495289c",
+          "size_bytes": 44208,
+          "title": "PopulationTimestepConvergence"
+        },
+        {
+          "description": "Matched-galaxy diagnosis of the oscillatory stellar-mass-function timestep residual.",
+          "key": "ringing",
+          "media_type": "image/svg+xml",
+          "path": "assets/TimestepRingingDiagnosis.svg",
+          "role": "figure",
+          "sha256": "2ce6385687cf1c986823a750a497ef08dc1f7173658f3781afd5caf803f0a6c4",
+          "size_bytes": 40910,
+          "title": "TimestepRingingDiagnosis"
+        },
+        {
+          "description": "Single-tree module ablation identifies the hybrid process chain that amplifies timestep sensitivity.",
+          "key": "module_ablation",
+          "media_type": "image/svg+xml",
+          "path": "assets/TimestepModuleAblation.svg",
+          "role": "figure",
+          "sha256": "891c8faf14484066ad6e7a27e0ece0d3ef64f39c0490674c84005c1f0d676901",
+          "size_bytes": 44549,
+          "title": "TimestepModuleAblation"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "convergence_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-convergence-500.json",
+          "role": "diagnostic-summary",
+          "sha256": "41685b47726567d168a8b6ee65b6442d2c5110f036922b4cc2a3f117b0c37a0d",
+          "size_bytes": 1303,
+          "title": "Convergence summary"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "ringing_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-timestep-ringing.npz",
+          "role": "scientific-data",
+          "sha256": "e5bdf32750d5b5012821320b81ffbdec77b02f20079f84213f7701e6c5586309",
+          "size_bytes": 35479,
+          "title": "Ringing arrays"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "module_ablation_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-timestep-module-ablation.npz",
+          "role": "scientific-data",
+          "sha256": "6e1c360f9322af1bcca4fca7aa3e9af9c14430a01342f43e8720689104e976cb",
+          "size_bytes": 17757,
+          "title": "Module Ablation arrays"
+        }
+      ],
+      "diagnostics": [],
+      "key": "numerics",
+      "links": [
+        {
+          "target": "../../docs/numerical_integration.md",
+          "title": "Numerical integration"
+        }
+      ],
+      "notes": [
+        "The 500 trees are spread across the complete partition and resolve log10 stellar mass 8.05–10.55; the rarer massive tail remains unresolved.",
+        "The five-resolution experiment, including an intentionally coarse five-substep run, took 653.8 s on this CPU. The complete seven-parameter response of all 2,864 trees took 433.3 s.",
+        "The apparent ringing is a mass-coordinate residual, not a measured oscillation in cosmic time. At 0.05 dex smoothing the median 10-to-80 difference is 4.81% overall, 5.31% for centrals, and 5.68% for satellites.",
+        "Matched galaxies shift by a median 9.80 millidex between 10 and 80 substeps. Coherent movement through a finite, structured mass distribution produces alternating excess/deficit lobes at fixed mass; the diagnostic does not by itself isolate which finite map drives the movement.",
+        "Common galaxy identities account for 100.00% of the change in total stellar mass.",
+        "A deliberately sensitive 88-halo tree provides process attribution, not a population average. Its z=0 10/80 stellar-mass ratio is 9.48; it becomes 1.012 without disk instability, 1.012 without its quasar/starburst consumers, and 1.047 without AGN heating.",
+        "Suppressing satellite stripping leaves the same tree's ratio at 9.54. This isolates the strong amplification to the disk-instability → burst/BH-growth → AGN chain in this case, while the remaining percent-level offset is the wider sequential-flow/threshold error.",
+        "At z=2.07, the summed stored AGN heating radius is 5.9 times larger in the 80-substep history. The persistent Rheat projection therefore records the early branch divergence and suppresses later cooling even though the coarse history ends with the larger black hole."
+      ],
+      "summary": "The exact upstream-sequential update remains the equivalence reference. Here only its internal baryonic substep count is refined under the same piecewise-constant merger-tree forcing. The sequence does not converge cleanly through 80 substeps because SubSteps also changes the repeated realization of finite stripping, threshold, and event maps; this is precisely why rate flows and genuine maps must be separated in the hybrid model.",
+      "title": "Does the timestep change familiar science?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Automatic fractional responses compared with explicit symmetric 1% parameter reruns.",
+          "key": "gradient_validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/ParameterResponseValidation.svg",
+          "role": "figure",
+          "sha256": "dd9e6cb115987679f0230ce33ce4298b195c68cca5dd0d2500d580c3b2c2ffd1",
+          "size_bytes": 24088,
+          "title": "ParameterResponseValidation"
+        },
+        {
+          "description": "Machine-readable evidence used to generate this report.",
+          "key": "parameter_validation_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-response-validation-1000.json",
+          "role": "diagnostic-summary",
+          "sha256": "309acb8e6c4c2a0e6591ec546df711cf42081f7f7d1b02fa00211d142fb43ec2",
+          "size_bytes": 1771,
+          "title": "Parameter Validation summary"
+        }
+      ],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Cooling and AGN finite-epoch reruns converge toward the local automatic response as perturbations shrink.",
+              "key": "history_validation",
+              "media_type": "image/svg+xml",
+              "path": "assets/HistoricalResponseValidation.svg",
+              "role": "figure",
+              "sha256": "6e449bf8372775d05ef5c2b77009b0fcd65536946485fe653ff268193f2995b1",
+              "size_bytes": 27336,
+              "title": "HistoricalResponseValidation"
+            },
+            {
+              "description": "Machine-readable evidence used to generate this report.",
+              "key": "history_validation_summary",
+              "media_type": "application/json",
+              "path": "assets/mini-millennium-sage16-history-validation.json",
+              "role": "diagnostic-summary",
+              "sha256": "24c18426191001e379e41755a5cff2699fee1e4d9d6f4a6ac7b6fe33a05075f1",
+              "size_bytes": 1346,
+              "title": "History Validation summary"
+            }
+          ],
+          "key": "history_step_sweep",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "At 0.1%, the largest cooling/AGN response error is 0.0052; the error decreases as the intervention shrinks.",
+          "title": "Do finite epoch reruns approach the local response?",
+          "tolerance": "maximum absolute response error <= 0.01"
+        }
+      ],
+      "key": "technical_validation",
+      "links": [],
+      "notes": [],
+      "summary": "The tangent calculation differentiates the same fixed-topology sequential SAGE map and propagates derivatives through tree inheritance. Explicit plus/minus reruns validate representative parameter directions; history responses are reported with their stricter piecewise-smooth caveat.",
+      "title": "Why trust the new derivatives?"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [],
+      "key": "not_yet_measured",
+      "links": [],
+      "notes": [],
+      "summary": "The report does not fabricate missing science. Cosmic SFR evolution, gas and metallicity relations, BH–bulge response curves, quenched fractions, uncertainty propagation with a defensible parameter covariance, environment, and clustering remain subsequent population products.",
+      "title": "What remains outside this report?"
+    }
+  ]
+}

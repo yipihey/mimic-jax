@@ -1,0 +1,79 @@
+{
+  "arrays": "mini-millennium-sage16-timestep-ringing.npz",
+  "backend": "cpu",
+  "bandwidths_dex": [
+    0.03,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "coarse_galaxy_count": 599,
+  "coarse_only_galaxy_count": 0,
+  "coarse_substeps": 10,
+  "common_galaxy_count": 599,
+  "common_galaxy_type_change_count": 0,
+  "common_identity_fraction_of_total_difference": 1.0,
+  "common_identity_stellar_mass_difference": 91.20025888992859,
+  "elapsed_seconds": {
+    "coarse": 97.860677167,
+    "fine": 121.166448416
+  },
+  "fine_galaxy_count": 599,
+  "fine_only_galaxy_count": 0,
+  "fine_substeps": 80,
+  "fraction_with_larger_coarse_stellar_mass": 0.9227722772277228,
+  "input_halos": 23767,
+  "jax_version": "0.4.30",
+  "median_coarse_minus_fine_log_stellar_mass": 0.009802564341710505,
+  "peak_resident_bytes": 11947884544,
+  "population_names": [
+    "all",
+    "centrals",
+    "satellites"
+  ],
+  "positive_common_galaxy_count": 505,
+  "schema_version": "mimic-jax-mini-millennium-timestep-ringing/v1",
+  "soft_smf_maximum_absolute_fractional_difference": [
+    [
+      0.44129687211141766,
+      0.5780827510706362,
+      0.6761583619371805,
+      0.47233142894292607
+    ],
+    [
+      0.3591107119429112,
+      0.2886313820692856,
+      0.1649410095544757,
+      0.09708034254721598
+    ],
+    [
+      0.45183697608996454,
+      0.4027034939675742,
+      0.22283605514326238,
+      0.0769175990317073
+    ]
+  ],
+  "soft_smf_median_absolute_fractional_difference": [
+    [
+      0.0679390136464185,
+      0.04809222524506521,
+      0.04334220588525248,
+      0.031651284989407134
+    ],
+    [
+      0.05268454514917502,
+      0.05311371702780973,
+      0.036936419867716556,
+      0.027675981779428486
+    ],
+    [
+      0.022132776214849294,
+      0.05683090901637583,
+      0.09604387101242547,
+      0.05858882574632903
+    ]
+  ],
+  "total_stellar_mass_difference": 91.20025888992859,
+  "tree_count": 500,
+  "tree_selection": "spread"
+}

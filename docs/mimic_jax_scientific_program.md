@@ -8,9 +8,13 @@ Applications begin only after the complete fiducial SAGE16 pipeline, tree inheri
 
 Figure 1 reproduces upstream selections, units, bins, and definitions for the existing Mini-Millennium example plots and reports quantitative residuals.
 
+The initial gate is now met for one complete Mini-Millennium input partition: all 32 resolved z=0 stellar-mass-function bins have identical MIMIC and mimic-jax counts, and the all-snapshot field comparison passes its recorded mixed-precision tolerances. The [science-program report](../reports/mini-millennium-sage16-science-program/index.md) is the durable statement of the completed scope and its remaining limitations.
+
 ## First application: Does the numerical timestep matter?
 
 Before population sensitivities, the first application after equivalence quantifies the reference SAGE16 sequential update itself. It refines internal substeps at fixed tree forcing; reports reservoir, SFR, metallicity, BH, and quenched-state convergence; measures baryon/metal residuals and positivity; and maps the finite-step-to-fastest-timescale ratio over halo mass and redshift. Tree-forcing interpolation and baryonic integration resolution are varied separately.
+
+The first 500-tree result is now available for the stellar mass function and integrated stellar, cold, ejected, and black-hole reservoirs. The complete upstream schedule does not converge cleanly through 80 substeps: repeated finite maps change along with rate resolution. This is not a characterization of upstream SAGE as a single low-order ODE solver. A separate adaptive experiment now holds genuine maps outside the integrator and tests 27 branch-smooth fixed-forcing intervals against a 4,096-step RK4 reference. At `rtol=1e-7`, the median/maximum reservoir errors are `2.10e-9`/`6.00e-7`, the maximum stellar-mass error is `2.54e-9 dex`, baryon closure is `2.22e-16`, and the adaptive derivative agrees with symmetric finite differences to `8.31e-7` relative error. Twenty-five boundary- or threshold-crossing intervals still require explicit event localization, so full-tree adaptive convergence remains open.
 
 Only prescriptions with an explicit continuous-rate interpretation are compared with a higher-order fixed-step method. Accuracy is compared at matched right-hand-side evaluations, wall-clock cost, and target error, with compilation separated from warmed execution. Numerical shifts in familiar Mini-Millennium statistics are compared directly with fractional parameter responses so numerical error is not confused with parameter or model uncertainty. See [`numerical_integration.md`](numerical_integration.md).
 

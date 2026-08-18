@@ -112,6 +112,48 @@ On the measured Apple-arm64 CPU run, the 1,000-tree benchmark completed in 93.8 
 
 The resulting `reports/mini-millennium-sage16-initial/index.md` opens directly in GitHub or Obsidian. `report.json` exposes stable status, diagnostic, observable, parameter, artifact, and provenance fields for programmatic queries. The population, response, and refinement NPZ products retain larger arrays and their scientific metadata.
 
+The science-program report is built in independent stages so each expensive calculation releases its JAX compilation state and peak memory before the next begins. The complete-partition parameter response, 1,000-tree finite-difference audit, selected-history response, and 500-tree timestep study are durable inputs to a presentation-only builder:
+
+```bash
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_science_program.py \
+    --skip-history --skip-convergence --skip-finite-difference \
+    --output-json archive/mini-millennium-sage16-parameter-responses.json \
+    --output-arrays archive/mini-millennium-sage16-parameter-responses.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_science_program.py \
+    --tree-start 1500 --tree-count 1000 \
+    --skip-history --skip-convergence \
+    --output-json archive/mini-millennium-sage16-response-validation-1000.json \
+    --output-arrays archive/mini-millennium-sage16-response-validation-1000.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_history.py \
+    --output-json archive/mini-millennium-sage16-history-responses.json \
+    --output-arrays archive/mini-millennium-sage16-history-responses.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/validate_mini_millennium_history_responses.py \
+    --output-json archive/mini-millennium-sage16-history-validation.json \
+    --output-arrays archive/mini-millennium-sage16-history-validation.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_convergence.py \
+    --output-json archive/mini-millennium-sage16-convergence-500.json \
+    --output-arrays archive/mini-millennium-sage16-convergence-500.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_mini_millennium_adaptive.py \
+    --output-json archive/mini-millennium-sage16-adaptive-continuous.json \
+    --output-arrays archive/mini-millennium-sage16-adaptive-continuous.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    examples/build_mini_millennium_science_report.py
+```
+
+The result is `reports/mini-millennium-sage16-science-program/index.md`. The hard-bin stellar mass function remains the upstream-equivalence observable. A labeled Gaussian-CDF finite-volume estimator is used only for population derivatives because the pathwise derivative of fixed hard-bin membership is zero almost everywhere. Historical responses use finite bins in `ln(a)` with redshift labels, and all report claims retain sample sizes and derivative-validation caveats.
+
 For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
 
 Comparison metrics should normally be constructed with `ComparisonMetric.from_values(...)`. It records baseline, candidate, and absolute difference, and defines a fractional difference only for a meaningful nonzero baseline. `derivative_prediction` is a separate optional fractional prediction, so a local elasticity is never confused with the measured finite run-to-run change.

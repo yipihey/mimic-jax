@@ -1,0 +1,44 @@
+{
+  "arrays": "mini-millennium-sage16-convergence-500.npz",
+  "backend": "cpu",
+  "baseline_evolution_seconds": 96.611413792,
+  "default_vs_fine_scalar_fractional_difference": {
+    "BlackHoleMass": 0.45697524203016787,
+    "ColdGas": 0.16742306734290377,
+    "EjectedGas": 0.09603425110326916,
+    "StellarMass": 0.8148564270632794
+  },
+  "fine_reference_substeps": 80,
+  "forcing": "piecewise constant within each merger-tree interval",
+  "input_halos": 23767,
+  "jax_version": "0.4.30",
+  "maximum_coarse_vs_fine_smf_fractional_difference": 0.8261206481007107,
+  "maximum_default_vs_fine_smf_fractional_difference": 0.578082071318437,
+  "median_default_vs_fine_smf_fractional_difference": 0.048093072284100424,
+  "peak_resident_bytes": 23224434688,
+  "refinement_evolution_seconds": [
+    132.811663292,
+    0.0,
+    134.23602433300002,
+    129.67126237499997,
+    160.515988166
+  ],
+  "resolved_smf_bins": 25,
+  "schema_version": "mimic-jax-mini-millennium-convergence/v1",
+  "smf_estimator": {
+    "bandwidth_dex": 0.05,
+    "kind": "Gaussian-CDF finite-volume estimator"
+  },
+  "step_counts": [
+    5,
+    10,
+    20,
+    40,
+    80
+  ],
+  "tree_count": 500,
+  "tree_end": 2864,
+  "tree_file": "simulations/mini-millennium/snapshots/trees_063.1",
+  "tree_selection": "spread",
+  "tree_start": 0
+}

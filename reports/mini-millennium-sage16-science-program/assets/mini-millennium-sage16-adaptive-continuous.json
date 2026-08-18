@@ -1,0 +1,114 @@
+{
+  "adaptive_maximum_absolute_baryon_residual": [
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.220446049250313e-16,
+    2.7755575615628914e-17
+  ],
+  "adaptive_maximum_absolute_stellar_log_shift_dex": [
+    7.637152364816709e-07,
+    2.1162925735672525e-07,
+    2.5420369783662672e-09,
+    8.772545778350646e-10
+  ],
+  "adaptive_maximum_accepted_steps": [
+    38,
+    38,
+    38,
+    38
+  ],
+  "adaptive_maximum_relative_reservoir_error": [
+    7.559454915801194e-06,
+    2.3252312280918527e-06,
+    6.003396597348615e-07,
+    2.602066868543481e-07
+  ],
+  "adaptive_maximum_stability_product": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "adaptive_median_accepted_steps": [
+    2.0,
+    2.0,
+    3.0,
+    6.0
+  ],
+  "adaptive_median_maximum_relative_reservoir_error": [
+    7.0839426087831955e-09,
+    7.083942752884304e-09,
+    2.100647733473135e-09,
+    6.156468350790826e-11
+  ],
+  "adaptive_median_rhs_evaluations": [
+    14.0,
+    14.0,
+    28.0,
+    42.0
+  ],
+  "adaptive_success_counts": [
+    27,
+    27,
+    27,
+    27
+  ],
+  "adaptive_tolerances": [
+    0.001,
+    1e-05,
+    1e-07,
+    1e-09
+  ],
+  "arrays": "mini-millennium-sage16-adaptive-continuous.npz",
+  "backend": "cpu",
+  "candidate_case_count": 52,
+  "case_count": 27,
+  "derivative_validation": {
+    "automatic": 0.4845249162022358,
+    "finite_difference": [
+      0.48452531870912807,
+      0.4845249510062229,
+      0.4845249186802292
+    ],
+    "finite_difference_steps": [
+      0.01,
+      0.003,
+      0.001
+    ],
+    "galaxy_id": 3569000000041,
+    "maximum_relative_error": 8.307248581058382e-07,
+    "parameter": "SfrEfficiency"
+  },
+  "elapsed_seconds": {
+    "adaptive_compile_and_run": [
+      3.1544068750000065,
+      3.1429108749999983,
+      3.2059092079999942,
+      3.156116499999996
+    ],
+    "fixed_compile_and_run": [
+      0.6898949579999964,
+      0.896094749999996,
+      0.896724583000001,
+      0.9125177919999956,
+      0.9278620839999974,
+      0.9017541659999964,
+      0.898469832999993
+    ],
+    "reference_compile_and_run": 0.9091574589999993,
+    "state_sample": 56.916511750000005
+  },
+  "excluded_boundary_or_threshold_cases": 25,
+  "input_halos": 2888,
+  "jacobian_control": "tolerance-scaled infinity norm of D^-1 (d f/d x) D",
+  "jacobian_stability_factor": 1.0,
+  "jax_version": "0.4.30",
+  "peak_resident_bytes": 5267144704,
+  "reference_method": "rk4",
+  "reference_steps": 4096,
+  "schema_version": "mimic-jax-mini-millennium-adaptive-continuous/v1",
+  "scope": "continuous quiescent SAGE16 RHS under fixed halo forcing; no finite maps or events inside adaptive steps",
+  "selection_contract": "all four mass reservoirs remain >1e-8 and the reference trajectory crosses neither the quiescent-star-formation nor cooling-regime threshold",
+  "snapshot": 63,
+  "tree_count": 64
+}

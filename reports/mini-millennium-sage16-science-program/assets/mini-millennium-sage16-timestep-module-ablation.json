@@ -1,0 +1,66 @@
+{
+  "arrays": "mini-millennium-sage16-timestep-module-ablation.npz",
+  "backend": "cpu",
+  "coarse_substeps": 10,
+  "conditions": [
+    "fiducial",
+    "no_disk_instability",
+    "no_satellite_stripping",
+    "no_agn_heating",
+    "no_quasar_or_starburst"
+  ],
+  "disabled_process_multiplier": 0.0,
+  "elapsed_seconds": [
+    [
+      3.941008625,
+      4.082734375
+    ],
+    [
+      0.030943416999999585,
+      0.0349673329999991
+    ],
+    [
+      0.030326249999999888,
+      0.0342975420000009
+    ],
+    [
+      0.030948374999999473,
+      0.03425658300000123
+    ],
+    [
+      0.029257666000001237,
+      0.03459125000000007
+    ]
+  ],
+  "final_coarse_to_fine_ratio": {
+    "fiducial": {
+      "black_hole_mass": 1.5899186537572938,
+      "stellar_mass": 9.476914106783296
+    },
+    "no_agn_heating": {
+      "black_hole_mass": 0.5120963134626146,
+      "stellar_mass": 1.0465025312764549
+    },
+    "no_disk_instability": {
+      "black_hole_mass": 0.9789001776785884,
+      "stellar_mass": 1.0124287237299732
+    },
+    "no_quasar_or_starburst": {
+      "black_hole_mass": null,
+      "stellar_mass": 1.012153025942166
+    },
+    "no_satellite_stripping": {
+      "black_hole_mass": 1.585898646873565,
+      "stellar_mass": 9.538362729002237
+    }
+  },
+  "final_snapshot": 63,
+  "fine_substeps": 80,
+  "input_halos": 88,
+  "interpretation_scope": "single deliberately timestep-sensitive case study; not a population-average attribution",
+  "jax_version": "0.4.30",
+  "peak_resident_bytes": 1724514304,
+  "schema_version": "mimic-jax-mini-millennium-timestep-module-ablation/v1",
+  "selection_reason": "one of the largest matched-galaxy stellar-mass shifts in the 500-tree timestep diagnostic",
+  "tree_index": 91
+}

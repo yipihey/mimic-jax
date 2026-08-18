@@ -10,6 +10,7 @@ Mimic-jax reports connect familiar SAGE results to the evidence needed to trust 
 
 ## Published reference reports
 
+- [What controls galaxies in SAGE16?](reports/mini-millennium-sage16-science-program/index.md) — the complete-partition stellar mass function, its seven-parameter fractional response, an observable–parameter response matrix, parameter similarities, finite-epoch baryon-cycle responses, a cooling/AGN comparison, halo–stellar growth histories, population timestep refinement, and Jacobian-aware adaptive convergence of the separated continuous flows.
 - [SAGE16 Mini-Millennium: from equivalence to baryon-cycle insight](reports/mini-millennium-sage16-initial/index.md) — a complete input-partition stellar mass function, explicit FoF baryon inventory, quantified object-level residuals, larger-sample performance, controlled derivative evidence, and complete provenance.
 
 ## How to read a report

@@ -1,0 +1,52 @@
+{
+  "arrays": "mini-millennium-sage16-response-validation-1000.npz",
+  "backend": "cpu",
+  "convergence_tree_count": 0,
+  "findings": {
+    "dominant_parameter_by_resolved_bin": {
+      "BlackHoleGrowthRate": 0,
+      "FeedbackEjectionEfficiency": 0,
+      "FeedbackReheatingEpsilon": 7,
+      "QuasarModeEfficiency": 0,
+      "RadioModeEfficiency": 0,
+      "ReIncorporationFactor": 0,
+      "SfrEfficiency": 0
+    },
+    "largest_absolute_parameter_response": 2.976405381355732,
+    "maximum_resolved_parameter_fd_absolute_error": 0.07769716398066828,
+    "maximum_soft_vs_hard_fractional_difference": 0.31302163534921856,
+    "median_resolved_parameter_fd_absolute_error": 0.022362646986090876,
+    "median_soft_vs_hard_fractional_difference": 0.03203357911150826
+  },
+  "history_evolution_seconds": null,
+  "input_halos": 19410,
+  "jax_version": "0.4.30",
+  "num_substeps": 10,
+  "parameter_batch_seconds": 119.80098000399985,
+  "parameter_derivative_method": "jax.linearize forward chain rule",
+  "parameter_evolution_seconds": 124.175403417,
+  "parameter_names": [
+    "SfrEfficiency",
+    "FeedbackReheatingEpsilon",
+    "FeedbackEjectionEfficiency",
+    "ReIncorporationFactor",
+    "RadioModeEfficiency",
+    "BlackHoleGrowthRate",
+    "QuasarModeEfficiency"
+  ],
+  "peak_resident_bytes": 17525669888,
+  "process_derivative_method": "not evaluated",
+  "process_names": [],
+  "records": 1003,
+  "schema_version": "mimic-jax-mini-millennium-science-program/v1",
+  "smf_estimator": {
+    "bandwidth_dex": 0.05,
+    "hard_bin_width_dex": 0.09999999999999964,
+    "kind": "Gaussian-CDF finite-volume estimator"
+  },
+  "snapshot": 63,
+  "tree_count": 1000,
+  "tree_end": 2500,
+  "tree_file": "simulations/mini-millennium/snapshots/trees_063.1",
+  "tree_start": 1500
+}

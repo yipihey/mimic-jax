@@ -24,8 +24,14 @@ The initial API deliberately uses finite epochs, not a density called sensitivit
 
 `response_similarity` calculates the cosine similarity between parameter response columns using their pairwise-valid observables. Values near +1 indicate nearly indistinguishable response fingerprints, values near zero indicate distinct patterns, and values near -1 indicate approximately opposite patterns. This diagnoses identifiability separately from influence: a large response says a parameter matters, while a distinct response says the chosen observables may distinguish it from other parameters.
 
+## Complete-tree responses
+
+`linearize_lhalo_partition` differentiates the exact fixed-topology, upstream-sequential SAGE16 map one control direction at a time. Each fixed-shape FoF group is differentiated with a JAX JVP, and the resulting state tangent follows the same host-side progenitor inheritance and snapshot-reset maps as the ordinary galaxy state. Parameter controls are raw derivatives with respect to the selected parameter value. Process-history controls are derivatives with respect to `rate -> rate exp(epsilon)` in one finite `ln(a)` epoch. Merger identities, threshold decisions, and topology remain on the fiducial active branch, so the result is the local piecewise derivative of the implemented numerical SAGE map.
+
+The familiar hard-bin stellar mass function is retained for upstream equivalence, but its pathwise derivative with respect to galaxy masses is zero almost everywhere. `soft_stellar_mass_function` therefore provides an explicitly labeled Gaussian-CDF finite-volume estimator over the same bins. This changes only the summary statistic, not SAGE physics. Every scientific use records its bandwidth, compares its fiducial density with the hard histogram, and validates selected parameter responses against full symmetric tree reruns.
+
 ## Example
 
 [`examples/sage16_fractional_responses.py`](../examples/sage16_fractional_responses.py) calculates a two-observable parameter response and a finite-epoch process response for the controlled implemented central chain. Its process tensor includes coupled `agn_heating`, `disk_instability`, `quasar_mode`, and `starburst` channels; the shared-central `satellite_stripping` row remains explicitly inactive. It is an API and validation example, not a Mini-Millennium scientific conclusion.
 
-The first population application is gated on full catalog equivalence and is described in [`mimic_jax_scientific_program.md`](mimic_jax_scientific_program.md).
+The first population application has passed its catalog-equivalence gate. The [science-program report](../reports/mini-millennium-sage16-science-program/index.md) presents the complete-partition stellar-mass-function response, an observable–parameter matrix, response similarities, and finite-epoch cooling/SN/reincorporation/AGN histories. Its linked NPZ products retain the arrays, estimator metadata, sample counts, and finite-difference evidence.
