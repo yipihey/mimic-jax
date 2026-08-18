@@ -1,27 +1,27 @@
 {
   "batch_size": 128,
   "diagnostic": "mini_millennium_partition_equivalence",
-  "elapsed_seconds": 46.798089583,
-  "field_comparisons": 9408,
+  "elapsed_seconds": 47.389033083,
+  "field_comparisons": 74172,
   "global_tree_offset": 0,
-  "groups_evolved": 2929,
-  "input_halos": 2932,
+  "groups_evolved": 24854,
+  "input_halos": 24885,
   "largest_relative_errors": {
     "BlackHoleMass": 8.276978746835084e-07,
     "BulgeMass": 1.0261239822284551e-06,
-    "ColdGas": 9.63354480632006e-08,
+    "EjectedGas": 6.925191087248095e-07,
     "HotGas": 6.726111791977019e-07,
     "MetalsBulgeMass": 1.108715082409617e-06,
-    "MetalsEjectedGas": 1.9178018817456177e-07,
+    "MetalsColdGas": 1.7468767055106582e-07,
+    "MetalsEjectedGas": 1.2640284694498405e-06,
     "MetalsHotGas": 5.127453732711729e-07,
     "StarFormationRate": 5.460838110593613e-07,
-    "StellarMass": 1.1520799603204068e-07,
     "SupernovaOutflowRate": 5.663091542373877e-07
   },
   "max_batch_members": 512,
   "member_binning": "power_of_two",
   "mismatches": 0,
-  "records_compared": 224,
+  "records_compared": 1766,
   "success": true,
   "tolerances": {
     "float32_and_cooling_heating": {
@@ -34,7 +34,7 @@
       "rtol": 2e-12
     }
   },
-  "tree_count": 100,
-  "tree_end": 1600,
+  "tree_count": 1000,
+  "tree_end": 2500,
   "tree_start": 1500
 }

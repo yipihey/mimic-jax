@@ -1,0 +1,88 @@
+{
+  "all_snapshot_equivalence": {
+    "batch_size": 128,
+    "diagnostic": "mini_millennium_partition_equivalence",
+    "elapsed_seconds": 195.14932066699998,
+    "field_comparisons": 794136,
+    "global_tree_offset": 3432,
+    "groups_evolved": 133708,
+    "input_halos": 151216,
+    "largest_relative_errors": {
+      "ColdGas": 5.255298674455844e-05,
+      "Cooling": 7.413753971246097e-06,
+      "EjectedGas": 2.7183759812032804e-05,
+      "Heating": 7.413753968925966e-06,
+      "HotGas": 6.870674042147584e-06,
+      "MetalsColdGas": 3.942592957173474e-05,
+      "MetalsEjectedGas": 2.748130282270722e-05,
+      "MetalsStellarMass": 6.148895408841781e-06,
+      "StarFormationRate": 2.9957011065562256e-05,
+      "SupernovaOutflowRate": 3.000478864123579e-05
+    },
+    "max_batch_members": 512,
+    "member_binning": "power_of_two",
+    "mismatches": 20,
+    "records_compared": 18908,
+    "success": true,
+    "tolerances": {
+      "float32_and_cooling_heating": {
+        "atol": 2e-06,
+        "rtol": 2e-06
+      },
+      "integer_fields": "exact",
+      "other_float64": {
+        "atol": 2e-12,
+        "rtol": 2e-12
+      }
+    },
+    "tree_count": 2864,
+    "tree_end": 2864,
+    "tree_start": 0
+  },
+  "arrays": "mini-millennium-partition-1-science.npz",
+  "backend": "cpu",
+  "dominant_baryon_reservoir_regimes": [
+    {
+      "log10_halo_mass_max": 10.5,
+      "log10_halo_mass_min": 9.75,
+      "reservoir": "ColdGas"
+    },
+    {
+      "log10_halo_mass_max": 11.5,
+      "log10_halo_mass_min": 10.5,
+      "reservoir": "EjectedGas"
+    },
+    {
+      "log10_halo_mass_max": 12.75,
+      "log10_halo_mass_min": 11.5,
+      "reservoir": "HotGas"
+    }
+  ],
+  "evolution_seconds": 147.038510417,
+  "global_tree_offset": 3432,
+  "groups_evolved": 133708,
+  "hubble_h": 0.73,
+  "input_halos": 151216,
+  "metrics": {
+    "all_smf_bin_mismatches": 0,
+    "maximum_resolved_quenched_fraction_absolute_difference": 0.0,
+    "maximum_resolved_smf_fractional_difference": 0.0,
+    "maximum_resolved_stellar_mass_relative_difference": 3.307473995792409e-06,
+    "maximum_resolved_total_baryon_fractional_difference": 2.2601648211303923e-08,
+    "resolved_baryon_inventory_bins": 11,
+    "resolved_quenched_fraction_bins": 32,
+    "resolved_smf_bin_mismatches": 0,
+    "resolved_smf_bins": 32,
+    "stellar_mass_values_different": 175,
+    "stellar_mass_values_exact": false
+  },
+  "partition_index": 1,
+  "peak_resident_bytes": 8099299328,
+  "records_matched": 3595,
+  "schema_version": "mimic-jax-mini-millennium-science/v1",
+  "snapshot": 63,
+  "tree_count": 2864,
+  "tree_end": 2864,
+  "tree_start": 0,
+  "volume_mpc_over_h_cubed": 30517.578125
+}

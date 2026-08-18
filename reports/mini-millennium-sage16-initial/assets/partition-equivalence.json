@@ -1,0 +1,40 @@
+{
+  "batch_size": 128,
+  "diagnostic": "mini_millennium_partition_equivalence",
+  "elapsed_seconds": 195.14932066699998,
+  "field_comparisons": 794136,
+  "global_tree_offset": 3432,
+  "groups_evolved": 133708,
+  "input_halos": 151216,
+  "largest_relative_errors": {
+    "ColdGas": 5.255298674455844e-05,
+    "Cooling": 7.413753971246097e-06,
+    "EjectedGas": 2.7183759812032804e-05,
+    "Heating": 7.413753968925966e-06,
+    "HotGas": 6.870674042147584e-06,
+    "MetalsColdGas": 3.942592957173474e-05,
+    "MetalsEjectedGas": 2.748130282270722e-05,
+    "MetalsStellarMass": 6.148895408841781e-06,
+    "StarFormationRate": 2.9957011065562256e-05,
+    "SupernovaOutflowRate": 3.000478864123579e-05
+  },
+  "max_batch_members": 512,
+  "member_binning": "power_of_two",
+  "mismatches": 20,
+  "records_compared": 18908,
+  "success": true,
+  "tolerances": {
+    "float32_and_cooling_heating": {
+      "atol": 2e-06,
+      "rtol": 2e-06
+    },
+    "integer_fields": "exact",
+    "other_float64": {
+      "atol": 2e-12,
+      "rtol": 2e-12
+    }
+  },
+  "tree_count": 2864,
+  "tree_end": 2864,
+  "tree_start": 0
+}

@@ -1,14 +1,14 @@
 {
   "headline_artifacts": [
     {
-      "description": "The familiar SAGE diagnostic is sourced from the upstream MIMIC catalogue. It is context, not a claim of full mimic-jax population equivalence.",
-      "key": "stellar_mass_function",
+      "description": "The top panel is the familiar z=0 SAGE16 stellar mass function for one complete Mini-Millennium input partition. The lower panel is the percentage bin-by-bin difference; all 32 bins containing at least five reference galaxies have identical counts.",
+      "key": "partition_stellar_mass_function",
       "media_type": "image/svg+xml",
-      "path": "assets/StellarMassFunction.svg",
+      "path": "assets/StellarMassFunctionComparison.svg",
       "role": "figure",
-      "sha256": "00977af14ee279d74a0cc490f637858dd7f72eaf12be8e46b2b17f9396ee1caf",
-      "size_bytes": 55019,
-      "title": "Upstream MIMIC z=0 stellar mass function"
+      "sha256": "28b6982bbe285b9719cfe8964fe85da287a4b8524217acdcd610c6e900f219e6",
+      "size_bytes": 39068,
+      "title": "MIMIC and mimic-jax stellar mass functions for a complete input partition"
     }
   ],
   "health": [
@@ -20,40 +20,135 @@
           "media_type": "application/json",
           "path": "assets/equivalence.json",
           "role": "diagnostic",
-          "sha256": "79e4068526cc262100a0fe23269413be7dc02cddf2e948cf63a8a2a86a932eb2",
-          "size_bytes": 1095,
-          "title": "Selected-tree equivalence JSON"
+          "sha256": "1cad2f26b97e9fe07b87bbafa92a8dc89f035eb66264009de60d5562a3cc4c3d",
+          "size_bytes": 1106,
+          "title": "Zero-failure 1,000-tree equivalence JSON"
+        },
+        {
+          "description": "All-snapshot field comparison for every tree in Mini-Millennium input partition 1.",
+          "key": "partition_equivalence",
+          "media_type": "application/json",
+          "path": "assets/partition-equivalence.json",
+          "role": "diagnostic",
+          "sha256": "0cf9f1230a5d36c141266fb68b9124ce648f1bd5df0cb0c2a845ec592d4e59e8",
+          "size_bytes": 1105,
+          "title": "Complete-partition equivalence JSON"
         }
       ],
       "key": "upstream_equivalence",
-      "method": "field-by-field catalogue comparison",
+      "method": "field-by-field matching by UniqueGalaxyID over all configured snapshots",
       "metrics": [
         {
-          "description": "Mini-Millennium trees 1500–1599",
-          "key": "comparisons",
-          "label": "Field comparisons",
+          "description": "every tree in input partition 1",
+          "key": "partition_trees",
+          "label": "Trees",
           "unit": "",
-          "value": 9408
+          "value": 2864
         },
         {
-          "description": "zero is required for a passing equivalence check",
-          "key": "mismatches",
+          "description": "all configured output snapshots",
+          "key": "partition_records",
+          "label": "Catalogue records",
+          "unit": "",
+          "value": 18908
+        },
+        {
+          "description": "",
+          "key": "partition_comparisons",
+          "label": "Field comparisons",
+          "unit": "",
+          "value": 794136
+        },
+        {
+          "description": "",
+          "key": "partition_mismatches",
           "label": "Comparisons outside tolerance",
           "unit": "",
-          "value": 0
+          "value": 20
         }
       ],
       "notes": [
-        "This warning prevents a selected-tree pass from being presented as Mini-Millennium population equivalence."
+        "The technical table retains 20 non-bitwise residuals so that science-level identity is not mistaken for a bitwise-equality claim."
       ],
-      "status": "warning",
-      "summary": "The selected 100-tree control passes, but full-population equivalence is not yet established and the separate complex tree-0 gate retains one known mismatch.",
-      "title": "Upstream equivalence",
+      "status": "passed",
+      "summary": "MIMIC and mimic-jax are scientifically indistinguishable for the population observables shown. The 1,000-tree control passes 74,172 field comparisons with zero failures, and all resolved stellar-mass-function bins agree exactly in the complete 2,864-tree partition.",
+      "title": "Science-level upstream equivalence",
       "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
     },
     {
+      "artifacts": [
+        {
+          "description": "Machine-readable scope, metrics, runtime, and evidence-backed findings.",
+          "key": "partition_science_summary",
+          "media_type": "application/json",
+          "path": "assets/partition-science.json",
+          "role": "diagnostic",
+          "sha256": "137c8b29aa42ac4d7cee031fae3a6b75d490eedf743c48748ea67ea79dd202c4",
+          "size_bytes": 2658,
+          "title": "Complete-partition science summary JSON"
+        },
+        {
+          "description": "Matched SMF, group baryon inventory, quenched-fraction, cooling, and heating summaries.",
+          "key": "partition_science_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-partition-1-science.npz",
+          "role": "scientific_array",
+          "sha256": "3d81a5dfd5c79c61725484076319098f5f3a6d8a23eb4dd95ce0921e47f49f5c",
+          "size_bytes": 14410,
+          "title": "Complete-partition science arrays"
+        }
+      ],
+      "key": "stellar_mass_function_equivalence",
+      "method": "matched z=0 catalogue, 0.1-dex bins, one complete input partition",
+      "metrics": [
+        {
+          "description": "at least five MIMIC galaxies per 0.1-dex bin",
+          "key": "resolved_smf_bins",
+          "label": "Resolved SMF bins",
+          "unit": "",
+          "value": 32
+        },
+        {
+          "description": "zero is required by this population-level gate",
+          "key": "resolved_smf_bin_mismatches",
+          "label": "Resolved bins with different counts",
+          "unit": "",
+          "value": 0
+        },
+        {
+          "description": "fractional, not percent",
+          "key": "maximum_smf_difference",
+          "label": "Maximum resolved fractional abundance difference",
+          "unit": "",
+          "value": 0.0
+        },
+        {
+          "description": "out of 3,595 matched z=0 galaxies",
+          "key": "stellar_mass_values_different",
+          "label": "Individual stellar masses that are not bit-identical",
+          "unit": "",
+          "value": 175
+        },
+        {
+          "description": "the small object-level residuals do not cross an SMF bin edge",
+          "key": "maximum_stellar_mass_difference",
+          "label": "Largest resolved stellar-mass relative difference",
+          "unit": "",
+          "value": 3.307473995792409e-06
+        }
+      ],
+      "notes": [
+        "This is a population-level agreement test, weaker than the per-object field gate; both are reported.",
+        "175 individual stellar masses are not bit-identical, so identical histogram counts are not presented as exact per-galaxy equivalence."
+      ],
+      "status": "passed",
+      "summary": "All 32 bins containing at least five MIMIC galaxies have identical mimic-jax counts in the complete-partition z=0 sample.",
+      "title": "Stellar mass function",
+      "tolerance": "exact bin counts where the MIMIC bin contains at least five galaxies"
+    },
+    {
       "artifacts": [],
-      "key": "baryon_conservation",
+      "key": "controlled_baryon_conservation",
       "method": "controlled central source/sink ledger over 1, 2, 4, and 8 substeps",
       "metrics": [
         {
@@ -66,8 +161,8 @@
       ],
       "notes": [],
       "status": "passed",
-      "summary": "Baryon mass conservation satisfies the stated ledger tolerance.",
-      "title": "Baryon conservation",
+      "summary": "The explicit controlled source/sink ledger closes within tolerance; a full Mini-Millennium history ledger was not evaluated.",
+      "title": "Controlled baryon conservation",
       "tolerance": "maximum absolute residual <= 3e-06 1e10 Msun/h"
     },
     {
@@ -82,19 +177,8 @@
       "tolerance": ""
     },
     {
-      "artifacts": [
-        {
-          "description": "Values, validity mask, normalization, names, units, and derivative method.",
-          "key": "controlled_parameter_response",
-          "media_type": "application/x-npz",
-          "path": "assets/controlled_parameter_response.npz",
-          "role": "scientific_array",
-          "sha256": "3e9d54e449e489a115341b684c63bdd7f92abca0437d8749079aede3a0c53e40",
-          "size_bytes": 3557,
-          "title": "Controlled fractional parameter response arrays"
-        }
-      ],
-      "key": "parameter_responses",
+      "artifacts": [],
+      "key": "controlled_gradient_validation",
       "method": "jax.jacrev",
       "metrics": [
         {
@@ -126,66 +210,45 @@
           "value": 4.631531789538179e-05
         }
       ],
-      "notes": [
-        "A 1% increase in `SfrEfficiency` decreases `final_cold_gas` by approximately 0.0889%.",
-        "A 1% increase in `FeedbackReheatingEpsilon` decreases `final_cold_gas` by approximately 0.0747%.",
-        "A 1% increase in `SfrEfficiency` increases `final_stellar_mass` by approximately 0.0612%.",
-        "A 1% increase in `FeedbackReheatingEpsilon` does not change `final_stellar_mass` by approximately 0%."
-      ],
+      "notes": [],
       "status": "passed",
-      "summary": "At least one tested symmetric finite-difference step agrees with automatic differentiation within the stated tolerance.",
-      "title": "Fractional parameter responses",
+      "summary": "A controlled quiescent SAGE16 step has a logarithmic parameter response that agrees with symmetric finite differences; this is not yet an SMF response.",
+      "title": "Controlled gradient validation",
       "tolerance": "best tested maximum absolute error <= 2e-05"
     },
     {
-      "artifacts": [
-        {
-          "description": "Substeps, observables, provisional errors, and empirical orders.",
-          "key": "controlled_timestep_refinement",
-          "media_type": "application/x-npz",
-          "path": "assets/controlled_timestep_refinement.npz",
-          "role": "scientific_array",
-          "sha256": "7a757783185f4d90bf505bdf36a36742be4a1886ffb42a03285a1a5b432ca656",
-          "size_bytes": 2200,
-          "title": "Controlled timestep-refinement arrays"
-        }
-      ],
-      "key": "timestep_refinement",
-      "method": "upstream_sequential",
-      "metrics": [
-        {
-          "description": "reported only for observables with nonzero finest values",
-          "key": "maximum_relative_difference",
-          "label": "Maximum coarsest-to-finest relative difference",
-          "unit": "",
-          "value": 0.3225990093927403
-        },
-        {
-          "description": "in the underlying observable units",
-          "key": "maximum_absolute_difference",
-          "label": "Maximum coarsest-to-finest absolute difference",
-          "unit": "",
-          "value": 0.6307525634765625
-        }
-      ],
+      "artifacts": [],
+      "key": "smf_parameter_response",
+      "method": "not evaluated",
+      "metrics": [],
       "notes": [
-        "The finest requested run is a provisional reference, not an exact solution.",
-        "Halo forcing interpolation: `piecewise_constant`."
+        "The next science milestone remains E_i(M*) = d ln phi / d ln theta with symmetric finite-difference validation."
       ],
       "status": "not_evaluated",
-      "summary": "Timestep refinement was evaluated, but no acceptance threshold was supplied.",
-      "title": "Timestep refinement",
+      "summary": "A validated differentiable estimator for hard stellar-mass-function bin membership has not yet been run on this partition. No raw or zero-almost-everywhere histogram gradient is shown.",
+      "title": "Stellar-mass-function parameter response",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "population_timestep_convergence",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "The stellar mass function has not yet been recomputed at refined Mini-Millennium substeps. The controlled central refinement remains technical API evidence only.",
+      "title": "Population timestep convergence",
       "tolerance": ""
     }
   ],
   "identity": {
-    "dataset": "Mini-Millennium, selected trees 1500–1599",
+    "dataset": "Mini-Millennium partition 1, all 2,864 trees; 1/8 simulation volume",
     "integration_method": "upstream_sequential, 10 configured substeps",
     "model": "fiducial SAGE16",
     "parameter_set": "sage16_mini-millennium fiducial",
     "run_id": "mini-millennium-sage16-initial",
-    "summary": "This report combines familiar upstream MIMIC figures with the current selected-tree mimic-jax equivalence gate and controlled conservation, timestep, gradient, and performance diagnostics. It deliberately does not claim full-population equivalence.",
-    "title": "SAGE16 Mini-Millennium: initial mimic-jax run report"
+    "summary": "A complete Mini-Millennium input partition now connects a familiar SAGE16 stellar mass function to an explicit baryon inventory. MIMIC and mimic-jax are scientifically indistinguishable for the observables shown; strict numerical residuals, controlled derivative checks, and unavailable population responses remain visible so the science story never outruns the evidence.",
+    "title": "SAGE16 Mini-Millennium: from equivalence to baryon-cycle insight"
   },
   "kind": "run",
   "links": [
@@ -202,37 +265,51 @@
     {
       "description": "",
       "key": "trees",
-      "label": "Trees in selected gate",
+      "label": "Trees in science sample",
       "unit": "",
-      "value": 100
+      "value": 2864
     },
     {
       "description": "",
       "key": "input_halos",
       "label": "Input halos",
       "unit": "",
-      "value": 2932
+      "value": 151216
     },
     {
       "description": "",
       "key": "catalogue_records",
-      "label": "Catalogue records compared",
+      "label": "Matched z=0 galaxies",
       "unit": "",
-      "value": 224
+      "value": 3595
     },
     {
       "description": "",
-      "key": "cold_evolution_seconds",
-      "label": "First evolution call",
+      "key": "partition_evolution_seconds",
+      "label": "Complete-partition evolution",
       "unit": "s",
-      "value": 46.461243042
+      "value": 147.038510417
     },
     {
       "description": "",
-      "key": "warm_evolution_seconds",
-      "label": "Best warm evolution call",
+      "key": "benchmark_first_seconds",
+      "label": "1,000-tree first benchmark call",
       "unit": "s",
-      "value": 1.0160164159999994
+      "value": 93.762457417
+    },
+    {
+      "description": "",
+      "key": "benchmark_warm_seconds",
+      "label": "1,000-tree best warm call",
+      "unit": "s",
+      "value": 4.774757000000008
+    },
+    {
+      "description": "",
+      "key": "partition_peak_memory",
+      "label": "Complete-partition peak memory",
+      "unit": "GiB",
+      "value": 7.543060302734375
     },
     {
       "description": "",
@@ -244,91 +321,91 @@
   ],
   "parameters": [
     {
-      "description": "",
+      "description": "Universal baryon fraction available to haloes.",
       "name": "GlobalBaryonFraction",
       "unit": "dimensionless",
       "value": 0.17
     },
     {
-      "description": "",
+      "description": "Quiescent star-formation efficiency per disk dynamical time.",
       "name": "SfrEfficiency",
       "unit": "dimensionless",
       "value": 0.05
     },
     {
-      "description": "",
+      "description": "Disk-radius multiple used by the star-formation threshold.",
       "name": "StarFormingDiskFactor",
       "unit": "dimensionless",
       "value": 3.0
     },
     {
-      "description": "",
+      "description": "SN reheating mass loading from cold to hot gas.",
       "name": "FeedbackReheatingEpsilon",
       "unit": "dimensionless",
       "value": 3.0
     },
     {
-      "description": "",
+      "description": "SN energy efficiency for ejecting gas from the halo.",
       "name": "FeedbackEjectionEfficiency",
       "unit": "dimensionless",
       "value": 0.3
     },
     {
-      "description": "",
+      "description": "Return rate of ejected gas to the hot halo.",
       "name": "ReIncorporationFactor",
       "unit": "dimensionless",
       "value": 0.15
     },
     {
-      "description": "",
+      "description": "Radio-mode black-hole accretion prescription selector.",
       "name": "AGNrecipe",
       "unit": "dimensionless",
       "value": 2
     },
     {
-      "description": "",
+      "description": "Efficiency with which radio-mode accretion heats halo gas.",
       "name": "RadioModeEfficiency",
       "unit": "dimensionless",
       "value": 0.08
     },
     {
-      "description": "",
+      "description": "Cold-gas accretion efficiency in quasar-mode events.",
       "name": "BlackHoleGrowthRate",
       "unit": "dimensionless",
       "value": 0.015
     },
     {
-      "description": "",
+      "description": "Efficiency of quasar-mode gas ejection.",
       "name": "QuasarModeEfficiency",
       "unit": "dimensionless",
       "value": 0.005
     },
     {
-      "description": "",
+      "description": "Fraction of newly formed stellar mass returned immediately to gas.",
       "name": "RecycleFraction",
       "unit": "dimensionless",
       "value": 0.43
     },
     {
-      "description": "",
+      "description": "New metal mass produced per unit newly formed stellar mass.",
       "name": "Yield",
       "unit": "dimensionless",
       "value": 0.025
     },
     {
-      "description": "",
+      "description": "Fraction of new metals deposited directly into hot gas.",
       "name": "FracZleaveDisk",
       "unit": "dimensionless",
       "value": 0.0
     },
     {
-      "description": "",
+      "description": "Baryonic mass-ratio threshold for a major merger.",
       "name": "ThresholdMajorMerger",
       "unit": "dimensionless",
       "value": 0.3
     },
     {
-      "description": "",
+      "description": "Halo-to-baryon threshold for satellite disruption.",
       "name": "ThresholdSatDisruption",
       "unit": "dimensionless",
       "value": 1.0
@@ -339,9 +416,15 @@
       "mimic_venv/bin/python",
       "examples/build_mini_millennium_report.py",
       "--equivalence-json",
-      "benchmarks/mini-millennium-equivalence.json",
+      "archive/mini-millennium-equivalence-1000.json",
+      "--partition-equivalence-json",
+      "archive/mini-millennium-equivalence-partition-1.json",
       "--benchmark-json",
-      "benchmarks/mini-millennium-benchmark.json"
+      "archive/mini-millennium-benchmark-1000.json",
+      "--science-json",
+      "archive/mini-millennium-partition-1-science.json",
+      "--science-arrays",
+      "archive/mini-millennium-partition-1-science.npz"
     ],
     "files": [
       {
@@ -415,11 +498,41 @@
         "role": "input",
         "sha256": "18e810dc839da64e84bbb2439b22255f64819ba472f7af315d93b00c8a8443f7",
         "size_bytes": 5856791
+      },
+      {
+        "path": "archive/mini-millennium-equivalence-1000.json",
+        "role": "input",
+        "sha256": "1cad2f26b97e9fe07b87bbafa92a8dc89f035eb66264009de60d5562a3cc4c3d",
+        "size_bytes": 1106
+      },
+      {
+        "path": "archive/mini-millennium-equivalence-partition-1.json",
+        "role": "input",
+        "sha256": "0cf9f1230a5d36c141266fb68b9124ce648f1bd5df0cb0c2a845ec592d4e59e8",
+        "size_bytes": 1105
+      },
+      {
+        "path": "archive/mini-millennium-benchmark-1000.json",
+        "role": "input",
+        "sha256": "24f07615a8d6819e942cc05f9d2b6922d0a441046ead7471ce61a9cff55eee92",
+        "size_bytes": 1590
+      },
+      {
+        "path": "archive/mini-millennium-partition-1-science.json",
+        "role": "input",
+        "sha256": "137c8b29aa42ac4d7cee031fae3a6b75d490eedf743c48748ea67ea79dd202c4",
+        "size_bytes": 2658
+      },
+      {
+        "path": "archive/mini-millennium-partition-1-science.npz",
+        "role": "input",
+        "sha256": "3d81a5dfd5c79c61725484076319098f5f3a6d8a23eb4dd95ce0921e47f49f5c",
+        "size_bytes": 14410
       }
     ],
-    "generated_at": "2026-08-18T09:08:43Z",
+    "generated_at": "2026-08-18T10:10:51Z",
     "git_branch": "main",
-    "git_commit": "56d9da55fa26c1433c74d3ae534eb5a6ccb808fb",
+    "git_commit": "e58faf0ee137e07709e53ace3119810cc54d5eac",
     "git_dirty": false,
     "hardware": {
       "jax_backend": "cpu",
@@ -458,6 +571,22 @@
   "schema_version": "mimic-jax-report/v1",
   "sections": [
     {
+      "artifacts": [],
+      "diagnostics": [],
+      "key": "findings",
+      "links": [],
+      "notes": [
+        "The complete partition contains 2,864 trees, 151,216 input halos, and 3,595 matched z=0 galaxies; its evolution with the persistent compilation cache enabled completed in 147.0 s.",
+        "All 32 stellar-mass bins with at least five reference galaxies have identical MIMIC and mimic-jax counts.",
+        "Cold gas is the largest modeled share of the universal baryon allotment over 9.75 ≤ log10(Mvir/Msun) < 10.50 in bins containing at least ten FoF groups.",
+        "Ejected gas is the largest modeled share of the universal baryon allotment over 10.50 ≤ log10(Mvir/Msun) < 11.50 in bins containing at least ten FoF groups.",
+        "Hot gas is the largest modeled share of the universal baryon allotment over 11.50 ≤ log10(Mvir/Msun) < 12.75 in bins containing at least ten FoF groups.",
+        "The complete all-snapshot field gate retains 20 residuals among 794,136 comparisons (0.002518%, maximum relative difference 5.26e-05). These are negligible for the science observables shown, while remaining visible in technical validation."
+      ],
+      "summary": "These statements are generated from the committed JSON/NPZ products rather than being hand-maintained narrative claims.",
+      "title": "What did this larger run teach us?"
+    },
+    {
       "artifacts": [
         {
           "description": "The familiar SAGE diagnostic is sourced from the upstream MIMIC catalogue. It is context, not a claim of full mimic-jax population equivalence.",
@@ -465,133 +594,211 @@
           "media_type": "image/svg+xml",
           "path": "assets/StellarMassFunction.svg",
           "role": "figure",
-          "sha256": "00977af14ee279d74a0cc490f637858dd7f72eaf12be8e46b2b17f9396ee1caf",
+          "sha256": "a791219a7af7fb1767d11a81ea97b37178b144c3fc1c69c213f463cc38757bd8",
           "size_bytes": 55019,
           "title": "Upstream MIMIC z=0 stellar mass function"
-        },
-        {
-          "description": "An existing model-local SAGE16 plot generated without report-specific logic.",
-          "key": "black_hole_bulge_relation",
-          "media_type": "image/svg+xml",
-          "path": "assets/BlackHoleBulgeRelation.svg",
-          "role": "figure",
-          "sha256": "1cca11a822629aa80d9e186e7ea5bafddb6fd7fdd447acea444474cd29481844",
-          "size_bytes": 992371,
-          "title": "Upstream MIMIC black-hole–bulge relation"
         }
       ],
-      "diagnostics": [],
-      "key": "familiar_science",
-      "links": [
-        {
-          "target": "../../plot/mimic-plot/README.md",
-          "title": "SAGE16 plotting manual"
-        }
-      ],
-      "notes": [],
-      "summary": "These figures come directly from the existing SAGE16 plot registry and the upstream MIMIC catalogue. They establish the practitioner-facing context before new diagnostics are introduced.",
-      "title": "Familiar SAGE science"
-    },
-    {
-      "artifacts": [],
       "diagnostics": [
         {
           "artifacts": [
             {
-              "description": "Exact evaluated scope, comparison count, tolerances, and residual summary.",
-              "key": "selected_tree_equivalence",
+              "description": "Machine-readable scope, metrics, runtime, and evidence-backed findings.",
+              "key": "partition_science_summary",
               "media_type": "application/json",
-              "path": "assets/equivalence.json",
+              "path": "assets/partition-science.json",
               "role": "diagnostic",
-              "sha256": "79e4068526cc262100a0fe23269413be7dc02cddf2e948cf63a8a2a86a932eb2",
-              "size_bytes": 1095,
-              "title": "Selected-tree equivalence JSON"
-            }
-          ],
-          "key": "upstream_equivalence",
-          "method": "field-by-field catalogue comparison",
-          "metrics": [
-            {
-              "description": "Mini-Millennium trees 1500–1599",
-              "key": "comparisons",
-              "label": "Field comparisons",
-              "unit": "",
-              "value": 9408
+              "sha256": "137c8b29aa42ac4d7cee031fae3a6b75d490eedf743c48748ea67ea79dd202c4",
+              "size_bytes": 2658,
+              "title": "Complete-partition science summary JSON"
             },
             {
-              "description": "zero is required for a passing equivalence check",
-              "key": "mismatches",
-              "label": "Comparisons outside tolerance",
-              "unit": "",
-              "value": 0
+              "description": "Matched SMF, group baryon inventory, quenched-fraction, cooling, and heating summaries.",
+              "key": "partition_science_arrays",
+              "media_type": "application/x-npz",
+              "path": "assets/mini-millennium-partition-1-science.npz",
+              "role": "scientific_array",
+              "sha256": "3d81a5dfd5c79c61725484076319098f5f3a6d8a23eb4dd95ce0921e47f49f5c",
+              "size_bytes": 14410,
+              "title": "Complete-partition science arrays"
             }
           ],
-          "notes": [],
+          "key": "stellar_mass_function_equivalence",
+          "method": "matched z=0 catalogue, 0.1-dex bins, one complete input partition",
+          "metrics": [
+            {
+              "description": "at least five MIMIC galaxies per 0.1-dex bin",
+              "key": "resolved_smf_bins",
+              "label": "Resolved SMF bins",
+              "unit": "",
+              "value": 32
+            },
+            {
+              "description": "zero is required by this population-level gate",
+              "key": "resolved_smf_bin_mismatches",
+              "label": "Resolved bins with different counts",
+              "unit": "",
+              "value": 0
+            },
+            {
+              "description": "fractional, not percent",
+              "key": "maximum_smf_difference",
+              "label": "Maximum resolved fractional abundance difference",
+              "unit": "",
+              "value": 0.0
+            },
+            {
+              "description": "out of 3,595 matched z=0 galaxies",
+              "key": "stellar_mass_values_different",
+              "label": "Individual stellar masses that are not bit-identical",
+              "unit": "",
+              "value": 175
+            },
+            {
+              "description": "the small object-level residuals do not cross an SMF bin edge",
+              "key": "maximum_stellar_mass_difference",
+              "label": "Largest resolved stellar-mass relative difference",
+              "unit": "",
+              "value": 3.307473995792409e-06
+            }
+          ],
+          "notes": [
+            "This is a population-level agreement test, weaker than the per-object field gate; both are reported.",
+            "175 individual stellar masses are not bit-identical, so identical histogram counts are not presented as exact per-galaxy equivalence."
+          ],
           "status": "passed",
-          "summary": "All requested comparisons passed for Mini-Millennium trees 1500–1599.",
-          "title": "Upstream equivalence",
-          "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
+          "summary": "All 32 bins containing at least five MIMIC galaxies have identical mimic-jax counts in the complete-partition z=0 sample.",
+          "title": "Stellar mass function",
+          "tolerance": "exact bin counts where the MIMIC bin contains at least five galaxies"
         }
       ],
       "key": "equivalence",
       "links": [
+        {
+          "target": "../../plot/mimic-plot/README.md",
+          "title": "SAGE16 plotting manual"
+        },
         {
           "target": "../../docs/mini_millennium_equivalence.md",
           "title": "Mini-Millennium equivalence evidence"
         }
       ],
       "notes": [],
-      "summary": "The evaluated sample compares catalogue fields by `UniqueGalaxyID` over every configured output snapshot. Its scope is stated explicitly.",
-      "title": "What has been matched upstream?"
+      "summary": "The opening comparison uses a complete Mini-Millennium input partition with the same volume normalization and 0.1-dex bins as the familiar MIMIC plot. The full-volume upstream figure below retains the observational context used by SAGE practitioners.",
+      "title": "Does mimic-jax reproduce familiar SAGE16?"
     },
     {
-      "artifacts": [],
-      "diagnostics": [
+      "artifacts": [
         {
-          "artifacts": [],
-          "key": "baryon_conservation",
-          "method": "controlled central source/sink ledger over 1, 2, 4, and 8 substeps",
-          "metrics": [
-            {
-              "description": "ledger delta minus explicit sources plus sinks",
-              "key": "maximum_absolute_residual",
-              "label": "Maximum absolute residual",
-              "unit": "1e10 Msun/h",
-              "value": 2.4372711777687073e-06
-            }
-          ],
-          "notes": [],
-          "status": "passed",
-          "summary": "Baryon mass conservation satisfies the stated ledger tolerance.",
-          "title": "Baryon conservation",
-          "tolerance": "maximum absolute residual <= 3e-06 1e10 Msun/h"
-        },
-        {
-          "artifacts": [],
-          "key": "metal_conservation",
-          "method": "",
-          "metrics": [],
-          "notes": [],
-          "status": "not_evaluated",
-          "summary": "A report-level Mini-Millennium metal ledger was not evaluated for this run.",
-          "title": "Metal conservation",
-          "tolerance": ""
+          "description": "Reservoir masses are summed over each FoF group and normalized by its universal baryon allotment. The residual panel compares the same inventory between mimic-jax and MIMIC; it is a catalogue-equivalence residual, not a time-integrated conservation residual.",
+          "key": "partition_baryon_inventory",
+          "media_type": "image/svg+xml",
+          "path": "assets/BaryonInventory.svg",
+          "role": "figure",
+          "sha256": "be68f4edaa1a39cec7076993102545870461120db50bf409e2acce16d243ede1",
+          "size_bytes": 26905,
+          "title": "Where SAGE16 stores the baryons across halo mass"
         }
       ],
-      "key": "conservation",
+      "diagnostics": [],
+      "key": "baryons",
       "links": [
+        {
+          "target": "../../docs/reservoirs_and_transfers.md",
+          "title": "Reservoir and transfer model"
+        },
         {
           "target": "../../docs/conservation.md",
           "title": "Conservation contract"
         }
       ],
-      "notes": [],
-      "summary": "Executable ledgers make closed transfers and explicit sources or sinks visible. This first report includes a controlled baryon check only.",
-      "title": "Conservation"
+      "notes": [
+        "Cold gas is the largest modeled share of the universal baryon allotment over 9.75 ≤ log10(Mvir/Msun) < 10.50 in bins containing at least ten FoF groups.",
+        "Ejected gas is the largest modeled share of the universal baryon allotment over 10.50 ≤ log10(Mvir/Msun) < 11.50 in bins containing at least ten FoF groups.",
+        "Hot gas is the largest modeled share of the universal baryon allotment over 11.50 ≤ log10(Mvir/Msun) < 12.75 in bins containing at least ten FoF groups."
+      ],
+      "summary": "The explicit SAGE reservoirs can be read as a physical inventory. Each stack is the total reservoir mass of a FoF group divided by its universal baryon allotment, making reionization/ejection suppression and the hot-halo transition visible before the small catalogue-equivalence residual is shown.",
+      "title": "Where are the baryons?"
     },
     {
       "artifacts": [],
       "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "smf_parameter_response",
+          "method": "not evaluated",
+          "metrics": [],
+          "notes": [
+            "The next science milestone remains E_i(M*) = d ln phi / d ln theta with symmetric finite-difference validation."
+          ],
+          "status": "not_evaluated",
+          "summary": "A validated differentiable estimator for hard stellar-mass-function bin membership has not yet been run on this partition. No raw or zero-almost-everywhere histogram gradient is shown.",
+          "title": "Stellar-mass-function parameter response",
+          "tolerance": ""
+        }
+      ],
+      "key": "smf_responses",
+      "links": [
+        {
+          "target": "../../docs/sensitivity.md",
+          "title": "Fractional-response API"
+        }
+      ],
+      "notes": [],
+      "summary": "The public-facing quantity will be percentage abundance change per 1% parameter change. Hard catalogue bins are discrete, so mimic-jax will not substitute the pathwise derivative of fixed bin assignments for a population response.",
+      "title": "What controls the stellar mass function?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "An existing model-local SAGE16 plot generated without report-specific logic.",
+          "key": "black_hole_bulge_relation",
+          "media_type": "image/svg+xml",
+          "path": "assets/BlackHoleBulgeRelation.svg",
+          "role": "figure",
+          "sha256": "39f75129f1fe5b35f31ff44413faaa31defe376f2de8c07fd5fc95bc8c3d6c77",
+          "size_bytes": 992371,
+          "title": "Upstream MIMIC black-hole–bulge relation"
+        }
+      ],
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "historical_process_response",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "not_evaluated",
+          "summary": "Epoch-binned cooling and AGN perturbations were not evaluated for this catalogue, so the report does not infer causal regulation from instantaneous output correlations.",
+          "title": "Cooling and AGN historical response",
+          "tolerance": ""
+        }
+      ],
+      "key": "agn_regulation",
+      "links": [
+        {
+          "target": "../../docs/radio_mode_heating.md",
+          "title": "Radio-mode heating prescription"
+        }
+      ],
+      "notes": [],
+      "summary": "The familiar black-hole–bulge relation establishes the relevant SAGE population, but the causal cooling-versus-AGN response map is deliberately withheld until epoch-binned process perturbations are validated.",
+      "title": "Where does AGN regulation take over from cooling?"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "population_timestep_convergence",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "not_evaluated",
+          "summary": "The stellar mass function has not yet been recomputed at refined Mini-Millennium substeps. The controlled central refinement remains technical API evidence only.",
+          "title": "Population timestep convergence",
+          "tolerance": ""
+        },
         {
           "artifacts": [
             {
@@ -641,12 +848,208 @@
         }
       ],
       "notes": [],
-      "summary": "The faithful upstream-sequential method is refined on a controlled fixed-forcing central. This is API evidence, not Mini-Millennium convergence.",
-      "title": "Numerical integration"
+      "summary": "Population-level convergence must be expressed through familiar observables. It has not yet been run for this partition; the controlled fixed-forcing refinement is retained below as scoped technical evidence.",
+      "title": "How accurately are these histories being integrated?"
     },
     {
       "artifacts": [],
       "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Cold/warm timing, backend, device, memory, shapes, and catalogue digest.",
+              "key": "partition_benchmark",
+              "media_type": "application/json",
+              "path": "assets/benchmark.json",
+              "role": "benchmark",
+              "sha256": "24f07615a8d6819e942cc05f9d2b6922d0a441046ead7471ce61a9cff55eee92",
+              "size_bytes": 1590,
+              "title": "Selected-tree benchmark JSON"
+            }
+          ],
+          "key": "performance",
+          "method": "wall-clock benchmark",
+          "metrics": [
+            {
+              "description": "includes cold compilation and execution in this benchmark process",
+              "key": "first_evolution_seconds",
+              "label": "First evolution time",
+              "unit": "s",
+              "value": 93.762457417
+            },
+            {
+              "description": "best repeat after the first invocation",
+              "key": "best_warm_evolution_seconds",
+              "label": "Best warm evolution time",
+              "unit": "s",
+              "value": 4.774757000000008
+            },
+            {
+              "description": "",
+              "key": "tree_count",
+              "label": "Trees",
+              "unit": "",
+              "value": 1000
+            },
+            {
+              "description": "",
+              "key": "input_halos",
+              "label": "Input halos",
+              "unit": "",
+              "value": 24885
+            }
+          ],
+          "notes": [
+            "Compilation cost and warmed execution are reported separately."
+          ],
+          "status": "warning",
+          "summary": "Warmed execution is much faster than the first call, but the cold catalogue path is currently much slower than upstream MIMIC; no JAX speedup is claimed.",
+          "title": "Performance",
+          "tolerance": ""
+        }
+      ],
+      "key": "performance",
+      "links": [
+        {
+          "target": "../../docs/performance.md",
+          "title": "Current performance evidence"
+        }
+      ],
+      "notes": [],
+      "summary": "The 1,000-tree benchmark is ten times the original report sample and separates first-process and warmed calls. The complete-partition science product records its own runtime and peak memory; neither number is compared unfairly with upstream compilation excluded on only one side.",
+      "title": "Can a scientifically larger sample run interactively?"
+    },
+    {
+      "artifacts": [],
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "Exact evaluated scope, comparison count, tolerances, and residual summary.",
+              "key": "selected_tree_equivalence",
+              "media_type": "application/json",
+              "path": "assets/equivalence.json",
+              "role": "diagnostic",
+              "sha256": "1cad2f26b97e9fe07b87bbafa92a8dc89f035eb66264009de60d5562a3cc4c3d",
+              "size_bytes": 1106,
+              "title": "Zero-failure 1,000-tree equivalence JSON"
+            }
+          ],
+          "key": "upstream_equivalence",
+          "method": "field-by-field catalogue comparison",
+          "metrics": [
+            {
+              "description": "Mini-Millennium trees 1500–2499",
+              "key": "comparisons",
+              "label": "Field comparisons",
+              "unit": "",
+              "value": 74172
+            },
+            {
+              "description": "zero is required for a passing equivalence check",
+              "key": "mismatches",
+              "label": "Comparisons outside tolerance",
+              "unit": "",
+              "value": 0
+            }
+          ],
+          "notes": [],
+          "status": "passed",
+          "summary": "All requested comparisons passed for Mini-Millennium trees 1500–2499.",
+          "title": "Upstream equivalence",
+          "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
+        },
+        {
+          "artifacts": [
+            {
+              "description": "All-snapshot field comparison for every tree in Mini-Millennium input partition 1.",
+              "key": "partition_equivalence",
+              "media_type": "application/json",
+              "path": "assets/partition-equivalence.json",
+              "role": "diagnostic",
+              "sha256": "0cf9f1230a5d36c141266fb68b9124ce648f1bd5df0cb0c2a845ec592d4e59e8",
+              "size_bytes": 1105,
+              "title": "Complete-partition equivalence JSON"
+            },
+            {
+              "description": "The strict field gate remains visible: 20 comparisons exceed the stated mixed-precision tolerance even though the resolved stellar-mass-function bins agree.",
+              "key": "partition_field_residuals",
+              "media_type": "image/svg+xml",
+              "path": "assets/PartitionFieldResiduals.svg",
+              "role": "figure",
+              "sha256": "40461522ac884576efa2c74170313b4bea23d57dd1dd438107d932c92ce188b4",
+              "size_bytes": 15460,
+              "title": "Largest per-field residuals in the complete-partition comparison"
+            }
+          ],
+          "key": "partition_equivalence",
+          "method": "field-by-field matching by UniqueGalaxyID over all configured snapshots",
+          "metrics": [
+            {
+              "description": "every tree in input partition 1",
+              "key": "partition_trees",
+              "label": "Trees",
+              "unit": "",
+              "value": 2864
+            },
+            {
+              "description": "all configured output snapshots",
+              "key": "partition_records",
+              "label": "Catalogue records",
+              "unit": "",
+              "value": 18908
+            },
+            {
+              "description": "",
+              "key": "partition_comparisons",
+              "label": "Field comparisons",
+              "unit": "",
+              "value": 794136
+            },
+            {
+              "description": "",
+              "key": "partition_mismatches",
+              "label": "Comparisons outside tolerance",
+              "unit": "",
+              "value": 20
+            }
+          ],
+          "notes": [],
+          "status": "warning",
+          "summary": "20 of 794,136 strict field comparisons exceed the stated mixed-precision tolerance. The residuals remain open; agreement of a population statistic does not erase them.",
+          "title": "Complete-partition field comparison",
+          "tolerance": "float32/Cooling/Heating rtol=atol=2e-6; other float64 rtol=atol=2e-12; integers exact"
+        },
+        {
+          "artifacts": [],
+          "key": "baryon_conservation",
+          "method": "controlled central source/sink ledger over 1, 2, 4, and 8 substeps",
+          "metrics": [
+            {
+              "description": "ledger delta minus explicit sources plus sinks",
+              "key": "maximum_absolute_residual",
+              "label": "Maximum absolute residual",
+              "unit": "1e10 Msun/h",
+              "value": 2.4372711777687073e-06
+            }
+          ],
+          "notes": [],
+          "status": "passed",
+          "summary": "Baryon mass conservation satisfies the stated ledger tolerance.",
+          "title": "Baryon conservation",
+          "tolerance": "maximum absolute residual <= 3e-06 1e10 Msun/h"
+        },
+        {
+          "artifacts": [],
+          "key": "metal_conservation",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "not_evaluated",
+          "summary": "A report-level Mini-Millennium metal ledger was not evaluated for this run.",
+          "title": "Metal conservation",
+          "tolerance": ""
+        },
         {
           "artifacts": [
             {
@@ -704,84 +1107,24 @@
           "tolerance": "best tested maximum absolute error <= 2e-05"
         }
       ],
-      "key": "parameter_responses",
+      "key": "technical_validation",
       "links": [
+        {
+          "target": "../../docs/mini_millennium_equivalence.md",
+          "title": "Mini-Millennium equivalence evidence"
+        },
+        {
+          "target": "../../docs/conservation.md",
+          "title": "Conservation contract"
+        },
         {
           "target": "../../docs/sensitivity.md",
           "title": "Fractional-response API"
         }
       ],
       "notes": [],
-      "summary": "The first validated derivative is shown as a fractional response: percentage change in the observable per 1% parameter change. The example is a controlled quiescent disk step, not a population response.",
-      "title": "How does familiar SAGE physics change the result?"
-    },
-    {
-      "artifacts": [],
-      "diagnostics": [
-        {
-          "artifacts": [
-            {
-              "description": "Cold/warm timing, backend, device, memory, shapes, and catalogue digest.",
-              "key": "partition_benchmark",
-              "media_type": "application/json",
-              "path": "assets/benchmark.json",
-              "role": "benchmark",
-              "sha256": "e9213b8640d8a55312cef456263b90028c4b4b28288c0acaff217b206242938c",
-              "size_bytes": 1539,
-              "title": "Selected-tree benchmark JSON"
-            }
-          ],
-          "key": "performance",
-          "method": "wall-clock benchmark",
-          "metrics": [
-            {
-              "description": "includes cold compilation and execution in this benchmark process",
-              "key": "first_evolution_seconds",
-              "label": "First evolution time",
-              "unit": "s",
-              "value": 46.461243042
-            },
-            {
-              "description": "best repeat after the first invocation",
-              "key": "best_warm_evolution_seconds",
-              "label": "Best warm evolution time",
-              "unit": "s",
-              "value": 1.0160164159999994
-            },
-            {
-              "description": "",
-              "key": "tree_count",
-              "label": "Trees",
-              "unit": "",
-              "value": 100
-            },
-            {
-              "description": "",
-              "key": "input_halos",
-              "label": "Input halos",
-              "unit": "",
-              "value": 2932
-            }
-          ],
-          "notes": [
-            "Compilation cost and warmed execution are reported separately."
-          ],
-          "status": "warning",
-          "summary": "Warmed execution is much faster than the first call, but the cold catalogue path is currently much slower than upstream MIMIC; no JAX speedup is claimed.",
-          "title": "Performance",
-          "tolerance": ""
-        }
-      ],
-      "key": "performance",
-      "links": [
-        {
-          "target": "../../docs/performance.md",
-          "title": "Current performance evidence"
-        }
-      ],
-      "notes": [],
-      "summary": "Compilation, first execution, warmed execution, host work, catalogue conversion, and memory are kept distinct.",
-      "title": "Performance"
+      "summary": "The science panels above are supported by stronger per-object comparisons and controlled invariant/derivative tests. The strict field residuals are retained to distinguish scientific identity from bitwise equality.",
+      "title": "Why should we trust these results?"
     }
   ]
 }
