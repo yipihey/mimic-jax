@@ -389,6 +389,118 @@ def timestep_refinement_diagnostic(
     )
 
 
+def ode_convergence_diagnostic(
+    study,
+    *,
+    expected_orders: Mapping[str, float],
+    order_tolerance: float,
+    maximum_rate_relative_difference: float,
+    rate_tolerance: float,
+    maximum_baryon_residual: float,
+    baryon_tolerance: float,
+    maximum_upstream_storage_baryon_residual: Optional[float] = None,
+    artifact: Optional[Artifact] = None,
+    figure: Optional[Artifact] = None,
+) -> Diagnostic:
+    """Summarize rate equivalence, conservation, and temporal convergence."""
+
+    relative_errors = np.asarray(study.relative_errors, dtype=np.float64)
+    maximum_errors = np.nanmax(relative_errors, axis=2)
+    measured_orders = np.log(maximum_errors[:, -3:-1] / maximum_errors[:, -2:]) / np.log(
+        np.asarray(study.step_counts[-2:], dtype=np.float64)
+        / np.asarray(study.step_counts[-3:-1], dtype=np.float64)
+    )
+    measured_orders = np.nanmedian(measured_orders, axis=1)
+    method_indices = {method: index for index, method in enumerate(study.methods)}
+    missing = set(expected_orders) - set(method_indices)
+    if missing:
+        raise ValueError(f"Expected convergence orders name missing methods: {sorted(missing)}")
+    order_passes = all(
+        np.isfinite(measured_orders[method_indices[method]])
+        and abs(measured_orders[method_indices[method]] - expected) <= order_tolerance
+        for method, expected in expected_orders.items()
+    )
+    passed = (
+        order_passes
+        and maximum_rate_relative_difference <= rate_tolerance
+        and abs(maximum_baryon_residual) <= baryon_tolerance
+    )
+    metrics = [
+        ScalarMetric(
+            "maximum_rate_relative_difference",
+            "Largest isolated rate mismatch",
+            maximum_rate_relative_difference,
+            description="continuous rate versus the matching upstream finite budget divided by dt",
+        ),
+        ScalarMetric(
+            "maximum_baryon_residual",
+            "Largest integrated baryon residual",
+            maximum_baryon_residual,
+            unit="1e10 Msun/h",
+            description="across the float64 continuous integrators and refinement levels",
+        ),
+    ]
+    if maximum_upstream_storage_baryon_residual is not None:
+        metrics.append(
+            ScalarMetric(
+                "maximum_upstream_storage_baryon_residual",
+                "Largest upstream-split storage residual",
+                maximum_upstream_storage_baryon_residual,
+                unit="1e10 Msun/h",
+                description="includes SAGE16 float32 reservoir writes at every sequential step",
+            )
+        )
+    notes = [
+        "The independent reference is "
+        f"`{study.reference_method}` with {study.reference_steps:,} fixed steps.",
+        f"Halo forcing interpolation: `{study.forcing_interpolation}`.",
+    ]
+    for method in study.methods:
+        index = method_indices[method]
+        metrics.extend(
+            [
+                ScalarMetric(
+                    f"{method}_observed_order",
+                    f"{method} observed order",
+                    float(measured_orders[index]),
+                    description="median of the final two maximum-error ratios",
+                ),
+                ScalarMetric(
+                    f"{method}_finest_relative_error",
+                    f"{method} finest maximum relative error",
+                    float(maximum_errors[index, -1]),
+                    description=f"at {int(np.asarray(study.step_counts)[-1])} steps",
+                ),
+            ]
+        )
+        expected = expected_orders.get(method)
+        if expected is not None:
+            notes.append(
+                f"`{method}` approaches order {measured_orders[index]:.3f}; "
+                f"the expected order is {expected:g}."
+            )
+    artifacts = tuple(value for value in (figure, artifact) if value is not None)
+    return Diagnostic(
+        key="ode_convergence",
+        title="Does the continuous SAGE16 subset converge in time?",
+        status=DiagnosticStatus.PASSED if passed else DiagnosticStatus.FAILED,
+        summary=(
+            "The isolated rates match their upstream SAGE16 budgets, the reservoir ledger "
+            "closes, and every tested method reaches its expected temporal order."
+            if passed
+            else "At least one rate-equivalence, conservation, or temporal-order gate failed."
+        ),
+        metrics=tuple(metrics),
+        artifacts=artifacts,
+        notes=tuple(notes),
+        method="fixed-forcing upstream split, Euler, Heun RK2, and RK4",
+        tolerance=(
+            f"rate relative difference <= {rate_tolerance:.3g}; baryon residual <= "
+            f"{baryon_tolerance:.3g}; observed orders within {order_tolerance:.3g}"
+        ),
+    )
+
+
 def benchmark_diagnostic(
     payload: Mapping[str, Any],
     *,

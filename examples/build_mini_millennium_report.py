@@ -24,6 +24,10 @@ import numpy as np
 jax.config.update("jax_enable_x64", True)
 
 from mimic_jax import (  # noqa: E402
+    FORWARD_EULER,
+    HEUN_RK2,
+    RK4,
+    method_convergence_study,
     parameter_response_matrix,
     timestep_refinement_study,
     validate_parameter_response,
@@ -41,20 +45,31 @@ from mimic_jax.reporting import (  # noqa: E402
     capture_provenance,
     conservation_diagnostic,
     equivalence_diagnostic,
+    ode_convergence_diagnostic,
     parameter_response_diagnostic,
     parameters_from_namedtuple,
     timestep_refinement_diagnostic,
     write_report,
 )
 from mimic_jax.sage16 import (  # noqa: E402
+    ODE_STATE_NAMES,
+    UPSTREAM_RATE_SUBSET,
+    apply_reincorporation,
     baryonic_mass,
+    calculate_cooling_budget,
+    calculate_star_formation_budget,
+    calculate_supernova_feedback_budget,
     fiducial_parameters,
     initial_galaxy_state,
     initial_halo_forcing,
+    integrate_sage16_ode,
     load_cooling_tables,
+    ode_state_from_galaxy,
     quiescent_disk_step,
+    sage16_ode_rhs_and_rates,
     sage16_units,
     step_context,
+    subcycle_upstream_rate_subset,
     subcycle_upstream_sequential_central,
 )
 
@@ -238,6 +253,177 @@ def controlled_refinement(output_path: Path):
         for num_substeps in (1, 2, 4, 8)
     ]
     return study, max(abs(residual) for residual in residuals)
+
+
+def controlled_ode_convergence(output_path: Path):
+    """Build the fixed-forcing continuous-limit experiment used in the report."""
+
+    galaxy = initial_galaxy_state(
+        ColdGas=2.0,
+        HotGas=10.0,
+        EjectedGas=1.0,
+        StellarMass=1.0,
+        MetalsColdGas=0.04,
+        MetalsHotGas=0.2,
+        MetalsEjectedGas=0.02,
+        MetalsStellarMass=0.02,
+        DiskScaleRadius=0.01,
+    )
+    halo = initial_halo_forcing(Mvir=100.0, Rvir=0.2, Vvir=150.0, dT=5.0e-4)
+    context = step_context(time_interval=5.0e-4)
+    parameters = fiducial_parameters()
+    units = sage16_units()
+    tables = load_cooling_tables()
+    initial = ode_state_from_galaxy(galaxy)
+    step_counts = (2, 4, 8, 16, 32, 64, 128)
+    methods = (UPSTREAM_RATE_SUBSET, FORWARD_EULER, HEUN_RK2, RK4)
+    reference_steps = 4096
+    reference = integrate_sage16_ode(
+        initial,
+        halo,
+        galaxy.DiskScaleRadius,
+        parameters,
+        units,
+        tables,
+        num_steps=reference_steps,
+        method=RK4,
+    ).final_state
+    cache = {}
+
+    def run(method, num_steps):
+        key = (method, num_steps)
+        if key not in cache:
+            if method == UPSTREAM_RATE_SUBSET:
+                result = subcycle_upstream_rate_subset(
+                    galaxy,
+                    halo,
+                    context,
+                    parameters,
+                    units,
+                    tables,
+                    num_substeps=num_steps,
+                )
+                cache[key] = ode_state_from_galaxy(result.final_state)
+            else:
+                cache[key] = integrate_sage16_ode(
+                    initial,
+                    halo,
+                    galaxy.DiskScaleRadius,
+                    parameters,
+                    units,
+                    tables,
+                    num_steps=num_steps,
+                    method=method,
+                ).final_state
+        return cache[key]
+
+    def observables(state):
+        return jnp.stack([getattr(state, name) for name in ODE_STATE_NAMES])
+
+    study = method_convergence_study(
+        run,
+        observables,
+        reference,
+        methods=methods,
+        step_counts=step_counts,
+        observable_names=ODE_STATE_NAMES,
+        observable_units=("1e10 Msun/h",) * len(ODE_STATE_NAMES),
+        rhs_evaluations_per_step={
+            UPSTREAM_RATE_SUBSET: 1,
+            FORWARD_EULER: 1,
+            HEUN_RK2: 2,
+            RK4: 4,
+        },
+        reference_method=RK4,
+        reference_steps=reference_steps,
+        duration=float(halo.dT),
+    )
+    study.save(output_path)
+
+    comparison_substeps = 128
+    comparison_context = context._replace(
+        num_substeps=jnp.asarray(comparison_substeps, dtype=jnp.int32)
+    )
+    dt = halo.dT / comparison_substeps
+    rates = sage16_ode_rhs_and_rates(
+        0.0,
+        initial,
+        halo,
+        galaxy.DiskScaleRadius,
+        parameters,
+        units,
+        tables,
+    ).rates
+    reincorporation = apply_reincorporation(
+        galaxy,
+        halo,
+        comparison_context,
+        parameters,
+    ).transfer
+    cooling = calculate_cooling_budget(
+        galaxy,
+        halo,
+        comparison_context,
+        units,
+        tables,
+    ).budget
+    star_formation = calculate_star_formation_budget(
+        galaxy,
+        halo,
+        comparison_context,
+        parameters,
+    )
+    supernova = calculate_supernova_feedback_budget(
+        galaxy,
+        halo,
+        parameters,
+        units,
+        star_formation,
+    )
+    ode_rates = np.asarray(
+        [
+            rates.cooling,
+            rates.star_formation,
+            rates.sn_reheating,
+            rates.sn_ejection,
+            rates.reincorporation,
+        ],
+        dtype=np.float64,
+    )
+    upstream_rates = np.asarray(
+        [
+            cooling.gas / dt,
+            star_formation.NewStellarMass / dt,
+            supernova.SupernovaReheatedMass / dt,
+            supernova.SupernovaEjectedMass / dt,
+            reincorporation.gas / dt,
+        ],
+        dtype=np.float64,
+    )
+    rate_scale = np.where(np.abs(upstream_rates) > 0.0, np.abs(upstream_rates), 1.0)
+    maximum_rate_relative_difference = float(
+        np.max(np.abs(ode_rates - upstream_rates) / rate_scale)
+    )
+
+    initial_baryons = sum(float(value) for value in initial[:4])
+    ode_baryon_residuals = []
+    upstream_baryon_residuals = []
+    for method in methods:
+        for num_steps in step_counts:
+            final = run(method, num_steps)
+            residual = sum(float(value) for value in final[:4]) - initial_baryons
+            if method == UPSTREAM_RATE_SUBSET:
+                upstream_baryon_residuals.append(residual)
+            else:
+                ode_baryon_residuals.append(residual)
+    evidence = {
+        "maximum_rate_relative_difference": maximum_rate_relative_difference,
+        "maximum_ode_baryon_residual": max(abs(value) for value in ode_baryon_residuals),
+        "maximum_upstream_storage_baryon_residual": max(
+            abs(value) for value in upstream_baryon_residuals
+        ),
+    }
+    return study, evidence
 
 
 def generate_familiar_plots(arguments, assets: Path):
@@ -549,6 +735,147 @@ def generate_partition_science_figures(arrays_path: Path, equivalence, assets: P
     )
 
 
+def generate_ode_convergence_figure(study, assets: Path):
+    """Show temporal error and measured order for the continuous SAGE16 subset."""
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    labels = {
+        UPSTREAM_RATE_SUBSET: "Upstream sequential rate subset",
+        FORWARD_EULER: "Forward Euler",
+        HEUN_RK2: "Heun RK2",
+        RK4: "Classical RK4",
+    }
+    colors = {
+        UPSTREAM_RATE_SUBSET: "#1F2937",
+        FORWARD_EULER: "#D97706",
+        HEUN_RK2: "#4C78A8",
+        RK4: "#009E73",
+    }
+    markers = {
+        UPSTREAM_RATE_SUBSET: "o",
+        FORWARD_EULER: "s",
+        HEUN_RK2: "^",
+        RK4: "D",
+    }
+    expected_orders = {
+        UPSTREAM_RATE_SUBSET: 1.0,
+        FORWARD_EULER: 1.0,
+        HEUN_RK2: 2.0,
+        RK4: 4.0,
+    }
+    errors = np.nanmax(np.asarray(study.relative_errors, dtype=np.float64), axis=2)
+    step_counts = np.asarray(study.step_counts, dtype=np.int32)
+    measured_orders = np.log(errors[:, -3:-1] / errors[:, -2:]) / np.log(
+        step_counts[-2:] / step_counts[-3:-1]
+    )
+    measured_orders = np.nanmedian(measured_orders, axis=1)
+    style = {
+        "font.size": 10,
+        "axes.labelsize": 11,
+        "axes.titlesize": 12,
+        "legend.fontsize": 8.5,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        "savefig.bbox": "tight",
+        "svg.fonttype": "none",
+    }
+    with plt.rc_context(style):
+        figure, (error_axis, order_axis) = plt.subplots(
+            1,
+            2,
+            figsize=(10.2, 4.6),
+            gridspec_kw={"width_ratios": (1.65, 1.0), "wspace": 0.35},
+        )
+        for index, method in enumerate(study.methods):
+            error_axis.loglog(
+                step_counts,
+                100.0 * errors[index],
+                color=colors[method],
+                marker=markers[method],
+                linewidth=1.8,
+                markersize=4.5,
+                label=labels[method],
+            )
+        error_axis.set_xlabel("Internal steps across one fixed-forcing interval")
+        error_axis.set_ylabel("Largest reservoir error [%]")
+        error_axis.set_title("Refining time steps approaches one common solution")
+        error_axis.grid(which="both", color="#E5E7EB", linewidth=0.6)
+        error_axis.legend(frameon=False, loc="lower left")
+        error_axis.text(
+            0.03,
+            0.97,
+            f"Reference: RK4 with {study.reference_steps:,} steps",
+            transform=error_axis.transAxes,
+            va="top",
+            color="#4B5563",
+        )
+
+        positions = np.arange(len(study.methods))
+        order_axis.bar(
+            positions,
+            measured_orders,
+            color=[colors[method] for method in study.methods],
+            width=0.68,
+        )
+        for position, method in enumerate(study.methods):
+            expected = expected_orders[method]
+            order_axis.plot(
+                [position - 0.34, position + 0.34],
+                [expected, expected],
+                color="#111827",
+                linewidth=1.5,
+            )
+            order_axis.text(
+                position,
+                measured_orders[position] + 0.12,
+                f"{measured_orders[position]:.2f}",
+                ha="center",
+                va="bottom",
+            )
+        order_axis.set_xticks(positions)
+        order_axis.set_xticklabels(("Upstream\nsubset", "Euler", "Heun\nRK2", "RK4"))
+        order_axis.set_ylim(0.0, 4.7)
+        order_axis.set_ylabel("Measured convergence order")
+        order_axis.set_title("The measured slopes match theory")
+        order_axis.grid(axis="y", color="#E5E7EB", linewidth=0.6)
+        order_axis.text(
+            0.03,
+            0.97,
+            "Black ticks: expected order",
+            transform=order_axis.transAxes,
+            va="top",
+            color="#4B5563",
+        )
+        figure.suptitle(
+            "A continuous SAGE16 baryon-cycle subset has controlled temporal error",
+            fontsize=14,
+            y=1.02,
+        )
+        output = assets / "OdeTimeConvergence.svg"
+        figure.savefig(output)
+        plt.close(figure)
+
+    return Artifact(
+        key="ode_time_convergence",
+        title="Temporal convergence of the continuous SAGE16 rate subset",
+        path="assets/OdeTimeConvergence.svg",
+        media_type="image/svg+xml",
+        role="figure",
+        description=(
+            "The left panel measures the largest relative error among four baryon and four metal "
+            "reservoirs against an independent fine RK4 reference. The right panel shows that "
+            "the upstream split and Euler are first order, Heun is second order, and RK4 is "
+            "fourth order for this smooth fixed-forcing interval."
+        ),
+    )
+
+
 def main():
     arguments = parse_arguments()
     output = arguments.output_dir.resolve()
@@ -573,15 +900,18 @@ def main():
         if arguments.science_json is not None
         else assets / "partition-science.json"
     )
-    science_arrays_source = (
-        arguments.science_arrays.resolve()
-        if arguments.science_arrays is not None
-        else assets / "partition-science.npz"
-    )
     equivalence = load_json(equivalence_source)
     benchmark = load_json(benchmark_source)
     partition_equivalence = load_json(partition_equivalence_source)
     science = load_json(science_source)
+    science_arrays_name = Path(str(science["arrays"]))
+    if science_arrays_name.name != str(science["arrays"]):
+        raise SystemExit("Science JSON arrays entry must be a plain filename")
+    science_arrays_source = (
+        arguments.science_arrays.resolve()
+        if arguments.science_arrays is not None
+        else science_source.parent / science_arrays_name
+    )
     upstream_partitions = tuple(
         sorted(arguments.upstream_output.glob("model_[0-9][0-9][0-9].hdf5"))
     )
@@ -615,9 +945,6 @@ def main():
         partition_equivalence_source, assets / "partition-equivalence.json"
     )
     science_path = stage_json(science_source, assets / "partition-science.json")
-    science_arrays_name = Path(str(science["arrays"]))
-    if science_arrays_name.name != str(science["arrays"]):
-        raise SystemExit("Science JSON arrays entry must be a plain filename")
     science_arrays_path = stage_file(science_arrays_source, assets / science_arrays_name)
     familiar_artifacts = generate_familiar_plots(arguments, assets)
     science_figures = generate_partition_science_figures(
@@ -655,6 +982,38 @@ def main():
     refinement_diagnostic = timestep_refinement_diagnostic(
         refinement,
         artifact=refinement_artifact,
+    )
+    ode_convergence_artifact = Artifact(
+        key="ode_convergence_arrays",
+        title="Continuous-subset convergence arrays",
+        path="assets/ode_time_convergence.npz",
+        media_type="application/x-npz",
+        role="scientific_array",
+        description=(
+            "Methods, step sizes, eight reservoir histories, independent-reference errors, "
+            "measured orders, and method metadata."
+        ),
+    )
+    ode_convergence, ode_evidence = controlled_ode_convergence(assets / "ode_time_convergence.npz")
+    ode_convergence_figure = generate_ode_convergence_figure(ode_convergence, assets)
+    ode_diagnostic = ode_convergence_diagnostic(
+        ode_convergence,
+        expected_orders={
+            UPSTREAM_RATE_SUBSET: 1.0,
+            FORWARD_EULER: 1.0,
+            HEUN_RK2: 2.0,
+            RK4: 4.0,
+        },
+        order_tolerance=0.15,
+        maximum_rate_relative_difference=ode_evidence["maximum_rate_relative_difference"],
+        rate_tolerance=2.0e-14,
+        maximum_baryon_residual=ode_evidence["maximum_ode_baryon_residual"],
+        baryon_tolerance=2.0e-12,
+        maximum_upstream_storage_baryon_residual=ode_evidence[
+            "maximum_upstream_storage_baryon_residual"
+        ],
+        artifact=ode_convergence_artifact,
+        figure=ode_convergence_figure,
     )
     baryon_diagnostic = conservation_diagnostic(
         key="baryon_conservation",
@@ -899,6 +1258,10 @@ def main():
         f"({100.0 * mismatch_fraction:.4g}%, maximum relative difference "
         f"{maximum_partition_relative_difference:.3g}). These are negligible "
         "for the science observables shown, while remaining visible in technical validation.",
+        "For the fixed-halo, smooth quiescent reservoir subset, the repeated upstream-order "
+        "update and forward Euler converge at first order, Heun at second order, and RK4 at "
+        "fourth order; this is a controlled time-integration result, not yet a population-level "
+        "Mini-Millennium convergence claim.",
     )
     population_response = Diagnostic(
         key="smf_parameter_response",
@@ -1033,13 +1396,22 @@ def main():
             key="numerical_integration",
             title="How accurately are these histories being integrated?",
             summary=(
-                "Population-level convergence must be expressed through familiar observables. It "
-                "has not yet been run for this partition; the controlled fixed-forcing refinement "
-                "is retained below as scoped technical evidence."
+                "The exact upstream-sequential path remains the SAGE16 reference. Separately, a "
+                "fixed-halo continuous reservoir experiment now demonstrates genuine convergence "
+                "in time: upstream-order splitting and Euler are first order, Heun is second "
+                "order, and RK4 is fourth order. The wider hybrid formulation treats prepared "
+                "infall as external forcing, makes AGN memory Markovian with stored `Rheat`, "
+                "represents stripping as a group flow, and retains projections and mergers as "
+                "events. Population-level convergence must still be tested through familiar "
+                "observables and is not inferred from this controlled experiment."
             ),
-            diagnostics=(population_convergence, refinement_diagnostic),
+            diagnostics=(ode_diagnostic, population_convergence, refinement_diagnostic),
             links=(
                 ReportLink("Numerical integration contract", "../../docs/numerical_integration.md"),
+                ReportLink(
+                    "Complete SAGE16 hybrid classification",
+                    "../../docs/sage16_hybrid_system.md",
+                ),
             ),
         ),
         ReportSection(
@@ -1106,6 +1478,7 @@ def main():
             controlled_baryon_health,
             metal_diagnostic,
             controlled_gradient_health,
+            ode_diagnostic,
             population_response,
             population_convergence,
         ),
