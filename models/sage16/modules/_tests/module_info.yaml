@@ -33,6 +33,7 @@ module:
   # List of tests (add new tests here)
   tests:
     unit:
+      - test_unit_mimic_jax_reference.c
       - test_unit_mixed_dt_parity.c
       - test_unit_sage_dependency_contracts.c
 
