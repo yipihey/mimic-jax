@@ -2,7 +2,7 @@
 title: "What controls galaxies in SAGE16?"
 report-id: "mini-millennium-sage16-science-program"
 report-kind: "run"
-date: "2026-08-18T16:59:35Z"
+date: "2026-08-18T17:12:32Z"
 toc: true
 ---
 
@@ -255,8 +255,8 @@ The report does not fabricate missing science. Cosmic SFR evolution, gas and met
 
 | Item | Value |
 | --- | --- |
-| Generated | 2026-08-18T16:59:35Z |
-| Git commit | `cc00febb1ded1a28c9389373375ed92f72eba6c9` (dirty working tree) |
+| Generated | 2026-08-18T17:12:32Z |
+| Git commit | `0a409c970936c83057d905b6e297666df5c10ead` (dirty working tree) |
 | Git branch | main |
 
 ### Rerun command

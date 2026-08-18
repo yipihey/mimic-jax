@@ -143,12 +143,14 @@ def configure_matplotlib():
             "axes.spines.right": False,
             "axes.grid": False,
             "svg.fonttype": "none",
+            "svg.hashsalt": "mimic-jax-science-report",
         }
     )
 
 
 def save_figure(figure, path):
-    figure.savefig(path, bbox_inches="tight", facecolor="white")
+    metadata = {"Date": None} if path.suffix.lower() == ".svg" else None
+    figure.savefig(path, bbox_inches="tight", facecolor="white", metadata=metadata)
     plt.close(figure)
 
 

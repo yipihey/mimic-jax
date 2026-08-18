@@ -6,8 +6,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/StellarMassFunctionScience.svg",
       "role": "figure",
-      "sha256": "fb1b93e82bf61fbf5ea91ca0682d71121b406ba5c4c68ce856be8ccacec83dda",
-      "size_bytes": 29048,
+      "sha256": "3a3d5bb6856bcf1fc41d46deb503421964d111880f7adbb2d8f13ce94e7f4070",
+      "size_bytes": 28998,
       "title": "StellarMassFunctionScience"
     },
     {
@@ -16,8 +16,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/StellarMassFunctionResponses.svg",
       "role": "figure",
-      "sha256": "1a72d3306d4809976b49ab61ad023f01a41188282b3766e2f0a0192d98a5f27a",
-      "size_bytes": 38456,
+      "sha256": "09f6160474bab5a3751b26bce17345c9d78677f0ba98ace4838021da5d77b542",
+      "size_bytes": 38406,
       "title": "StellarMassFunctionResponses"
     }
   ],
@@ -67,8 +67,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/ParameterResponseValidation.svg",
           "role": "figure",
-          "sha256": "dd9e6cb115987679f0230ce33ce4298b195c68cca5dd0d2500d580c3b2c2ffd1",
-          "size_bytes": 24088,
+          "sha256": "00395277661e8ac8334ff1f0f3648dda35d4e218bc4a78baf0eb4b25f5959cfa",
+          "size_bytes": 24038,
           "title": "ParameterResponseValidation"
         },
         {
@@ -107,8 +107,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/HistoricalResponseValidation.svg",
           "role": "figure",
-          "sha256": "6e449bf8372775d05ef5c2b77009b0fcd65536946485fe653ff268193f2995b1",
-          "size_bytes": 27336,
+          "sha256": "35824b94b1296759afc77934bfc9d72b5457d4e473e69f4bf579261dd6bd3aa0",
+          "size_bytes": 27286,
           "title": "HistoricalResponseValidation"
         },
         {
@@ -156,8 +156,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/AdaptiveContinuousConvergence.svg",
           "role": "figure",
-          "sha256": "847f567dfbc1a826cfc01356a49e97989463ac598721ff7efd3283a3b5bd13c4",
-          "size_bytes": 110468,
+          "sha256": "109e2b99751d87102cee29e03f684520a6ec5f1324fbdf6b3510a5a2fcf2e9bb",
+          "size_bytes": 110418,
           "title": "AdaptiveContinuousConvergence"
         },
         {
@@ -227,8 +227,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/PopulationTimestepConvergence.svg",
           "role": "figure",
-          "sha256": "e2f6ad07d8c7d278236b65d6e6e8f7932ca30ba26ad3719ee02e41950495289c",
-          "size_bytes": 44208,
+          "sha256": "c6f0b896ec278485a4111f21fb9cef4937637dcb3994d016b51ae27397b3bcd4",
+          "size_bytes": 44158,
           "title": "PopulationTimestepConvergence"
         },
         {
@@ -585,9 +585,9 @@
         "size_bytes": 577
       }
     ],
-    "generated_at": "2026-08-18T16:59:35Z",
+    "generated_at": "2026-08-18T17:12:32Z",
     "git_branch": "main",
-    "git_commit": "cc00febb1ded1a28c9389373375ed92f72eba6c9",
+    "git_commit": "0a409c970936c83057d905b6e297666df5c10ead",
     "git_dirty": true,
     "hardware": {
       "jax_backend": "cpu",
@@ -637,8 +637,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/StellarMassFunctionScience.svg",
           "role": "figure",
-          "sha256": "fb1b93e82bf61fbf5ea91ca0682d71121b406ba5c4c68ce856be8ccacec83dda",
-          "size_bytes": 29048,
+          "sha256": "3a3d5bb6856bcf1fc41d46deb503421964d111880f7adbb2d8f13ce94e7f4070",
+          "size_bytes": 28998,
           "title": "StellarMassFunctionScience"
         },
         {
@@ -672,8 +672,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/BaryonInventoryScience.svg",
           "role": "figure",
-          "sha256": "934fbf317606a2b93cf2f25e563134fa26952146fce23fc491f8151b644d0596",
-          "size_bytes": 26063,
+          "sha256": "52c43f7ab07349e3d3880e6777c213c5e6370493287c8495da267ef3ac8c8ccb",
+          "size_bytes": 26013,
           "title": "BaryonInventoryScience"
         }
       ],
@@ -697,8 +697,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/StellarMassFunctionResponses.svg",
           "role": "figure",
-          "sha256": "1a72d3306d4809976b49ab61ad023f01a41188282b3766e2f0a0192d98a5f27a",
-          "size_bytes": 38456,
+          "sha256": "09f6160474bab5a3751b26bce17345c9d78677f0ba98ace4838021da5d77b542",
+          "size_bytes": 38406,
           "title": "StellarMassFunctionResponses"
         },
         {
@@ -707,8 +707,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/StellarMassFunctionResponseMap.svg",
           "role": "figure",
-          "sha256": "dddeba8b9f3e46da3d79949e3519fdf4377f61f55974f16eb60265e2a37aed87",
-          "size_bytes": 34431,
+          "sha256": "984a5f6f5dd957a4a2e582037c0967d4ba0999148eea17d1650750410612190d",
+          "size_bytes": 34381,
           "title": "StellarMassFunctionResponseMap"
         },
         {
@@ -745,8 +745,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/ObservableParameterResponseMatrix.svg",
           "role": "figure",
-          "sha256": "8aa8bf310836f343da9767ee394975f3409e5c87c478bf568ab0e954263b7389",
-          "size_bytes": 45159,
+          "sha256": "4fdf5b1412022600edb08c861a39c4070b74e33fd7de7817029b88d946af1e0c",
+          "size_bytes": 45109,
           "title": "ObservableParameterResponseMatrix"
         },
         {
@@ -755,8 +755,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/ParameterResponseSimilarity.svg",
           "role": "figure",
-          "sha256": "d3dcf455f18a48e6577135f14c83f36fa05c1fe45196080fe8512ddc506fd0e3",
-          "size_bytes": 43345,
+          "sha256": "31b786de8d602596ea2e75c2385d5f54aef265a5ac079cf75e98123221ddfa91",
+          "size_bytes": 43295,
           "title": "ParameterResponseSimilarity"
         }
       ],
@@ -778,8 +778,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/HistoricalProcessResponses.svg",
           "role": "figure",
-          "sha256": "d44c178e6e99cc2e9bde4ea65577d5bd3cf1f629fb7f2b1a45b7c88ca3946875",
-          "size_bytes": 75690,
+          "sha256": "9aa48ef39416a4817f57eeef5a0596b380a130a9bd7ba5cf7448e5a1a020bc4e",
+          "size_bytes": 75640,
           "title": "HistoricalProcessResponses"
         },
         {
@@ -811,8 +811,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/CoolingAgnTransition.svg",
           "role": "figure",
-          "sha256": "22b0538f379b75dfdb3ea4525a020901c59f85797dbbecaa7f55e994fb0a4211",
-          "size_bytes": 37191,
+          "sha256": "5231edc6b930a3d16c1c81890128a1e9989fc5a22d0afa162121b4f17654d8d0",
+          "size_bytes": 37141,
           "title": "CoolingAgnTransition"
         }
       ],
@@ -836,8 +836,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/HaloStellarGrowthDecoupling.svg",
           "role": "figure",
-          "sha256": "64a77e8235c7a49475784d4480f2d3074a81bf4676773615eb2f1f6493b41ce1",
-          "size_bytes": 29095,
+          "sha256": "69023955664d349a18f9644f5aff8fc55773adbcb0c4edcf3d0492121bbd6db0",
+          "size_bytes": 29045,
           "title": "HaloStellarGrowthDecoupling"
         }
       ],
@@ -856,8 +856,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/AdaptiveContinuousConvergence.svg",
           "role": "figure",
-          "sha256": "847f567dfbc1a826cfc01356a49e97989463ac598721ff7efd3283a3b5bd13c4",
-          "size_bytes": 110468,
+          "sha256": "109e2b99751d87102cee29e03f684520a6ec5f1324fbdf6b3510a5a2fcf2e9bb",
+          "size_bytes": 110418,
           "title": "AdaptiveContinuousConvergence"
         },
         {
@@ -907,8 +907,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/PopulationTimestepConvergence.svg",
           "role": "figure",
-          "sha256": "e2f6ad07d8c7d278236b65d6e6e8f7932ca30ba26ad3719ee02e41950495289c",
-          "size_bytes": 44208,
+          "sha256": "c6f0b896ec278485a4111f21fb9cef4937637dcb3994d016b51ae27397b3bcd4",
+          "size_bytes": 44158,
           "title": "PopulationTimestepConvergence"
         },
         {
@@ -917,8 +917,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/TimestepRingingDiagnosis.svg",
           "role": "figure",
-          "sha256": "2ce6385687cf1c986823a750a497ef08dc1f7173658f3781afd5caf803f0a6c4",
-          "size_bytes": 40910,
+          "sha256": "b1b66146a783097e3d28f5f379e93334aaff83dda0778beb57721f844cb106be",
+          "size_bytes": 40860,
           "title": "TimestepRingingDiagnosis"
         },
         {
@@ -927,8 +927,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/TimestepModuleAblation.svg",
           "role": "figure",
-          "sha256": "891c8faf14484066ad6e7a27e0ece0d3ef64f39c0490674c84005c1f0d676901",
-          "size_bytes": 44549,
+          "sha256": "32af2fd1d62c0076665de7e212c65d3dc2bcd4dde88f4f583e0e7798cb1ce43e",
+          "size_bytes": 44499,
           "title": "TimestepModuleAblation"
         },
         {
@@ -991,8 +991,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/ParameterResponseValidation.svg",
           "role": "figure",
-          "sha256": "dd9e6cb115987679f0230ce33ce4298b195c68cca5dd0d2500d580c3b2c2ffd1",
-          "size_bytes": 24088,
+          "sha256": "00395277661e8ac8334ff1f0f3648dda35d4e218bc4a78baf0eb4b25f5959cfa",
+          "size_bytes": 24038,
           "title": "ParameterResponseValidation"
         },
         {
@@ -1015,8 +1015,8 @@
               "media_type": "image/svg+xml",
               "path": "assets/HistoricalResponseValidation.svg",
               "role": "figure",
-              "sha256": "6e449bf8372775d05ef5c2b77009b0fcd65536946485fe653ff268193f2995b1",
-              "size_bytes": 27336,
+              "sha256": "35824b94b1296759afc77934bfc9d72b5457d4e473e69f4bf579261dd6bd3aa0",
+              "size_bytes": 27286,
               "title": "HistoricalResponseValidation"
             },
             {
