@@ -28,6 +28,7 @@ from mimic_jax.sage16 import (  # noqa: E402
     calculate_cooling_budget,
     calculate_star_formation_budget,
     calculate_supernova_feedback_budget,
+    evolve_upstream_sequential_group_interval,
     fiducial_parameters,
     inherit_progenitor,
     inheritance_descendant,
@@ -49,6 +50,8 @@ REFERENCE_TEST = "models/sage16/modules/_tests/test_unit_mimic_jax_reference.c"
 REFERENCE_LOG = "tests/unit/build/test_unit_mimic_jax_reference.run.log"
 CASE_TOLERANCES = {
     "cooling_budget": (1.0e-13, 0.0),
+    "group_interval": (0.0, 2.0e-8),
+    "group_interval_step0": (0.0, 2.0e-8),
     "infall_budget": (1.0e-15, 0.0),
     "radio_mode": (1.0e-13, 0.0),
 }
@@ -95,6 +98,8 @@ def parse_c_reference(path: Path):
         "infall_negative",
         "infall_positive",
         "inheritance",
+        "group_interval",
+        "group_interval_step0",
         "merger_clock",
         "merger_event",
         "reincorporation",
@@ -311,6 +316,84 @@ def calculate_jax_reference():
         True,
     )
     inherited_halo = inherited.halo._replace(CentralHalo=jnp.asarray(0, dtype=jnp.int32))
+
+    group_states = jax.tree_util.tree_map(
+        lambda *values: jnp.stack(values),
+        initial_galaxy_state(
+            HotGas=8.0,
+            ColdGas=3.0,
+            StellarMass=5.0,
+            EjectedGas=1.0,
+            ICS=0.5,
+            BlackHoleMass=0.01,
+            MetalsHotGas=0.16,
+            MetalsColdGas=0.06,
+            MetalsStellarMass=0.1,
+            MetalsEjectedGas=0.02,
+            MetalsICS=0.01,
+            MergTime=999.9,
+        ),
+        initial_galaxy_state(
+            HotGas=3.0,
+            ColdGas=1.5,
+            StellarMass=1.0,
+            EjectedGas=0.2,
+            ICS=0.1,
+            BlackHoleMass=0.005,
+            MetalsHotGas=0.06,
+            MetalsColdGas=0.03,
+            MetalsStellarMass=0.02,
+            MetalsEjectedGas=0.004,
+            MetalsICS=0.002,
+            DiskScaleRadius=0.005,
+            MergTime=10.0,
+        ),
+        initial_galaxy_state(ColdGas=7.0, HotGas=11.0, MergTime=4.0),
+    )
+    group_halos = jax.tree_util.tree_map(
+        lambda *values: jnp.stack(values),
+        initial_halo_forcing(
+            Type=0,
+            CentralHalo=0,
+            Len=1000,
+            Mvir=100.0,
+            Rvir=0.2,
+            Vvir=200.0,
+            Vmax=200.0,
+            Spin=(1.0, 2.0, 3.0),
+            dT=0.001,
+        ),
+        initial_halo_forcing(
+            Type=1,
+            CentralHalo=0,
+            Len=200,
+            Mvir=20.0,
+            Rvir=0.1,
+            Vvir=100.0,
+            Vmax=100.0,
+            dT=0.002,
+        ),
+        initial_halo_forcing(
+            Type=3,
+            CentralHalo=0,
+            Len=0,
+            Mvir=0.0,
+            Rvir=0.0,
+            Vvir=0.0,
+            Vmax=0.0,
+            dT=0.001,
+        ),
+    )
+    group_interval = evolve_upstream_sequential_group_interval(
+        group_states,
+        group_halos,
+        step_context(redshift=0.5, time_interval=0.002),
+        0,
+        parameters,
+        units,
+        cooling_tables,
+        num_substeps=2,
+    )
 
     central = initial_galaxy_state(
         HaloBaryonFraction=0.17,
@@ -666,6 +749,51 @@ def calculate_jax_reference():
             "Spin2": float(inherited_halo.Spin[2]),
             "MostBoundID": float(inherited_halo.MostBoundID),
         },
+        "group_interval": {
+            "CentralHaloBaryonFraction": float(group_interval.final_states.HaloBaryonFraction[0]),
+            "CentralInfallingGas": float(group_interval.final_states.InfallingGas[0]),
+            "CentralColdGas": float(group_interval.final_states.ColdGas[0]),
+            "CentralHotGas": float(group_interval.final_states.HotGas[0]),
+            "CentralEjectedGas": float(group_interval.final_states.EjectedGas[0]),
+            "CentralStellarMass": float(group_interval.final_states.StellarMass[0]),
+            "CentralBulgeMass": float(group_interval.final_states.BulgeMass[0]),
+            "CentralICS": float(group_interval.final_states.ICS[0]),
+            "CentralBlackHoleMass": float(group_interval.final_states.BlackHoleMass[0]),
+            "CentralMetalsColdGas": float(group_interval.final_states.MetalsColdGas[0]),
+            "CentralMetalsHotGas": float(group_interval.final_states.MetalsHotGas[0]),
+            "CentralMetalsEjectedGas": float(group_interval.final_states.MetalsEjectedGas[0]),
+            "CentralMetalsStellarMass": float(group_interval.final_states.MetalsStellarMass[0]),
+            "CentralMetalsBulgeMass": float(group_interval.final_states.MetalsBulgeMass[0]),
+            "CentralMetalsICS": float(group_interval.final_states.MetalsICS[0]),
+            "CentralSFR": float(group_interval.final_states.StarFormationRate[0]),
+            "CentralOutflowRate": float(group_interval.final_states.SupernovaOutflowRate[0]),
+            "CentralDiskScaleRadius": float(group_interval.final_states.DiskScaleRadius[0]),
+            "CentralMergTime": float(group_interval.final_states.MergTime[0]),
+            "SatelliteColdGas": float(group_interval.final_states.ColdGas[1]),
+            "SatelliteHotGas": float(group_interval.final_states.HotGas[1]),
+            "SatelliteEjectedGas": float(group_interval.final_states.EjectedGas[1]),
+            "SatelliteStellarMass": float(group_interval.final_states.StellarMass[1]),
+            "SatelliteBulgeMass": float(group_interval.final_states.BulgeMass[1]),
+            "SatelliteICS": float(group_interval.final_states.ICS[1]),
+            "SatelliteBlackHoleMass": float(group_interval.final_states.BlackHoleMass[1]),
+            "SatelliteMetalsColdGas": float(group_interval.final_states.MetalsColdGas[1]),
+            "SatelliteMetalsHotGas": float(group_interval.final_states.MetalsHotGas[1]),
+            "SatelliteMetalsEjectedGas": float(group_interval.final_states.MetalsEjectedGas[1]),
+            "SatelliteMetalsStellarMass": float(group_interval.final_states.MetalsStellarMass[1]),
+            "SatelliteMetalsBulgeMass": float(group_interval.final_states.MetalsBulgeMass[1]),
+            "SatelliteMetalsICS": float(group_interval.final_states.MetalsICS[1]),
+            "SatelliteSFR": float(group_interval.final_states.StarFormationRate[1]),
+            "SatelliteOutflowRate": float(group_interval.final_states.SupernovaOutflowRate[1]),
+            "SatelliteDiskScaleRadius": float(group_interval.final_states.DiskScaleRadius[1]),
+            "SatelliteMergTime": float(group_interval.final_states.MergTime[1]),
+            "CentralType": float(group_interval.final_halos.Type[0]),
+            "SatelliteType": float(group_interval.final_halos.Type[1]),
+            "ConsumedType": float(group_interval.final_halos.Type[2]),
+        },
+        "group_interval_step0": {
+            "CentralMetalsHotGas": float(group_interval.states.MetalsHotGas[0, 0]),
+            "SatelliteMetalsHotGas": float(group_interval.states.MetalsHotGas[0, 1]),
+        },
         "infall_budget": {
             "InfallingGas": float(infall_budget.InfallingGas[0]),
             "EjectedGas": float(infall_budget.EjectedGas[0]),
@@ -827,7 +955,8 @@ def compare_records(c_reference, jax_reference) -> None:
     print(f"MIMIC-JAX equivalence: {compared} fields match compiled SAGE16 " f"({exact} exactly)")
     print(
         "Tolerances: cooling budget and radio mode rtol=1e-13; "
-        "group infall budget rtol=1e-15; every other controlled field exact"
+        "group infall budget rtol=1e-15; group hot-metal accumulation atol=2e-8 "
+        "(one float32 ULP); every other controlled field exact"
     )
 
 

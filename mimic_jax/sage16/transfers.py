@@ -350,3 +350,65 @@ class UpstreamCentralHistoryResult(NamedTuple):
     final_state: GalaxyState
     states: GalaxyState
     diagnostics: UpstreamCentralStepDiagnostics
+
+
+class UpstreamGroupPreparationDiagnostics(NamedTuple):
+    """Diagnostics from the four fiducial pre-timestep modules."""
+
+    reionization_modifiers: Array
+    infall_budget: InfallBudgetTransfer
+    disk_radius: DiskScaleRadiusResult
+    merger_clock: MergerClockDiagnostics
+
+
+class UpstreamGroupPreparationResult(NamedTuple):
+    """Prepared FoF state and explicit pre-timestep diagnostics."""
+
+    states: GalaxyState
+    diagnostics: UpstreamGroupPreparationDiagnostics
+
+
+class UpstreamGroupGalaxyDiagnostics(NamedTuple):
+    """Galaxy-major transfers for every live FoF workspace member."""
+
+    active: Array
+    satellite_stripping: SatelliteStrippingTransfer
+    cooling_budget: CoolingBudget
+    radio_mode: RadioModeHeatingTransfer
+    cooling: CoolingTransfer
+    star_formation: StarFormationTransfer
+    disk_instability: DiskInstabilityTransfer
+    quasar_mode: QuasarModeTransfer
+    starburst: StarburstTransfer
+    enrichment: MetalEnrichmentTransfer
+
+
+class UpstreamGroupStepDiagnostics(NamedTuple):
+    """Full-halo, galaxy-major, and event diagnostics for one substep."""
+
+    infall: InfallTransfer
+    reincorporation: ReincorporationTransfer
+    galaxies: UpstreamGroupGalaxyDiagnostics
+    mergers: MergerResolutionDiagnostics
+
+
+class UpstreamGroupStepResult(NamedTuple):
+    """One exact fiducial SAGE16 FoF substep."""
+
+    states: GalaxyState
+    halos: Any
+    diagnostics: UpstreamGroupStepDiagnostics
+    success: Array
+
+
+class UpstreamGroupHistoryResult(NamedTuple):
+    """Prepared state, substep history, and final FoF workspace state."""
+
+    final_states: GalaxyState
+    final_halos: Any
+    prepared_states: GalaxyState
+    preparation: UpstreamGroupPreparationDiagnostics
+    states: GalaxyState
+    halos: Any
+    diagnostics: UpstreamGroupStepDiagnostics
+    success: Array

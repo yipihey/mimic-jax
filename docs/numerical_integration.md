@@ -29,7 +29,7 @@ The disk-instability burst is a concrete example: the structural trigger is reco
 
 ## Reference API and forcing resolution
 
-`upstream_sequential_central_step` implements the exact module order for the currently ported per-central subset. The FoF-wide `prepare_infall_budget` operation runs once before it, not inside the substep map. `subcycle_upstream_sequential_central(..., num_substeps=N)` holds the halo forcing and prepared infall budget fixed over one tree interval and repeats the reference map `N` times, while each rate-based module uses `halo.dT / N` and infall applies one `InfallingGas / N` partition. This is the initial, explicitly labeled `piecewise_constant` forcing assumption.
+`upstream_sequential_central_step` remains a compact single-central test slice. `evolve_upstream_sequential_group_interval` is the complete fiducial FoF schedule: it runs all four pre-timestep maps once, repeats the full-halo and galaxy-major physics in exact order, and then executes the ordered event phase. It holds halo forcing fixed over one tree interval, while each rate-based module uses its object's `halo.dT / N` and infall applies one `InfallingGas / N` partition. This is the initial, explicitly labeled `piecewise_constant` forcing assumption. See [`group_evolution.md`](group_evolution.md) for the live shared-central ordering.
 
 The merger-tree sampling and baryonic integration resolution are separate concepts. Future forcing interpolation must be selected explicitly and recorded in outputs. Piecewise-constant and linear interpolation will be compared before anything more elaborate is considered. Interpolation must not alter event times or invent smooth tree topology. The implemented merger phase derives each source's substep duration independently, decrements its float clock, and preserves event sequence as a discrete scan; it is outside every continuous higher-order integrator experiment.
 
@@ -41,7 +41,7 @@ Satellite stripping supplies an especially important numerical counterexample to
 
 `conservation_residual` evaluates `delta(total) - (sources - sinks)`. `step_to_timescale_ratio` evaluates the dimensionless finite-step diagnostic `|transfer| / source`, equivalent to `dt / tau` when `tau = source / |rate|`. Large values identify process/reservoir pairs that deserve timestep-refinement attention. Empty sources with nonzero transfers return infinity rather than hiding an invalid ledger.
 
-Tests already exercise `1, 2, 4, 8` substeps on the controlled implemented central chain, require nonnegative stored reservoirs, check the baryon ledger, preserve JIT execution, and differentiate through the subcycled path. These tests establish the machinery, not Mini-Millennium convergence.
+Tests already exercise `1, 2, 4, 8` substeps on the controlled central chain, require nonnegative stored reservoirs, check the baryon ledger, preserve JIT execution, and differentiate through the subcycled path. Group-level tests additionally cover exact pre-timestep placement, object-local durations, live Type-3 ownership, JIT, VMAP across independent groups, baryon conservation, and its zero derivative. These tests establish the machinery, not Mini-Millennium convergence.
 
 ## Alternative integrators: strict boundary
 

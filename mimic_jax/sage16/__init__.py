@@ -19,6 +19,11 @@ from mimic_jax.sage16.evolve import (
     subcycle_upstream_sequential_central,
     upstream_sequential_central_step,
 )
+from mimic_jax.sage16.group_evolve import (
+    evolve_upstream_sequential_group_interval,
+    prepare_upstream_sequential_group,
+    upstream_sequential_group_substep,
+)
 from mimic_jax.sage16.inheritance import (
     inherit_progenitor,
     initialise_new_central,
@@ -90,6 +95,12 @@ from mimic_jax.sage16.transfers import (
     StarFormationTransfer,
     UpstreamCentralHistoryResult,
     UpstreamCentralStepDiagnostics,
+    UpstreamGroupGalaxyDiagnostics,
+    UpstreamGroupHistoryResult,
+    UpstreamGroupPreparationDiagnostics,
+    UpstreamGroupPreparationResult,
+    UpstreamGroupStepDiagnostics,
+    UpstreamGroupStepResult,
 )
 from mimic_jax.sage16.types import (
     GalaxyState,
@@ -150,6 +161,12 @@ __all__ = [
     "UPSTREAM_SEQUENTIAL",
     "UpstreamCentralHistoryResult",
     "UpstreamCentralStepDiagnostics",
+    "UpstreamGroupGalaxyDiagnostics",
+    "UpstreamGroupHistoryResult",
+    "UpstreamGroupPreparationDiagnostics",
+    "UpstreamGroupPreparationResult",
+    "UpstreamGroupStepDiagnostics",
+    "UpstreamGroupStepResult",
     "PROCESS_NAMES",
     "ProcessPerturbations",
     "apply_cooling",
@@ -173,6 +190,7 @@ __all__ = [
     "central_quiescent_step",
     "evolve_central_history",
     "evolve_upstream_sequential_central_history",
+    "evolve_upstream_sequential_group_interval",
     "fiducial_parameters",
     "initial_galaxy_state",
     "initial_halo_forcing",
@@ -185,6 +203,7 @@ __all__ = [
     "metal_mass",
     "perturbations_from_matrix",
     "prepare_infall_budget",
+    "prepare_upstream_sequential_group",
     "process_perturbations",
     "quiescent_disk_step",
     "reionization_modifier",
@@ -196,4 +215,5 @@ __all__ = [
     "step_context",
     "subcycle_upstream_sequential_central",
     "upstream_sequential_central_step",
+    "upstream_sequential_group_substep",
 ]

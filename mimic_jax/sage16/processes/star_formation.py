@@ -47,9 +47,10 @@ def calculate_star_formation_budget(
     tdyn = reff / halo.Vvir
     cold_crit = 0.19 * halo.Vvir * reff
     cold = as_float64(state.ColdGas)
+    safe_tdyn = jnp.where(tdyn > 0.0, tdyn, 1.0)
     strdot = jnp.where(
         (cold > cold_crit) & (tdyn > 0.0),
-        parameters.SfrEfficiency * (cold - cold_crit) / tdyn,
+        parameters.SfrEfficiency * (cold - cold_crit) / safe_tdyn,
         0.0,
     )
     stars = jnp.maximum(

@@ -29,6 +29,8 @@
 #include "modules/_tests/sage_test_fixtures.h"
 
 extern int sage_apply_cooling_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_apply_cooling_init(void);
+extern int sage_apply_cooling_cleanup(void);
 extern int sage_apply_infall_init(void);
 extern int sage_apply_infall_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_apply_infall_cleanup(void);
@@ -178,6 +180,7 @@ static int test_emit_reference_cases(void) {
   configure_fiducial_slice();
 
   TEST_ASSERT(sage_calculate_cooling_budget_init() == 0, "Cooling-budget init should succeed");
+  TEST_ASSERT(sage_apply_cooling_init() == 0, "Cooling-application init should succeed");
   TEST_ASSERT(sage_reionization_init() == 0, "Reionization init should succeed");
   TEST_ASSERT(sage_prepare_infall_budget_init() == 0, "Infall-budget init should succeed");
   TEST_ASSERT(sage_apply_infall_init() == 0, "Infall-application init should succeed");
@@ -448,6 +451,154 @@ static int test_emit_reference_cases(void) {
          inheritance_workspace[0].infallVvir, inheritance_workspace[0].infallVmax,
          (double)inheritance_workspace[0].Vmax, (double)inheritance_workspace[0].Pos[0],
          (double)inheritance_workspace[0].Spin[2], (double)inheritance_workspace[0].MostBoundID);
+
+  struct Halo group_halos[3];
+  struct GalaxyData group_galaxies[3];
+  setup_halo(&group_halos[0], &group_galaxies[0], 100.0, 0.2, 200.0, 0.001);
+  setup_halo(&group_halos[1], &group_galaxies[1], 20.0, 0.1, 100.0, 0.002);
+  setup_halo(&group_halos[2], &group_galaxies[2], 0.0, 0.0, 0.0, 0.001);
+  group_halos[0].CentralHalo = 0;
+  group_halos[0].Len = 1000;
+  group_halos[0].Vmax = 200.0f;
+  group_halos[0].Spin[0] = 1.0f;
+  group_halos[0].Spin[1] = 2.0f;
+  group_halos[0].Spin[2] = 3.0f;
+  group_halos[1].Type = 1;
+  group_halos[1].CentralHalo = 0;
+  group_halos[1].Len = 200;
+  group_halos[1].Vmax = 100.0f;
+  group_halos[2].Type = 3;
+  group_halos[2].CentralHalo = 0;
+  group_halos[2].Len = 0;
+  group_halos[2].Vmax = 0.0f;
+
+  group_galaxies[0].HotGas = 8.0f;
+  group_galaxies[0].ColdGas = 3.0f;
+  group_galaxies[0].StellarMass = 5.0f;
+  group_galaxies[0].EjectedGas = 1.0f;
+  group_galaxies[0].ICS = 0.5f;
+  group_galaxies[0].BlackHoleMass = 0.01f;
+  group_galaxies[0].MetalsHotGas = 0.16f;
+  group_galaxies[0].MetalsColdGas = 0.06f;
+  group_galaxies[0].MetalsStellarMass = 0.1f;
+  group_galaxies[0].MetalsEjectedGas = 0.02f;
+  group_galaxies[0].MetalsICS = 0.01f;
+  group_galaxies[0].MergTime = 999.9f;
+
+  group_galaxies[1].HotGas = 3.0f;
+  group_galaxies[1].ColdGas = 1.5f;
+  group_galaxies[1].StellarMass = 1.0f;
+  group_galaxies[1].EjectedGas = 0.2f;
+  group_galaxies[1].ICS = 0.1f;
+  group_galaxies[1].BlackHoleMass = 0.005f;
+  group_galaxies[1].MetalsHotGas = 0.06f;
+  group_galaxies[1].MetalsColdGas = 0.03f;
+  group_galaxies[1].MetalsStellarMass = 0.02f;
+  group_galaxies[1].MetalsEjectedGas = 0.004f;
+  group_galaxies[1].MetalsICS = 0.002f;
+  group_galaxies[1].DiskScaleRadius = 0.005f;
+  group_galaxies[1].MergTime = 10.0f;
+
+  group_galaxies[2].ColdGas = 7.0f;
+  group_galaxies[2].HotGas = 11.0f;
+  group_galaxies[2].MergTime = 4.0f;
+
+  setup_context(&context, &group_halos[0], 2);
+  context.redshift = 0.5;
+  context.time_interval = 0.002;
+  context.substep_dt = context.time_interval / context.num_substeps;
+  TEST_ASSERT(sage_reionization_process(&context, group_halos, 3) == 0,
+              "Group reionization should succeed");
+  TEST_ASSERT(sage_prepare_infall_budget_process(&context, group_halos, 3) == 0,
+              "Group infall-budget preparation should succeed");
+  TEST_ASSERT(sage_set_disk_scale_radius_process(&context, group_halos, 3) == 0,
+              "Group disk-radius setup should succeed");
+  TEST_ASSERT(sage_initialise_merger_clock_process(&context, group_halos, 3) == 0,
+              "Group merger-clock setup should succeed");
+
+  for (int step = 0; step < context.num_substeps; step++) {
+    context.substep_number = step;
+    context.substep_time =
+        (context.time + context.time_interval) - (step + 0.5) * context.substep_dt;
+    TEST_ASSERT(sage_apply_infall_process(&context, group_halos, 3) == 0,
+                "Group infall application should succeed");
+    TEST_ASSERT(sage_reincorporation_process(&context, group_halos, 3) == 0,
+                "Group reincorporation should succeed");
+
+    for (int galaxy_index = 0; galaxy_index < 3; galaxy_index++) {
+      if (group_halos[galaxy_index].Type == 3) {
+        continue;
+      }
+      struct Halo *member = &group_halos[galaxy_index];
+      TEST_ASSERT(sage_satellite_stripping_process(&context, member, 1) == 0,
+                  "Group satellite stripping should succeed");
+      TEST_ASSERT(sage_calculate_cooling_budget_process(&context, member, 1) == 0,
+                  "Group cooling budget should succeed");
+      TEST_ASSERT(sage_radio_mode_heating_process(&context, member, 1) == 0,
+                  "Group radio mode should succeed");
+      TEST_ASSERT(sage_apply_cooling_process(&context, member, 1) == 0,
+                  "Group cooling application should succeed");
+      TEST_ASSERT(sage_calculate_star_formation_process(&context, member, 1) == 0,
+                  "Group star formation should succeed");
+      TEST_ASSERT(sage_calculate_supernova_feedback_process(&context, member, 1) == 0,
+                  "Group supernova budget should succeed");
+      TEST_ASSERT(sage_apply_star_formation_supernova_process(&context, member, 1) == 0,
+                  "Group star formation application should succeed");
+      TEST_ASSERT(sage_disk_instability_process(&context, member, 1) == 0,
+                  "Group disk instability should succeed");
+      TEST_ASSERT(sage_quasar_mode_process(&context, member, 1) == 0,
+                  "Group quasar mode should succeed");
+      TEST_ASSERT(sage_starburst_feedback_process(&context, member, 1) == 0,
+                  "Group starburst should succeed");
+      TEST_ASSERT(sage_apply_metal_enrichment_process(&context, member, 1) == 0,
+                  "Group metal enrichment should succeed");
+    }
+    TEST_ASSERT(sage_resolve_mergers_and_disruption_process(&context, group_halos, 3) == 0,
+                "Group merger resolution should succeed");
+    if (step == 0) {
+      printf("MIMIC_JAX_REFERENCE case=group_interval_step0 CentralMetalsHotGas=%.17g "
+             "SatelliteMetalsHotGas=%.17g\n",
+             (double)group_galaxies[0].MetalsHotGas, (double)group_galaxies[1].MetalsHotGas);
+    }
+  }
+
+  printf("MIMIC_JAX_REFERENCE case=group_interval "
+         "CentralHaloBaryonFraction=%.17g CentralInfallingGas=%.17g "
+         "CentralColdGas=%.17g CentralHotGas=%.17g CentralEjectedGas=%.17g "
+         "CentralStellarMass=%.17g CentralBulgeMass=%.17g CentralICS=%.17g "
+         "CentralBlackHoleMass=%.17g CentralMetalsColdGas=%.17g "
+         "CentralMetalsHotGas=%.17g CentralMetalsEjectedGas=%.17g "
+         "CentralMetalsStellarMass=%.17g CentralMetalsBulgeMass=%.17g "
+         "CentralMetalsICS=%.17g CentralSFR=%.17g CentralOutflowRate=%.17g "
+         "CentralDiskScaleRadius=%.17g CentralMergTime=%.17g "
+         "SatelliteColdGas=%.17g SatelliteHotGas=%.17g SatelliteEjectedGas=%.17g "
+         "SatelliteStellarMass=%.17g SatelliteBulgeMass=%.17g SatelliteICS=%.17g "
+         "SatelliteBlackHoleMass=%.17g SatelliteMetalsColdGas=%.17g "
+         "SatelliteMetalsHotGas=%.17g SatelliteMetalsEjectedGas=%.17g "
+         "SatelliteMetalsStellarMass=%.17g SatelliteMetalsBulgeMass=%.17g "
+         "SatelliteMetalsICS=%.17g SatelliteSFR=%.17g SatelliteOutflowRate=%.17g "
+         "SatelliteDiskScaleRadius=%.17g SatelliteMergTime=%.17g "
+         "CentralType=%.17g SatelliteType=%.17g ConsumedType=%.17g\n",
+         group_galaxies[0].HaloBaryonFraction, group_galaxies[0].InfallingGas,
+         (double)group_galaxies[0].ColdGas, (double)group_galaxies[0].HotGas,
+         (double)group_galaxies[0].EjectedGas, (double)group_galaxies[0].StellarMass,
+         (double)group_galaxies[0].BulgeMass, (double)group_galaxies[0].ICS,
+         (double)group_galaxies[0].BlackHoleMass, (double)group_galaxies[0].MetalsColdGas,
+         (double)group_galaxies[0].MetalsHotGas, (double)group_galaxies[0].MetalsEjectedGas,
+         (double)group_galaxies[0].MetalsStellarMass, (double)group_galaxies[0].MetalsBulgeMass,
+         (double)group_galaxies[0].MetalsICS, (double)group_galaxies[0].StarFormationRate,
+         (double)group_galaxies[0].SupernovaOutflowRate, (double)group_galaxies[0].DiskScaleRadius,
+         (double)group_galaxies[0].MergTime, (double)group_galaxies[1].ColdGas,
+         (double)group_galaxies[1].HotGas, (double)group_galaxies[1].EjectedGas,
+         (double)group_galaxies[1].StellarMass, (double)group_galaxies[1].BulgeMass,
+         (double)group_galaxies[1].ICS, (double)group_galaxies[1].BlackHoleMass,
+         (double)group_galaxies[1].MetalsColdGas, (double)group_galaxies[1].MetalsHotGas,
+         (double)group_galaxies[1].MetalsEjectedGas, (double)group_galaxies[1].MetalsStellarMass,
+         (double)group_galaxies[1].MetalsBulgeMass, (double)group_galaxies[1].MetalsICS,
+         (double)group_galaxies[1].StarFormationRate,
+         (double)group_galaxies[1].SupernovaOutflowRate, (double)group_galaxies[1].DiskScaleRadius,
+         (double)group_galaxies[1].MergTime, (double)group_halos[0].Type,
+         (double)group_halos[1].Type, (double)group_halos[2].Type);
 
   struct Halo infall_halos[2];
   struct GalaxyData infall_galaxies[2];
@@ -731,6 +882,7 @@ static int test_emit_reference_cases(void) {
   sage_prepare_infall_budget_cleanup();
   sage_reionization_cleanup();
   sage_radio_mode_heating_cleanup();
+  sage_apply_cooling_cleanup();
   sage_calculate_cooling_budget_cleanup();
   test_free_substep_phases();
   test_free_pre_timestep();
