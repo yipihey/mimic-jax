@@ -34,10 +34,10 @@ Each descendant subhalo slice must contain exactly one Type-0/1 local central. `
 
 The `HaloForcing` PyTree now carries the complete inheritance-relevant identity and phase-space subset: unique galaxy IDs, position, velocity, velocity dispersion, spin, `Vmax`, and most-bound-particle ID in addition to the physics forcing fields. Integer identities and topology/type choices are discrete. On a fixed inheritance branch, persistent galaxy values pass through differentiably; a test verifies unit derivative of inherited cold gas. This is useful for differentiating later evolution with respect to an inherited baryonic state, but it is not a derivative of tree connectivity.
 
-## Executable evidence and current boundary
+## Executable evidence and tree connection
 
 The compiled oracle compares 22 fields from a main-branch inheritance case, covering persistent and reset galaxy fields, copied snapshot identity, object duration, virial growth, descendant payload values, infall state, and local-central linkage. Every field matches the compiled inheritance service exactly. Python tests additionally cover the full 13-field reset contract, Type-0→1 and orphan transitions, preserved Type 2, discarded Type 3, mass-loss virial freezing, new-central defaults, topology validation, JIT, VMAP, and the fixed-branch state derivative. The existing upstream C inheritance suite also remains an independent gate.
 
-This completes the numerical inheritance maps, not the full tree driver. The remaining equivalence work is to gather ragged progenitor slices from Mini-Millennium, stamp FoF `CentralMvir` and central identity, run the complete pre-timestep/galaxy/event schedule, and marshal live outputs with the same selections.
+`evolve_lhalo_tree` now supplies the ragged driver boundary: it follows real Mini-Millennium progenitor and FoF lists, applies these maps, stamps `CentralMvir` and central identity, executes the complete schedule, and marshals surviving records. Selected linear and branched trees match upstream output across all public fields at recorded tolerances; see [`mini_millennium_equivalence.md`](mini_millennium_equivalence.md). Full-partition population equivalence remains the next, distinct gate.
 
-Current code: [`inheritance.py`](../mimic_jax/sage16/inheritance.py) and [`types.py`](../mimic_jax/sage16/types.py). Tests: [`test_inheritance.py`](../tests/mimic_jax/test_inheritance.py).
+Current code: [`inheritance.py`](../mimic_jax/sage16/inheritance.py), [`tree_evolve.py`](../mimic_jax/sage16/tree_evolve.py), and [`types.py`](../mimic_jax/sage16/types.py). Tests: [`test_inheritance.py`](../tests/mimic_jax/test_inheritance.py) and [`test_tree_evolve.py`](../tests/mimic_jax/test_tree_evolve.py).

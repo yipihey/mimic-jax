@@ -1,5 +1,6 @@
 """Fiducial SAGE16 state, parameters, transfers, and physics kernels."""
 
+from mimic_jax.sage16.catalogue import record_to_catalogue
 from mimic_jax.sage16.conservation import (
     active_group_baryonic_mass,
     active_group_metal_mass,
@@ -102,6 +103,17 @@ from mimic_jax.sage16.transfers import (
     UpstreamGroupStepDiagnostics,
     UpstreamGroupStepResult,
 )
+from mimic_jax.sage16.tree_evolve import (
+    GalaxyRecord,
+    SnapshotTiming,
+    TreeEvolutionResult,
+    evolve_lhalo_tree,
+    load_scale_factors,
+    snapshot_timing,
+    virial_mass,
+    virial_radius,
+    virial_velocity,
+)
 from mimic_jax.sage16.types import (
     GalaxyState,
     HaloForcing,
@@ -124,10 +136,13 @@ __all__ = [
     "CoolingBudgetResult",
     "CoolingTables",
     "GalaxyState",
+    "GalaxyRecord",
     "HaloForcing",
     "Sage16Parameters",
     "Sage16Units",
     "StepContext",
+    "SnapshotTiming",
+    "TreeEvolutionResult",
     "CoolingTransfer",
     "DiskScaleRadiusResult",
     "DiskInstabilityResult",
@@ -189,6 +204,7 @@ __all__ = [
     "calculate_supernova_feedback_budget",
     "central_quiescent_step",
     "evolve_central_history",
+    "evolve_lhalo_tree",
     "evolve_upstream_sequential_central_history",
     "evolve_upstream_sequential_group_interval",
     "fiducial_parameters",
@@ -199,6 +215,7 @@ __all__ = [
     "initialise_new_central",
     "initialise_merger_clocks",
     "load_cooling_tables",
+    "load_scale_factors",
     "metal_dependent_cooling_rate",
     "metal_mass",
     "perturbations_from_matrix",
@@ -207,13 +224,18 @@ __all__ = [
     "process_perturbations",
     "quiescent_disk_step",
     "reionization_modifier",
+    "record_to_catalogue",
     "reset_snapshot_accumulators",
     "resolve_mergers_and_disruption",
     "sage16_units",
     "set_disk_scale_radius",
     "set_local_central",
     "step_context",
+    "snapshot_timing",
     "subcycle_upstream_sequential_central",
     "upstream_sequential_central_step",
     "upstream_sequential_group_substep",
+    "virial_mass",
+    "virial_radius",
+    "virial_velocity",
 ]

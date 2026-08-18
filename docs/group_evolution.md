@@ -54,6 +54,6 @@ The compiled C oracle executes the same two-member-plus-Type-3 schedule for two 
 
 Tests also require eager/JIT equality, VMAP over independent groups, exact Type-3 skipping, object-local clock decrement, group baryon conservation, and a zero derivative of the closed baryon residual. The latter exposed and fixed an inactive zero-dynamical-time division in the star-formation branch without changing any forward SAGE16 result.
 
-The remaining end-to-end boundary is the format-specific merger-tree adapter: assembling inherited descendant workspaces over a complete tree, writing catalogue records, and comparing those histories and catalogues with a complete upstream Mini-Millennium run. No Mini-Millennium equivalence or population-science claim is made yet.
+The format-specific tree boundary is now connected for legacy L-Halo input. A linear six-node tree matches all 42 z=0 catalogue fields, and a 67-node branched/group tree matches 546 fields across every configured output snapshot at explicit mixed-precision tolerances. See [`mini_millennium_equivalence.md`](mini_millennium_equivalence.md). This is selected-tree evidence; no all-tree population or performance claim is made yet.
 
 Code: [`mimic_jax/sage16/group_evolve.py`](../mimic_jax/sage16/group_evolve.py). Tests: [`tests/mimic_jax/test_group_evolve.py`](../tests/mimic_jax/test_group_evolve.py). Compiled reference: [`models/sage16/modules/_tests/test_unit_mimic_jax_reference.c`](../models/sage16/modules/_tests/test_unit_mimic_jax_reference.c).
