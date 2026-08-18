@@ -6,7 +6,13 @@ The first application program asks familiar SAGE questions with direct fractiona
 
 Applications begin only after the complete fiducial SAGE16 pipeline, tree inheritance, shared-central ordering, and merger event maps reproduce the relevant upstream Mini-Millennium catalog fields and histories at recorded tolerances. Process-level C oracle agreement for the initial quiescent slice is necessary evidence but does not discharge this gate.
 
-Figure 1 reproduces upstream selections, units, bins, and definitions for the existing Mini-Millennium example plots and reports quantitative residuals. Figure 2 reports fair end-to-end and batched performance with compilation separated from warmed execution.
+Figure 1 reproduces upstream selections, units, bins, and definitions for the existing Mini-Millennium example plots and reports quantitative residuals.
+
+## First application: Does the numerical timestep matter?
+
+Before population sensitivities, the first application after equivalence quantifies the reference SAGE16 sequential update itself. It refines internal substeps at fixed tree forcing; reports reservoir, SFR, metallicity, BH, and quenched-state convergence; measures baryon/metal residuals and positivity; and maps the finite-step-to-fastest-timescale ratio over halo mass and redshift. Tree-forcing interpolation and baryonic integration resolution are varied separately.
+
+Only prescriptions with an explicit continuous-rate interpretation are compared with a higher-order fixed-step method. Accuracy is compared at matched right-hand-side evaluations, wall-clock cost, and target error, with compilation separated from warmed execution. Numerical shifts in familiar Mini-Millennium statistics are compared directly with fractional parameter responses so numerical error is not confused with parameter or model uncertainty. See [`numerical_integration.md`](numerical_integration.md).
 
 ## Application A: Which observations constrain which SAGE physics?
 
@@ -27,11 +33,15 @@ Paired cooling and AGN historical-response panels quantify the transition betwee
 ## Intended figure sequence
 
 1. Familiar Mini-Millennium universe: upstream MIMIC versus mimic-jax with numerical residuals.
-2. Fair performance: compilation, warmed CPU, vectorized batch, and GPU where available.
-3. Familiar stellar mass function plus fractional parameter responses.
-4. Observable/bin-by-parameter fractional response matrix.
-5. Parameter response-similarity matrix.
-6. Cooling, SN, reincorporation, and AGN historical-response maps.
-7. Direct cooling-versus-AGN transition map.
+2. Timestep convergence for representative histories and final observables.
+3. Conservation and positivity residuals versus timestep and method.
+4. Accuracy versus cost for the upstream reference and legitimate alternative integrators.
+5. Mass/redshift map of timestep resolution and convergence error.
+6. Numerical impact on familiar Mini-Millennium statistics.
+7. Familiar stellar mass function plus fractional parameter responses.
+8. Observable/bin-by-parameter fractional response matrix.
+9. Parameter response-similarity matrix.
+10. Cooling, SN, reincorporation, and AGN historical-response maps.
+11. Direct cooling-versus-AGN transition map.
 
 The later mathematical interpretation in terms of tangent models, reverse-mode propagation, and response operators belongs after these practitioner-facing results, not before them.

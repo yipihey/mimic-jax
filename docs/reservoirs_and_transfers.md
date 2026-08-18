@@ -7,6 +7,7 @@ mimic-jax keeps upstream SAGE16 prescriptions recognizable and separates two que
 | Process | Upstream implementation | Explicit transfer | Reservoir action |
 | --- | --- | --- | --- |
 | Cooling budget | [`sage_calculate_cooling_budget.c`](../models/sage16/modules/sage_calculate_cooling_budget/sage_calculate_cooling_budget.c) | `CoolingBudget(gas, radius, cooling_lambda)` | calculates transport only |
+| Radio-mode AGN | [`sage_radio_mode_heating.c`](../models/sage16/modules/sage_radio_mode_heating/sage_radio_mode_heating.c) | `RadioModeHeatingTransfer` | prior `Rheat` suppresses cooling; hot gas feeds BH growth and future heating radius |
 | Cooling application | [`sage_apply_cooling.c`](../models/sage16/modules/sage_apply_cooling/sage_apply_cooling.c) | `CoolingTransfer(gas, metals)` | hot to cold |
 | Reincorporation | [`sage_reincorporation.c`](../models/sage16/modules/sage_reincorporation/sage_reincorporation.c) | `ReincorporationTransfer(gas, metals)` | ejected to hot |
 | Quiescent star formation | [`sage_calculate_star_formation.c`](../models/sage16/modules/sage_calculate_star_formation/sage_calculate_star_formation.c) | `StarFormationBudget.NewStellarMass` | cold to long-lived stars after recycling |
@@ -22,10 +23,12 @@ The disk yield is not a conserved transfer: `Yield * NewStellarMass` is newly pr
 
 ## Process perturbations
 
-The faithful calculation is always the zero-perturbation path. Sensitivity experiments wrap a named transfer or requested budget as `m -> m exp(epsilon)` before the ordinary SAGE capacity limits and downstream application. At `epsilon = 0`, the compiled C equivalence cases remain bit-identical. The currently implemented names are `cooling`, `star_formation`, `sn_reheating`, `sn_ejection`, and `reincorporation`; AGN and BH channels will be added only with their faithful physics implementations.
+The faithful calculation is always the zero-perturbation path. Sensitivity experiments wrap a named transfer or requested budget as `m -> m exp(epsilon)` before the ordinary SAGE capacity limits and downstream application. At `epsilon = 0`, the compiled C equivalence cases remain unchanged. The currently implemented names are `cooling`, `star_formation`, `sn_reheating`, `sn_ejection`, `reincorporation`, and `agn_heating`. The last name scales the coupled upstream radio-mode accretion/heating rate; it does not invent independent BH-growth and heating physics.
 
 This construction means a process response has a direct interpretation: `d ln(O) / d epsilon = -0.4` means that making that process 1% stronger during the selected finite epoch changes the final positive observable by approximately -0.4% near the fiducial history.
 
 Current code: [`mimic_jax/sage16/transfers.py`](../mimic_jax/sage16/transfers.py), [`mimic_jax/sage16/processes/`](../mimic_jax/sage16/processes/), and [`mimic_jax/sage16/perturbations.py`](../mimic_jax/sage16/perturbations.py).
 
 Cooling-table interpolation and the two cooling regimes are documented separately in [`cooling.md`](cooling.md).
+
+Radio-mode ordering, ledgers, caps, and perturbation semantics are documented in [`radio_mode_heating.md`](radio_mode_heating.md). The exact sequential stepping semantics and numerical-analysis boundary are documented in [`numerical_integration.md`](numerical_integration.md).

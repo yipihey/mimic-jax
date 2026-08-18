@@ -79,7 +79,12 @@ def calculate_supernova_feedback_budget(
     )
     combined = stars + reheated
     renormalise = (combined > as_float64(state.ColdGas)) & (combined > 0.0)
-    factor = jnp.where(renormalise, as_float64(state.ColdGas) / combined, 1.0)
+    combined_denominator = jnp.where(combined > 0.0, combined, 1.0)
+    factor = jnp.where(
+        renormalise,
+        as_float64(state.ColdGas) / combined_denominator,
+        1.0,
+    )
     stars = stars * factor
     reheated = reheated * factor
 

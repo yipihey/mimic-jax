@@ -14,6 +14,7 @@ jax.config.update("jax_enable_x64", True)
 from mimic_jax.sage16 import (  # noqa: E402
     apply_cooling,
     apply_metal_enrichment,
+    apply_radio_mode_heating,
     apply_reincorporation,
     apply_star_formation_supernova,
     calculate_cooling_budget,
@@ -33,6 +34,7 @@ REFERENCE_TEST = "models/sage16/modules/_tests/test_unit_mimic_jax_reference.c"
 REFERENCE_LOG = "tests/unit/build/test_unit_mimic_jax_reference.run.log"
 CASE_TOLERANCES = {
     "cooling_budget": (1.0e-13, 0.0),
+    "radio_mode": (1.0e-13, 0.0),
 }
 
 
@@ -72,6 +74,7 @@ def parse_c_reference(path: Path):
         "cooling_budget",
         "cooling_interpolation",
         "reincorporation",
+        "radio_mode",
         "star_formation_budget",
         "star_formation_final",
     }
@@ -106,6 +109,28 @@ def calculate_jax_reference():
         step_context(num_substeps=10, time_interval=0.01),
         units,
         cooling_tables,
+    ).state
+
+    radio_initial = initial_galaxy_state(
+        HotGas=8.0,
+        MetalsHotGas=0.16,
+        BlackHoleMass=0.01,
+        Rheat=0.01,
+    )
+    radio_halo = initial_halo_forcing(Rvir=0.2, Vvir=200.0, dT=0.01)
+    radio_budget = calculate_cooling_budget(
+        radio_initial,
+        radio_halo,
+        step_context(num_substeps=10, time_interval=0.01),
+        units,
+        cooling_tables,
+    ).state
+    radio_mode = apply_radio_mode_heating(
+        radio_budget,
+        radio_halo,
+        step_context(num_substeps=10, time_interval=0.01),
+        parameters,
+        units,
     ).state
 
     cooling_state = initial_galaxy_state(
@@ -188,6 +213,20 @@ def calculate_jax_reference():
             cooling_budget,
             ("CoolingGas", "Rcool", "CoolingLambda"),
         ),
+        "radio_mode": {
+            "CoolingGasBefore": float(radio_budget.CoolingGas),
+            **select(
+                radio_mode,
+                (
+                    "CoolingGas",
+                    "BlackHoleMass",
+                    "HotGas",
+                    "MetalsHotGas",
+                    "Rheat",
+                    "Heating",
+                ),
+            ),
+        },
         "cooling": select(
             cooled,
             ("ColdGas", "HotGas", "MetalsColdGas", "MetalsHotGas", "Cooling"),
@@ -250,7 +289,10 @@ def compare_records(c_reference, jax_reference) -> None:
     if discrepancies:
         raise AssertionError("C/JAX equivalence failed:\n" + "\n".join(discrepancies))
     print(f"MIMIC-JAX equivalence: {compared} fields match compiled SAGE16 " f"({exact} exactly)")
-    print("Tolerances: cooling budget rtol=1e-13; every other controlled field exact")
+    print(
+        "Tolerances: cooling budget and radio mode rtol=1e-13; "
+        "every other controlled field exact"
+    )
 
 
 def main() -> int:

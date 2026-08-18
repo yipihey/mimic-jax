@@ -26,6 +26,6 @@ The initial API deliberately uses finite epochs, not a density called sensitivit
 
 ## Example
 
-[`examples/sage16_fractional_responses.py`](../examples/sage16_fractional_responses.py) calculates a two-observable parameter response and a finite-epoch process response for the controlled quiescent central-galaxy slice. It is an API and validation example, not a Mini-Millennium scientific conclusion.
+[`examples/sage16_fractional_responses.py`](../examples/sage16_fractional_responses.py) calculates a two-observable parameter response and a finite-epoch process response for the controlled central cooling/radio-mode/quiescent slice. Its process tensor includes the coupled `agn_heating` channel. It is an API and validation example, not a Mini-Millennium scientific conclusion.
 
 The first population application is gated on full catalog equivalence and is described in [`mimic_jax_scientific_program.md`](mimic_jax_scientific_program.md).

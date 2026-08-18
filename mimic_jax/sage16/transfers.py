@@ -32,6 +32,24 @@ class CoolingBudgetResult(NamedTuple):
     budget: CoolingBudget
 
 
+class RadioModeHeatingTransfer(NamedTuple):
+    """Coupled cooling suppression, BH growth, and heating from radio-mode AGN."""
+
+    cooling_before: Array
+    cooling_after_prior_heating: Array
+    accretion_rate: Array
+    black_hole_accreted: Array
+    hot_metals_accreted: Array
+    heating_mass: Array
+    heating_radius_before: Array
+    heating_radius_after: Array
+
+
+class RadioModeHeatingResult(NamedTuple):
+    state: GalaxyState
+    transfer: RadioModeHeatingTransfer
+
+
 class ReincorporationTransfer(NamedTuple):
     """Ejected-to-hot transfer committed by ``sage_reincorporation``."""
 
@@ -107,3 +125,22 @@ class CentralHistoryResult(NamedTuple):
     final_state: GalaxyState
     states: GalaxyState
     diagnostics: CentralStepDiagnostics
+
+
+class UpstreamCentralStepDiagnostics(NamedTuple):
+    """Ordered diagnostics for the implemented upstream central-galaxy slice."""
+
+    cooling_budget: CoolingBudget
+    radio_mode: RadioModeHeatingTransfer
+    cooling: CoolingTransfer
+    reincorporation: ReincorporationTransfer
+    star_formation: StarFormationTransfer
+    enrichment: MetalEnrichmentTransfer
+
+
+class UpstreamCentralHistoryResult(NamedTuple):
+    """History emitted by the faithful sequential update of the implemented slice."""
+
+    final_state: GalaxyState
+    states: GalaxyState
+    diagnostics: UpstreamCentralStepDiagnostics

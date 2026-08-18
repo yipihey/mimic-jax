@@ -33,6 +33,9 @@ extern int sage_calculate_cooling_budget_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
+extern int sage_radio_mode_heating_init(void);
+extern int sage_radio_mode_heating_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_radio_mode_heating_cleanup(void);
 extern int sage_calculate_star_formation_init(void);
 extern int sage_calculate_star_formation_process(struct ModuleContext *ctx, struct Halo *halos,
                                                  int ngal);
@@ -68,11 +71,14 @@ static void configure_fiducial_slice(void) {
   add_parameter("FeedbackReheatingEpsilon", "3.0");
   add_parameter("FeedbackEjectionEfficiency", "0.3");
   add_parameter("ReIncorporationFactor", "0.15");
+  add_parameter("AGNrecipe", "2");
+  add_parameter("RadioModeEfficiency", "0.08");
   add_parameter("RecycleFraction", "0.43");
   add_parameter("Yield", "0.025");
   add_parameter("FracZleaveDisk", "0.0");
 
   test_phase_add("galaxy_physics", "sage_calculate_cooling_budget", PROCESSING_MODE_BY_GALAXY);
+  test_phase_add("galaxy_physics", "sage_radio_mode_heating", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_cooling", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_reincorporation", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_calculate_star_formation", PROCESSING_MODE_BY_GALAXY);
@@ -117,6 +123,7 @@ static int test_emit_reference_cases(void) {
 
   TEST_ASSERT(sage_calculate_cooling_budget_init() == 0, "Cooling-budget init should succeed");
   TEST_ASSERT(sage_reincorporation_init() == 0, "Reincorporation init should succeed");
+  TEST_ASSERT(sage_radio_mode_heating_init() == 0, "Radio-mode init should succeed");
   TEST_ASSERT(sage_calculate_star_formation_init() == 0, "SF init should succeed");
   TEST_ASSERT(sage_calculate_supernova_feedback_init() == 0, "SN init should succeed");
   TEST_ASSERT(sage_apply_star_formation_supernova_init() == 0, "SF/SN apply init should succeed");
@@ -139,6 +146,22 @@ static int test_emit_reference_cases(void) {
   printf("MIMIC_JAX_REFERENCE case=cooling_budget CoolingGas=%.17g Rcool=%.17g "
          "CoolingLambda=%.17g\n",
          galaxy.CoolingGas, galaxy.Rcool, galaxy.CoolingLambda);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
+  setup_context(&context, &halo, 10);
+  galaxy.HotGas = 8.0f;
+  galaxy.MetalsHotGas = 0.16f;
+  galaxy.BlackHoleMass = 0.01f;
+  galaxy.Rheat = 0.01f;
+  TEST_ASSERT(sage_calculate_cooling_budget_process(&context, &halo, 1) == 0,
+              "Radio-mode cooling-budget reference case should succeed");
+  const double cooling_before_radio_mode = galaxy.CoolingGas;
+  TEST_ASSERT(sage_radio_mode_heating_process(&context, &halo, 1) == 0,
+              "Radio-mode reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=radio_mode CoolingGasBefore=%.17g CoolingGas=%.17g "
+         "BlackHoleMass=%.17g HotGas=%.17g MetalsHotGas=%.17g Rheat=%.17g Heating=%.17g\n",
+         cooling_before_radio_mode, galaxy.CoolingGas, (double)galaxy.BlackHoleMass,
+         (double)galaxy.HotGas, (double)galaxy.MetalsHotGas, (double)galaxy.Rheat, galaxy.Heating);
 
   setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
   setup_context(&context, &halo, 1);
@@ -204,6 +227,7 @@ static int test_emit_reference_cases(void) {
   sage_calculate_supernova_feedback_cleanup();
   sage_calculate_star_formation_cleanup();
   sage_reincorporation_cleanup();
+  sage_radio_mode_heating_cleanup();
   sage_calculate_cooling_budget_cleanup();
   test_free_substep_phases();
   check_memory_leaks();

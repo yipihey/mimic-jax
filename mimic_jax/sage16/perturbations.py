@@ -14,6 +14,7 @@ PROCESS_NAMES = (
     "sn_reheating",
     "sn_ejection",
     "reincorporation",
+    "agn_heating",
 )
 
 
@@ -25,6 +26,7 @@ class ProcessPerturbations(NamedTuple):
     sn_reheating: Array
     sn_ejection: Array
     reincorporation: Array
+    agn_heating: Array
 
 
 def process_perturbations(**overrides) -> ProcessPerturbations:

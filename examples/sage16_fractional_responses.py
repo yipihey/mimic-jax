@@ -19,10 +19,11 @@ from mimic_jax import (  # noqa: E402
 )
 from mimic_jax.sage16 import (  # noqa: E402
     PROCESS_NAMES,
-    evolve_central_history,
+    evolve_upstream_sequential_central_history,
     fiducial_parameters,
     initial_galaxy_state,
     initial_halo_forcing,
+    load_cooling_tables,
     perturbations_from_matrix,
     quiescent_disk_step,
     sage16_units,
@@ -86,49 +87,62 @@ def parameter_example():
 def history_example():
     num_epochs = 4
     state = initial_galaxy_state(
-        ColdGas=5.0,
-        HotGas=8.0,
-        EjectedGas=2.0,
+        ColdGas=2.0,
+        HotGas=10.0,
+        EjectedGas=1.0,
         StellarMass=1.0,
+        MetalsColdGas=0.04,
+        MetalsHotGas=0.2,
+        MetalsEjectedGas=0.02,
+        MetalsStellarMass=0.02,
+        BlackHoleMass=1.0e-5,
         DiskScaleRadius=0.01,
     )
     halos = stack_record(
-        initial_halo_forcing(Vvir=150.0, Rvir=0.2, dT=1.0e-4),
+        initial_halo_forcing(Mvir=100.0, Vvir=200.0, Rvir=0.2, dT=0.01),
         num_epochs,
     )
-    contexts = stack_record(step_context(time_interval=1.0e-4), num_epochs)
-    cooling = jnp.asarray([0.20, 0.25, 0.30, 0.35], dtype=jnp.float64)
+    contexts = stack_record(step_context(time_interval=0.01), num_epochs)
     parameters = fiducial_parameters()
     units = sage16_units()
+    cooling_tables = load_cooling_tables()
 
     def observables(epsilon):
-        history = evolve_central_history(
+        history = evolve_upstream_sequential_central_history(
             state,
             halos,
             contexts,
-            cooling,
             parameters,
             units,
+            cooling_tables,
             perturbations_from_matrix(epsilon),
         )
-        return jnp.asarray([history.final_state.StellarMass, history.final_state.ColdGas])
+        return jnp.asarray([history.final_state.StellarMass])
 
-    baseline = evolve_central_history(state, halos, contexts, cooling, parameters, units)
+    baseline = evolve_upstream_sequential_central_history(
+        state,
+        halos,
+        contexts,
+        parameters,
+        units,
+        cooling_tables,
+    )
     process_reference_values = jnp.stack(
         [
-            baseline.diagnostics.cooling.gas,
+            baseline.diagnostics.cooling_budget.gas,
             baseline.diagnostics.star_formation.formed_stars,
             baseline.diagnostics.star_formation.cold_to_hot,
             baseline.diagnostics.star_formation.hot_to_ejected,
             baseline.diagnostics.reincorporation.gas,
+            baseline.diagnostics.radio_mode.heating_mass,
         ]
     )
     response = process_response_tensor(
         observables,
         process_names=PROCESS_NAMES,
         ln_scale_factor_edges=uniform_ln_scale_factor_edges(4.0, 0.0, num_epochs),
-        observable_names=("final_stellar_mass", "final_cold_gas"),
-        observable_units=("1e10 Msun/h", "1e10 Msun/h"),
+        observable_names=("final_stellar_mass",),
+        observable_units=("1e10 Msun/h",),
         process_reference_values=process_reference_values,
     )
     validation = validate_process_response(response, observables, log_rate_steps=(1.0e-2,))
@@ -159,7 +173,18 @@ def print_history_response(response, validation):
         "  each value is the approximate % change in final stellar mass per 1% "
         "process increase in that finite epoch"
     )
-    print(f"  finite-difference max abs error={np.max(validation.absolute_error):.3e}")
+    automatic = np.asarray(response.values)
+    errors = np.asarray(validation.absolute_error)
+    resolved = np.abs(automatic) > 1.0e-2
+    if np.any(resolved):
+        print(
+            "  finite-difference max abs error for |response| > 1e-2: "
+            f"{np.max(errors[:, resolved]):.3e}"
+        )
+    print(
+        "  smaller final-reservoir responses can fall below float32 finite-difference "
+        "resolution; the AGN transfer derivative has a separate focused validation test"
+    )
 
 
 def main() -> int:
@@ -174,7 +199,10 @@ def main() -> int:
         parameter_response.save(arguments.output_dir / "parameter_response.npz")
         history_response.save(arguments.output_dir / "historical_process_response.npz")
         print(f"\nSaved response archives to {arguments.output_dir}")
-    print("\nScope: controlled quiescent subset; this is not a Mini-Millennium science result.")
+    print(
+        "\nScope: controlled cooling/radio-mode/quiescent subset; "
+        "this is not a Mini-Millennium science result."
+    )
     return 0
 
 

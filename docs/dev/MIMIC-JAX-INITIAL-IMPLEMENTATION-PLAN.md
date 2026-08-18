@@ -1,6 +1,6 @@
 # Mimic-JAX Initial SAGE16 Implementation Plan
 
-**Status:** Active fork-local implementation plan; initial quiescent slice implemented and gated 2026-08-18.
+**Status:** Active fork-local implementation plan; cooling/radio-mode/quiescent central slice implemented and gated 2026-08-18.
 **Baseline:** MIMIC `69590cc60dcb7b8b6510ee0b16b1ed921a6c4853` (the fork and upstream were identical when this plan was written).
 **Scope:** An additive JAX physics package; no changes to MIMIC's C core, model metadata, tree readers, or runtime module ABI.
 
@@ -26,13 +26,19 @@ Public parameter sensitivities default to `d ln(O) / d ln(theta)`, with explicit
 
 The first scientific application program is [`../mimic_jax_scientific_program.md`](../mimic_jax_scientific_program.md). It remains gated on complete Mini-Millennium equivalence; controlled-subset response examples must not be presented as population conclusions.
 
+## Numerical Integration as an Explicit Choice
+
+The exact upstream module sequence is the reference method and is called `upstream_sequential`; it is not casually labeled forward Euler. Rate-times-`dt` prescriptions, partitioned snapshot budgets, bounded finite transfers, threshold maps, and merger events retain distinct representations. Alternative integrators may act only on an explicitly extracted continuous-rate subset and never replace the zero-deviation equivalence path.
+
+The controlled central slice now exposes piecewise-constant halo forcing with independent baryonic substeps, `1, 2, 4, 8` refinement studies, empirical-order metadata, conservation residuals, positivity checks, and finite-step-to-timescale ratios. Full scientific conclusions remain gated on tree-complete Mini-Millennium comparisons. The contract and future fixed/adaptive-method tests are in [`../numerical_integration.md`](../numerical_integration.md).
+
 ## Deferred Fidelity Work
 
-The Sutherland-Dopita cooling-table interpolation and cooling budget are now implemented. The next slices, in order, are radio-mode AGN heating, infall/reionization, shared-central satellite stripping, disk instability/quasar/starburst, and finally ordered merger/disruption event maps plus tree inheritance. Full-tree and final-catalogue equivalence is not claimed until these processes and the C tree interface are present.
+The Sutherland-Dopita cooling-table interpolation, cooling budget, and fiducial Bondi radio-mode heating are now implemented. The next slices, in order, are infall/reionization, shared-central satellite stripping, disk instability/quasar/starburst, and finally ordered merger/disruption event maps plus tree inheritance. Full-tree and final-catalogue equivalence is not claimed until these processes and the C tree interface are present.
 
 ## Initial Milestone Evidence
 
-The first slice landed in commits `9f6d27d2` and `1ce7a135`. Twenty-one Python tests cover the complete state, process formulas, conservation, transforms, normalization safety, scan histories, and finite-difference validation. The next cooling-budget slice adds six focused Python tests. Relevant upstream C suites pass, including an executable oracle that compares 30 fields from cooling-table, cooling-budget/application, reincorporation, and quiescent SF/SN/enrichment cases. Twenty-seven controlled CPU fields are exact; three cooling-budget fields use `rtol=1e-13`, `atol=0` for C-libm/XLA transcendental ordering. These are process-level results, not full-tree or Mini-Millennium equivalence.
+The executable oracle now compares 37 fields from cooling-table, cooling-budget/radio-mode/application, reincorporation, and quiescent SF/SN/enrichment cases. Thirty-one controlled CPU fields are exact; cooling-budget and composed radio-mode fields use `rtol=1e-13`, `atol=0` for C-libm/XLA transcendental ordering. Python tests additionally cover the radio-mode ledgers and derivative, finite historical AGN response, exact sequential scan, substep refinement metadata, positivity, and derivative-level baryon conservation. These are process-level results, not full-tree or Mini-Millennium equivalence.
 
 ## Gates
 

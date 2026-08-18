@@ -1,6 +1,12 @@
 """JAX-native physics kernels that preserve MIMIC model semantics."""
 
 from mimic_jax import sage16
+from mimic_jax.numerics import (
+    TimestepRefinementResult,
+    conservation_residual,
+    step_to_timescale_ratio,
+    timestep_refinement_study,
+)
 from mimic_jax.sensitivity import (
     LOG_ELASTICITY,
     PROCESS_LOG_RESPONSE,
@@ -26,6 +32,8 @@ __all__ = [
     "HistoricalProcessResponse",
     "InvalidNormalizationError",
     "ParameterResponseMatrix",
+    "TimestepRefinementResult",
+    "conservation_residual",
     "finite_epoch_magnitude_weights",
     "ln_scale_factor",
     "parameter_response_matrix",
@@ -33,6 +41,8 @@ __all__ = [
     "redshift_from_ln_scale_factor",
     "response_similarity",
     "sage16",
+    "step_to_timescale_ratio",
+    "timestep_refinement_study",
     "uniform_ln_scale_factor_edges",
     "validate_parameter_response",
     "validate_process_response",
