@@ -4,7 +4,7 @@ The reference numerical method in mimic-jax is the upstream SAGE16 execution its
 
 ## What upstream actually does
 
-The fiducial Mini-Millennium configuration sets `SubSteps: 10`. At the start of a tree interval, pre-timestep modules calculate quantities such as reionization, the infall budget, disk radii, and merger clocks. Every substep then executes the configured modules in order. A later module sees reservoir writes made by every earlier module in that substep. The merger/disruption phase follows the ordinary galaxy-physics phase and emits discrete events to its quasar and starburst consumers.
+The fiducial Mini-Millennium configuration sets `SubSteps: 10`. At the start of a tree interval, four pre-timestep modules run in configured order: reionization, FoF infall-budget preparation, Type-0 disk-radius update, and merger-clock initialization. Every substep then executes the configured modules in order. A later module sees reservoir writes made by every earlier module in that substep. The merger/disruption phase follows the ordinary galaxy-physics phase and emits discrete events immediately to its quasar and starburst consumers before continuing the satellite scan.
 
 This is best described as an explicit sequential or operator-split update, not simply as one forward-Euler evaluation. For the currently implemented central slice, one substep is
 
@@ -20,6 +20,8 @@ The prescriptions have different numerical meanings:
 | Downstream finite transfer | cooling application, SN reheating/ejection, recycling, metal enrichment | consumes an earlier transport budget and commits bounded reservoir moves or explicit sources |
 | Thresholded finite map | disk instability, quasar feedback, starburst feedback | applies a finite redistribution after a trigger; it is not automatically an ODE right-hand side |
 | Discrete event/jump map | merger or disruption and its immediate consumers | preserves event order and tree identity; it is not passed to a continuous integrator |
+
+Disk-radius and merger-clock initialization are neither rate integrations nor reservoir transfers. They are pre-timestep state maps: the first derives Type-0 disk structure from current halo forcing, while the second sets or resets persistent event clocks from type and sentinel state. Subcycling does not rerun either map.
 
 `halo.dT` is the per-object tree-interval duration. `mimic_object_substep_dt` divides it by the configured substep count. Diagnostic rates such as SFR, cooling energy rate, and heating energy rate may divide committed amounts by the full `halo.dT`; those diagnostics should not be mistaken for the timestep used to calculate each transfer.
 

@@ -6,6 +6,8 @@ mimic-jax keeps upstream SAGE16 prescriptions recognizable and separates two que
 
 | Process | Upstream implementation | Explicit transfer | Reservoir action |
 | --- | --- | --- | --- |
+| Disk-radius setup | [`sage_set_disk_scale_radius.c`](../models/sage16/modules/sage_set_disk_scale_radius/sage_set_disk_scale_radius.c) | `DiskScaleRadiusResult` | Type-0 forcing-derived structural update; moves no reservoir |
+| Merger-clock setup | [`sage_initialise_merger_clock.c`](../models/sage16/modules/sage_initialise_merger_clock/sage_initialise_merger_clock.c) | `MergerClockDiagnostics` | initializes persistent event time and branch metadata; moves no reservoir |
 | Reionization | [`sage_reionization.c`](../models/sage16/modules/sage_reionization/sage_reionization.c) | `ReionizationResult.modifier` | sets the halo's allowed baryon fraction; moves no reservoir |
 | Infall preparation | [`sage_prepare_infall_budget.c`](../models/sage16/modules/sage_prepare_infall_budget/sage_prepare_infall_budget.c) | `InfallBudgetTransfer` | consolidates satellite ejecta/ICS and calculates a signed snapshot budget |
 | Infall application | [`sage_apply_infall.c`](../models/sage16/modules/sage_apply_infall/sage_apply_infall.c) | `InfallTransfer` | positive external source to hot gas; negative external sink from ejected then hot gas |
@@ -45,3 +47,5 @@ Group consolidation, signed supply/removal, and reionization are documented in [
 Shared-central ownership, galaxy-major ordering, and the exact substep dependence of stripping are documented in [`satellite_stripping.md`](satellite_stripping.md).
 
 The structural trigger, quasar wind, burst feedback, and delayed-yield ordering are documented in [`disk_instability_quasar_starburst.md`](disk_instability_quasar_starburst.md).
+
+Pre-timestep disk structure, clock sentinels, and dynamical-friction timing are documented in [`disk_radius_and_merger_clock.md`](disk_radius_and_merger_clock.md).

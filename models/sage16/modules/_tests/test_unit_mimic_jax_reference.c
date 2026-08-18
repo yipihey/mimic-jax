@@ -36,6 +36,14 @@ extern int sage_calculate_cooling_budget_cleanup(void);
 extern int sage_disk_instability_init(void);
 extern int sage_disk_instability_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_disk_instability_cleanup(void);
+extern int sage_set_disk_scale_radius_init(void);
+extern int sage_set_disk_scale_radius_process(struct ModuleContext *ctx, struct Halo *halos,
+                                              int ngal);
+extern int sage_set_disk_scale_radius_cleanup(void);
+extern int sage_initialise_merger_clock_init(void);
+extern int sage_initialise_merger_clock_process(struct ModuleContext *ctx, struct Halo *halos,
+                                                int ngal);
+extern int sage_initialise_merger_clock_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
@@ -106,6 +114,8 @@ static void configure_fiducial_slice(void) {
 
   test_pre_timestep_add("sage_reionization", PROCESSING_MODE_FULL_HALO);
   test_pre_timestep_add("sage_prepare_infall_budget", PROCESSING_MODE_FULL_HALO);
+  test_pre_timestep_add("sage_set_disk_scale_radius", PROCESSING_MODE_FULL_HALO);
+  test_pre_timestep_add("sage_initialise_merger_clock", PROCESSING_MODE_FULL_HALO);
   test_phase_add("galaxy_physics", "sage_apply_infall", PROCESSING_MODE_FULL_HALO);
   test_phase_add("galaxy_physics", "sage_reincorporation", PROCESSING_MODE_FULL_HALO);
   test_phase_add("galaxy_physics", "sage_satellite_stripping", PROCESSING_MODE_BY_GALAXY);
@@ -166,6 +176,8 @@ static int test_emit_reference_cases(void) {
   TEST_ASSERT(sage_calculate_supernova_feedback_init() == 0, "SN init should succeed");
   TEST_ASSERT(sage_apply_star_formation_supernova_init() == 0, "SF/SN apply init should succeed");
   TEST_ASSERT(sage_disk_instability_init() == 0, "Disk-instability init should succeed");
+  TEST_ASSERT(sage_set_disk_scale_radius_init() == 0, "Disk-radius init should succeed");
+  TEST_ASSERT(sage_initialise_merger_clock_init() == 0, "Merger-clock init should succeed");
   TEST_ASSERT(sage_quasar_mode_init() == 0, "Quasar-mode init should succeed");
   TEST_ASSERT(sage_starburst_feedback_init() == 0, "Starburst init should succeed");
   TEST_ASSERT(sage_apply_metal_enrichment_init() == 0, "Metal enrichment init should succeed");
@@ -185,6 +197,47 @@ static int test_emit_reference_cases(void) {
               "Reionization reference case should succeed");
   printf("MIMIC_JAX_REFERENCE case=reionization HaloBaryonFraction=%.17g\n",
          galaxy.HaloBaryonFraction);
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
+  setup_context(&context, &halo, 1);
+  halo.Spin[0] = 100.0f;
+  halo.Spin[1] = 150.0f;
+  halo.Spin[2] = 200.0f;
+  galaxy.DiskScaleRadius = 0.123f;
+  TEST_ASSERT(sage_set_disk_scale_radius_process(&context, &halo, 1) == 0,
+              "Disk-radius reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=disk_radius DiskScaleRadius=%.17g\n",
+         (double)galaxy.DiskScaleRadius);
+
+  struct Halo clock_halos[4];
+  struct GalaxyData clock_galaxies[4];
+  setup_halo(&clock_halos[0], &clock_galaxies[0], 100.0, 0.5, 200.0, 0.01);
+  setup_halo(&clock_halos[1], &clock_galaxies[1], 20.0, 0.2, 100.0, 0.01);
+  setup_halo(&clock_halos[2], &clock_galaxies[2], 5.0, 0.1, 50.0, 0.01);
+  setup_halo(&clock_halos[3], &clock_galaxies[3], 20.0, 0.2, 100.0, 0.01);
+  clock_halos[0].Len = 1000;
+  clock_halos[1].Type = 1;
+  clock_halos[1].Len = 200;
+  clock_halos[2].Type = 2;
+  clock_halos[2].Len = 0;
+  clock_halos[2].CentralHalo = 1;
+  clock_halos[3].Type = 3;
+  clock_halos[3].Len = 200;
+  clock_galaxies[0].MergTime = 5.0f;
+  clock_galaxies[1].MergTime = 999.9f;
+  clock_galaxies[1].StellarMass = 5.0f;
+  clock_galaxies[1].ColdGas = 2.0f;
+  clock_galaxies[2].MergTime = 999.9f;
+  clock_galaxies[2].StellarMass = 3.0f;
+  clock_galaxies[2].ColdGas = 1.0f;
+  clock_galaxies[3].MergTime = 999.9f;
+  setup_context(&context, &clock_halos[0], 1);
+  TEST_ASSERT(sage_initialise_merger_clock_process(&context, clock_halos, 4) == 0,
+              "Merger-clock reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=merger_clock CentralMergTime=%.17g "
+         "SatelliteMergTime=%.17g OrphanMergTime=%.17g Type3MergTime=%.17g\n",
+         (double)clock_galaxies[0].MergTime, (double)clock_galaxies[1].MergTime,
+         (double)clock_galaxies[2].MergTime, (double)clock_galaxies[3].MergTime);
 
   struct Halo infall_halos[2];
   struct GalaxyData infall_galaxies[2];
@@ -453,6 +506,8 @@ static int test_emit_reference_cases(void) {
          (double)galaxy.SupernovaOutflowRate, (double)galaxy.QuasarModeBHaccretionMass);
 
   sage_apply_metal_enrichment_cleanup();
+  sage_initialise_merger_clock_cleanup();
+  sage_set_disk_scale_radius_cleanup();
   sage_starburst_feedback_cleanup();
   sage_quasar_mode_cleanup();
   sage_disk_instability_cleanup();

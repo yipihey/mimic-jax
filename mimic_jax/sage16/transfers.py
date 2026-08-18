@@ -86,6 +86,30 @@ class SatelliteStrippingResult(NamedTuple):
     transfer: SatelliteStrippingTransfer
 
 
+class DiskScaleRadiusResult(NamedTuple):
+    """Forcing-derived pre-timestep disk-radius state update."""
+
+    state: GalaxyState
+    radius: Array
+    updated: Array
+
+
+class MergerClockDiagnostics(NamedTuple):
+    """Branch and target information from group merger-clock initialization."""
+
+    before: Array
+    after: Array
+    target_indices: Array
+    initialized: Array
+    forced_immediate: Array
+    reset_central: Array
+
+
+class MergerClockResult(NamedTuple):
+    states: GalaxyState
+    diagnostics: MergerClockDiagnostics
+
+
 class DiskInstabilityTransfer(NamedTuple):
     """Structural disk response and same-step unstable-gas trigger."""
 

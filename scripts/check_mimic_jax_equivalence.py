@@ -31,11 +31,13 @@ from mimic_jax.sage16 import (  # noqa: E402
     fiducial_parameters,
     initial_galaxy_state,
     initial_halo_forcing,
+    initialise_merger_clocks,
     load_cooling_tables,
     metal_dependent_cooling_rate,
     prepare_infall_budget,
     process_perturbations,
     sage16_units,
+    set_disk_scale_radius,
     step_context,
 )
 
@@ -85,9 +87,11 @@ def parse_c_reference(path: Path):
         "cooling_budget",
         "cooling_interpolation",
         "disk_instability",
+        "disk_radius",
         "infall_budget",
         "infall_negative",
         "infall_positive",
+        "merger_clock",
         "reincorporation",
         "radio_mode",
         "reionization",
@@ -128,6 +132,34 @@ def calculate_jax_reference():
         parameters,
         units,
     ).state
+
+    disk_radius = set_disk_scale_radius(
+        initial_galaxy_state(DiskScaleRadius=0.123),
+        initial_halo_forcing(Type=0, Spin=(100.0, 150.0, 200.0), Vvir=200.0, Rvir=0.2),
+    ).state
+
+    clock_states = jax.tree_util.tree_map(
+        lambda *values: jnp.stack(values),
+        initial_galaxy_state(MergTime=5.0),
+        initial_galaxy_state(MergTime=999.9, StellarMass=5.0, ColdGas=2.0),
+        initial_galaxy_state(MergTime=999.9, StellarMass=3.0, ColdGas=1.0),
+        initial_galaxy_state(MergTime=999.9),
+    )
+    clock_halos = jax.tree_util.tree_map(
+        lambda *values: jnp.stack(values),
+        initial_halo_forcing(Type=0, Len=1000, Mvir=100.0, Rvir=0.5, Vvir=200.0),
+        initial_halo_forcing(Type=1, Len=200, Mvir=20.0, Rvir=0.2, Vvir=100.0),
+        initial_halo_forcing(
+            Type=2,
+            Len=0,
+            Mvir=5.0,
+            Rvir=0.1,
+            Vvir=50.0,
+            CentralHalo=1,
+        ),
+        initial_halo_forcing(Type=3, Len=200, Mvir=20.0, Rvir=0.2, Vvir=100.0),
+    )
+    merger_clock = initialise_merger_clocks(clock_states, clock_halos, units).states
 
     central = initial_galaxy_state(
         HaloBaryonFraction=0.17,
@@ -427,6 +459,13 @@ def calculate_jax_reference():
 
     return {
         "reionization": select(reionization_state, ("HaloBaryonFraction",)),
+        "disk_radius": select(disk_radius, ("DiskScaleRadius",)),
+        "merger_clock": {
+            "CentralMergTime": float(merger_clock.MergTime[0]),
+            "SatelliteMergTime": float(merger_clock.MergTime[1]),
+            "OrphanMergTime": float(merger_clock.MergTime[2]),
+            "Type3MergTime": float(merger_clock.MergTime[3]),
+        },
         "infall_budget": {
             "InfallingGas": float(infall_budget.InfallingGas[0]),
             "EjectedGas": float(infall_budget.EjectedGas[0]),
