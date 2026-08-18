@@ -2,6 +2,7 @@
 """Batch Mini-Millennium trees and compare their catalogue fields with upstream MIMIC."""
 
 import argparse
+import json
 import time
 from pathlib import Path
 
@@ -44,6 +45,11 @@ def parse_arguments():
         "--upstream",
         type=Path,
         default=Path("output/sage16-mini-millennium/model_000.hdf5"),
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="optional path for the machine-readable equivalence summary",
     )
     return parser.parse_args()
 
@@ -192,6 +198,35 @@ def main():
         f"elapsed_seconds={elapsed:.6f} success={result.success}"
     )
     print("largest_relative_errors", largest_fields)
+    payload = {
+        "diagnostic": "mini_millennium_partition_equivalence",
+        "tree_start": arguments.tree_start,
+        "tree_end": end,
+        "tree_count": len(tree_indices),
+        "batch_size": arguments.batch_size,
+        "max_batch_members": arguments.max_batch_members,
+        "member_binning": arguments.member_binning,
+        "global_tree_offset": arguments.global_tree_offset,
+        "input_halos": int(partition.tree_halo_counts[arguments.tree_start : end].sum()),
+        "groups_evolved": result.groups_evolved,
+        "records_compared": records_compared,
+        "field_comparisons": comparisons,
+        "mismatches": len(mismatches),
+        "elapsed_seconds": elapsed,
+        "success": result.success,
+        "largest_relative_errors": {field: error for field, error in largest_fields},
+        "tolerances": {
+            "float32_and_cooling_heating": {"rtol": 2.0e-6, "atol": 2.0e-6},
+            "other_float64": {"rtol": 2.0e-12, "atol": 2.0e-12},
+            "integer_fields": "exact",
+        },
+    }
+    if arguments.output is not None:
+        arguments.output.parent.mkdir(parents=True, exist_ok=True)
+        arguments.output.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     if mismatches:
         for mismatch in mismatches[:20]:
             print("mismatch", mismatch)

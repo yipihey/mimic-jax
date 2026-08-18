@@ -19,9 +19,10 @@ If you're still deciding whether Mimic fits your science, start with the [README
 5. [Choosing Model and Simulation Packages](#choosing-model-and-simulation-packages)
 6. [Working With Your Catalogue](#working-with-your-catalogue)
 7. [Plotting](#plotting)
-8. [Troubleshooting](#troubleshooting)
-9. [Documentation Directory](#documentation-directory)
-10. [Citations](#citations)
+8. [Shareable Run Reports](#shareable-run-reports)
+9. [Troubleshooting](#troubleshooting)
+10. [Documentation Directory](#documentation-directory)
+11. [Citations](#citations)
 
 ---
 
@@ -559,6 +560,14 @@ The plot registry is model-specific — it lives in `models/<model>/plots/figure
 
 ---
 
+## Shareable Run Reports
+
+Mimic-jax can package canonical results, existing SAGE plots, evaluated diagnostics, and provenance into ordinary Markdown plus a compact JSON manifest. A report health table distinguishes passed, warning, failed, and not evaluated checks; missing evidence is never shown as a pass. Scientific arrays remain in HDF5 or NPZ and are linked with checksums rather than expanded into JSON.
+
+The initial Mini-Millennium builder consumes machine-readable equivalence and benchmark outputs, generates controlled conservation, timestep, and fractional-response diagnostics, and reuses the model-local plotting registry. See [Self-Documenting Run Reports](reporting.md#practitioner-workflow) for the exact commands, the Python API, comparison reports, Obsidian use, static rendering, and GitHub Pages publication.
+
+---
+
 ## Troubleshooting
 
 ### Build Issues
@@ -637,6 +646,7 @@ pip install -r requirements.txt
 - [VISION.md](VISION.md): architectural principles and design boundaries
 - [DEVELOPER-GUIDE.md](DEVELOPER-GUIDE.md): extending models, modules, simulations, properties, tests, and generated metadata
 - [STYLE-GUIDE.md](STYLE-GUIDE.md): naming, comments, documentation, metadata, tests, and review conventions
+- [reporting.md](reporting.md): self-documenting mimic-jax reports, comparisons, provenance, and publication
 - [plot/mimic-plot/README.md](../plot/mimic-plot/README.md): detailed plotting manual
 - [tests/README.md](../tests/README.md): test-suite quick reference
 - `models/<model>/README.md`: model-package science scope, module pipeline, parameters, plots, and references

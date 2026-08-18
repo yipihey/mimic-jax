@@ -55,3 +55,50 @@ No population-equivalence, conservation, convergence, gradient, or performance s
 ## Extension boundary
 
 New diagnostics integrate by producing a diagnostic summary and, where necessary, a referenced scientific artifact. Markdown, JSON, and site-rendering logic consume the report manifest generically. Physics functions never import the reporting package, and plotting functions continue to return their established `(plot_path, skip_message)` result.
+
+## Practitioner workflow
+
+The initial Mini-Millennium report deliberately separates expensive computation from presentation. First create machine-readable benchmark and equivalence products in the gitignored `benchmarks/` workspace:
+
+```bash
+mkdir -p benchmarks
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/check_mini_millennium_partition_equivalence.py \
+    --tree-start 1500 --tree-count 100 --member-binning=power_of_two \
+    --output benchmarks/mini-millennium-equivalence.json
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/benchmark_mini_millennium_partition.py \
+    --tree-start 1500 --tree-count 100 --repeats 2 \
+    --output benchmarks/mini-millennium-benchmark.json
+```
+
+Then build the report. The builder stages the two JSON products, saves its controlled response and refinement arrays, asks the existing model-local plotting registry for familiar figures, and writes Markdown plus JSON:
+
+```bash
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    examples/build_mini_millennium_report.py \
+    --equivalence-json benchmarks/mini-millennium-equivalence.json \
+    --benchmark-json benchmarks/mini-millennium-benchmark.json
+
+mimic_venv/bin/python scripts/check_reports.py
+```
+
+The resulting `reports/mini-millennium-sage16-initial/index.md` opens directly in GitHub or Obsidian. `report.json` exposes stable status, diagnostic, observable, parameter, artifact, and provenance fields for programmatic queries. The `.npz` response and refinement products retain the larger arrays and their scientific metadata.
+
+For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
+
+Comparison metrics should normally be constructed with `ComparisonMetric.from_values(...)`. It records baseline, candidate, and absolute difference, and defines a fractional difference only for a meaningful nonzero baseline. `derivative_prediction` is a separate optional fractional prediction, so a local elasticity is never confused with the measured finite run-to-run change.
+
+## Publishing
+
+Install Quarto locally only if a browser preview is useful, then render the already generated artifacts:
+
+```bash
+quarto render
+```
+
+The static site is written to the gitignored `_site/` directory. Quarto executes no scientific code. The GitHub Pages workflow performs the same lightweight validation and render, uploads `_site`, and deploys it with GitHub's Pages actions. A repository administrator must select **GitHub Actions** as the Pages source once under **Settings → Pages**.
+
+Publishing a report is deliberate: review its health states, scientific scope, provenance, and asset sizes, then commit the selected report directory. Temporary reports remain outside `reports/`; raw catalogues stay under the gitignored run-output area. If a future canonical array is too large for ordinary git, publish it as a release or in scientific storage and keep a checksummed reference in the report rather than turning the repository into a binary run database.

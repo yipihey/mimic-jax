@@ -56,6 +56,11 @@ def parse_arguments():
         type=Path,
         default=Path("simulations/mini-millennium/mini-millennium.a_list"),
     )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="optional path for the machine-readable benchmark JSON",
+    )
     return parser.parse_args()
 
 
@@ -180,7 +185,11 @@ def main():
         payload["first_to_best_warm_ratio"] = runs[0]["evolution_seconds"] / min(
             run["evolution_seconds"] for run in runs[1:]
         )
-    print(json.dumps(payload, indent=2, sort_keys=True))
+    encoded = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    if arguments.output is not None:
+        arguments.output.parent.mkdir(parents=True, exist_ok=True)
+        arguments.output.write_text(encoded, encoding="utf-8")
+    print(encoded, end="")
     if not all(run["success"] for run in runs):
         raise SystemExit("one or more evolution runs reported failure")
     if not payload["repeat_catalogues_identical"]:
