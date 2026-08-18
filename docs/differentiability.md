@@ -16,7 +16,8 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Cooling-table interpolation within one table interval | piecewise smooth | derivative exists within the interval; knots change the local formula |
 | Cooling and reincorporation formulas away from caps | smooth | ordinary JAX derivatives are meaningful |
 | Fiducial Bondi radio-mode rate within fixed caps | smooth | parameter and process responses are meaningful on the active branch |
-| Eddington, hot-gas, heating-mass, and `Rheat` caps | piecewise smooth | gradients describe the selected local cap |
+| Eddington, hot-gas, and heating-mass caps | piecewise smooth | gradients describe the selected local cap |
+| Monotone `Rheat` history update | piecewise-smooth projection | `Rheat` is explicit Markov state; derivatives pass through the active max branch |
 | `AGNrecipe` and cold-cloud triggering | discrete/thresholded | reproduce selection exactly; do not differentiate the integer recipe |
 | Reservoir caps such as `min(requested, available)` | piecewise smooth | derivative changes at saturation |
 | Star-formation critical cold-gas test | thresholded | each branch is differentiable; the threshold itself is not |
@@ -26,7 +27,8 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Quasar BH growth before wind thresholds | piecewise smooth | low-velocity suppression and cold-gas cap are differentiable on each active branch |
 | Quasar cold/hot wind decisions | thresholded | the all-reservoir ejection decisions are exact and are not smoothed |
 | Starburst formation, recycling, and SN transport | piecewise smooth | responses are local to the active trigger, balance, ejection-cap, and yield branches |
-| Merger/disruption choice, target identity, and major/minor classification | discrete event | preserved as a live ordered jump map; conditional consumer derivatives do not differentiate event occurrence |
+| Fixed-identity merger/disruption ownership map | piecewise smooth jump | progenitor-to-descendant derivatives are available for the selected event |
+| Merger/disruption choice, target identity, and major/minor classification | discrete event | preserved as a live ordered jump map; conditional derivatives do not differentiate event occurrence |
 | Merger-tree topology and galaxy identity | discrete | not differentiated by the initial model |
 | Persistent-state inheritance on a fixed branch | smooth identity/copy map | later observables can be differentiated with respect to inherited baryonic state |
 | Fixed-topology FoF group schedule | piecewise smooth ordered scan | reverse mode includes live satellite-to-central writes; group membership, Type, and event identity remain fixed |
@@ -35,6 +37,14 @@ The complete fixed-topology group schedule is compatible with JAX transformation
 
 Persistent SAGE reservoirs are float32 for parity. JAX can differentiate through a float64 calculation followed by a float32 write, but finite differences of the stored value eventually hit float32 resolution. This is one reason validation uses several perturbation sizes rather than declaring the smallest step the most accurate.
 
-Numerical integration is an additional differentiability boundary. The exact upstream sequential scan supports reverse-mode differentiation on its active branches. Future adaptive accept/reject control and alternative splitting order may add discrete choices; their forward accuracy and derivative semantics will be reported separately. See [`numerical_integration.md`](numerical_integration.md).
+Numerical integration is an additional differentiability boundary. The exact
+upstream sequential scan supports reverse-mode differentiation on its active
+branches. Euler, Heun RK2, and RK4 are now available for explicitly declared
+continuous flows and retain JAX differentiation. Projections are kept as maps,
+not hidden inside the RHS. Future adaptive accept/reject control and alternative
+splitting order may add discrete choices; their forward accuracy and derivative
+semantics will be reported separately. See
+[`numerical_integration.md`](numerical_integration.md) and the complete
+[`hybrid-system classification`](sage16_hybrid_system.md).
 
 Hard catalog selections and hard histogram bins deserve separate care. A galaxy crossing a mass-bin edge changes a conventional stellar mass function discretely, while pathwise AD through hard integer bin membership is zero almost everywhere and undefined at the edge. The first Mini-Millennium stellar-mass-function response will therefore require a separately validated population estimator or finite-volume treatment whose relation to the upstream hard-bin plot is measured and documented. mimic-jax will not silently report the derivative of fixed bin assignments as the derivative of galaxy abundance.

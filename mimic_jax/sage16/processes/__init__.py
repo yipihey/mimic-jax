@@ -6,7 +6,11 @@ from mimic_jax.sage16.processes.disk_instability import apply_disk_instability
 from mimic_jax.sage16.processes.disk_radius import set_disk_scale_radius
 from mimic_jax.sage16.processes.infall import apply_infall, prepare_infall_budget
 from mimic_jax.sage16.processes.merger_clock import initialise_merger_clocks
-from mimic_jax.sage16.processes.mergers import resolve_mergers_and_disruption
+from mimic_jax.sage16.processes.mergers import (
+    apply_disruption_ownership_event,
+    apply_merger_ownership_event,
+    resolve_mergers_and_disruption,
+)
 from mimic_jax.sage16.processes.quasar_mode import apply_quasar_mode
 from mimic_jax.sage16.processes.radio_mode_heating import apply_radio_mode_heating
 from mimic_jax.sage16.processes.reincorporation import apply_reincorporation
@@ -33,6 +37,8 @@ __all__ = [
     "apply_disk_instability",
     "apply_disk_instability_starburst",
     "apply_infall",
+    "apply_disruption_ownership_event",
+    "apply_merger_ownership_event",
     "initialise_merger_clocks",
     "calculate_cooling_budget",
     "apply_metal_enrichment",

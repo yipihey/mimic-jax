@@ -43,6 +43,10 @@ Cooling-table interpolation and the two cooling regimes are documented separatel
 
 Radio-mode ordering, ledgers, caps, and perturbation semantics are documented in [`radio_mode_heating.md`](radio_mode_heating.md). The exact sequential stepping semantics and numerical-analysis boundary are documented in [`numerical_integration.md`](numerical_integration.md).
 
+The full classification into continuous flows, external forcing,
+constraints/projections, and topology-changing events is documented in
+[`sage16_hybrid_system.md`](sage16_hybrid_system.md).
+
 Group consolidation, signed supply/removal, and reionization are documented in [`infall_and_reionization.md`](infall_and_reionization.md).
 
 Shared-central ownership, galaxy-major ordering, and the exact substep dependence of stripping are documented in [`satellite_stripping.md`](satellite_stripping.md).

@@ -204,6 +204,30 @@ def _apply_disruption_ownership(source: GalaxyState, target: GalaxyState):
     return updated, transfer
 
 
+def apply_merger_ownership_event(source: GalaxyState, target: GalaxyState):
+    """Apply the differentiable reservoir map for a known merger event.
+
+    Event detection, target identity, and the major/minor branch are discrete.
+    Once that event identity is fixed, this ownership map is an ordinary JAX
+    function and can supply the two progenitor derivatives of the descendant.
+    Immediate quasar/starburst consumers remain explicit downstream maps.
+    """
+
+    require_x64()
+    return _apply_merger_ownership(source, target)
+
+
+def apply_disruption_ownership_event(source: GalaxyState, target: GalaxyState):
+    """Apply the fixed-identity SAGE disruption ownership map.
+
+    The source black hole is an explicit sink in this event; the returned
+    ``MergerOwnershipTransfer`` records it rather than hiding non-conservation.
+    """
+
+    require_x64()
+    return _apply_disruption_ownership(source, target)
+
+
 def _resolve_target(halos: HaloForcing, live_types, source_index, fof_central_index):
     count = live_types.shape[0]
     source_type = live_types[source_index]

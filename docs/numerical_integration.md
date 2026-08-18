@@ -43,16 +43,57 @@ Satellite stripping supplies an especially important numerical counterexample to
 
 Tests already exercise `1, 2, 4, 8` substeps on the controlled central chain, require nonnegative stored reservoirs, check the baryon ledger, preserve JIT execution, and differentiate through the subcycled path. Group-level tests additionally cover exact pre-timestep placement, object-local durations, live Type-3 ownership, JIT, VMAP across independent groups, baryon conservation, and its zero derivative. These tests establish the machinery, not Mini-Millennium convergence.
 
+## Continuous and hybrid formulation
+
+The first alternative-integration slice is now executable. `Sage16OdeState`
+contains the quiescent central reservoirs, while `Sage16HybridState` adds the
+persistent BH, structural, event-clock, and `Rheat` history variables needed
+for the wider hybrid system. The initial fixed-forcing RHS includes cooling,
+quiescent star formation with instantaneous recycling, SN reheating/ejection,
+reincorporation, and their metal flows. The hybrid layer additionally exposes
+prepared infall, radio-mode BH growth and AGN-regulated cooling, merger-clock
+countdown, and the continuous fixed-forcing limit of satellite stripping.
+
+AGN illustrates why this is a hybrid rather than an ODE-only design. Its mass
+transport is rate based, but SAGE updates the stored heating radius with a
+monotone projection after evaluating new heating. `Rheat` is therefore part of
+the Markov state, while its upstream update remains an explicit projection.
+Disk instability, quasar/starburst triggers, mergers, and disruption remain
+finite maps or events. See [`sage16_hybrid_system.md`](sage16_hybrid_system.md)
+for the complete process classification.
+
+`integrate_fixed_step` supplies forward Euler, Heun RK2, and RK4 for a declared
+continuous RHS. It does not automatically reinterpret event maps as rates.
+The controlled smooth-rate experiment compares those methods with repeated
+upstream-order rate modules under identical fixed halo forcing. Its tests
+recover first-, second-, and fourth-order convergence respectively, preserve
+the continuous baryon invariant to floating-point precision, and retain JIT
+and gradient support. This is method evidence for the declared slice, not yet
+a claim that a complete Mini-Millennium hybrid run has converged.
+
 ## Alternative integrators: strict boundary
 
 Forward Euler, Heun or midpoint RK2, RK4, adaptive embedded Runge-Kutta, symmetric splitting, and conservative positivity-preserving methods are candidate numerical experiments only where the port exposes a mathematically legitimate continuous rate system. They must not be applied blindly to finite caps, snapshot partitions, merger events, or thresholded jump maps.
 
-The first higher-order experiment will therefore define and test a continuous-rate subset explicitly, compare it with the upstream sequential map at matched forcing, and report conservation, positivity, derivative behavior, right-hand-side evaluations, and wall-clock cost. Adaptive accept/reject decisions will be documented as piecewise or non-smooth. Modified Patankar-type methods will be investigated only if ordinary schemes exhibit material positivity or conservation failures in SAGE16 regimes.
+The first higher-order experiment therefore defines and tests its
+continuous-rate subset explicitly, compares it with the upstream sequential
+map at matched forcing, and reports conservation, positivity, derivative
+behavior, and right-hand-side evaluations. Cost benchmarking and a complete
+population run remain pending. Adaptive accept/reject decisions will be
+documented as piecewise or non-smooth. Modified Patankar-type methods will be
+investigated only if ordinary schemes exhibit material positivity or
+conservation failures in SAGE16 regimes.
 
 ## Required Mini-Millennium evidence
 
 After full pipeline equivalence, the numerical application will measure final reservoirs and familiar population statistics under `N, 2N, 4N, 8N` substeps; separate tree-forcing interpolation from baryonic subcycling; quantify sensible module-order alternatives; and compare numerical shifts with parameter-response magnitudes. A useful conclusion may be that the upstream scheme is already converged, that only specific mass/redshift regimes need refinement, or that event/tree discreteness dominates. The tests, rather than the choice of a sophisticated solver, determine the conclusion.
 
-Current code: [`mimic_jax/sage16/evolve.py`](../mimic_jax/sage16/evolve.py) and [`mimic_jax/numerics.py`](../mimic_jax/numerics.py). Tests: [`tests/mimic_jax/test_numerics.py`](../tests/mimic_jax/test_numerics.py).
+Current code: [`evolve.py`](../mimic_jax/sage16/evolve.py),
+[`ode.py`](../mimic_jax/sage16/ode.py),
+[`hybrid.py`](../mimic_jax/sage16/hybrid.py), and
+[`numerics.py`](../mimic_jax/numerics.py). Tests:
+[`test_numerics.py`](../tests/mimic_jax/test_numerics.py),
+[`test_ode.py`](../tests/mimic_jax/test_ode.py), and
+[`test_hybrid.py`](../tests/mimic_jax/test_hybrid.py).
 
 The runnable [`examples/sage16_timestep_refinement.py`](../examples/sage16_timestep_refinement.py) prints the controlled slice at `1, 2, 4, 8` substeps, its provisional-reference differences, and baryon residuals. Its final line states the scope explicitly so the example cannot be mistaken for a Mini-Millennium convergence result.

@@ -1,6 +1,13 @@
 # SAGE16 State in mimic-jax
 
-The immutable `GalaxyState` PyTree contains the 32 fields declared by [`models/sage16/model_properties.yaml`](../models/sage16/model_properties.yaml), in metadata order and with the same public names. This is the complete model state even though the initial JAX process slice currently reads or writes only part of it.
+The immutable `GalaxyState` PyTree contains the 32 fields declared by
+[`models/sage16/model_properties.yaml`](../models/sage16/model_properties.yaml),
+in metadata order and with the same public names. It is the canonical record
+for the complete exact-sequential implementation. `Sage16HybridState` is a
+deliberate projection of that record onto the persistent reservoirs,
+components, structure, AGN memory, and event history required by the hybrid
+mathematical formulation; transport budgets and output quadratures remain
+separate.
 
 Persistent SAGE reservoirs remain `float32` because upstream deliberately preserves the published SAGE structure's float storage. Calculation and transport fields declared `double` upstream remain `float64`. Enable JAX 64-bit mode before constructing a state; mimic-jax fails clearly instead of silently truncating these fields.
 
@@ -31,7 +38,7 @@ Persistent SAGE reservoirs remain `float32` because upstream deliberately preser
 | `Heating` | float64 | Snapshot-accumulated AGN-heating diagnostic | Reset each snapshot |
 | `Rcool` | float64 | Cooling radius calculated in the current substep | Substep transport |
 | `CoolingLambda` | float64 | Sutherland-Dopita cooling function value for the current substep | Substep diagnostic |
-| `Rheat` | float32 | Heating radius retained from AGN feedback | Persistent diagnostic state |
+| `Rheat` | float32 | Heating radius retained from AGN feedback | Persistent physical history state |
 | `SupernovaOutflowRate` | float32 | Snapshot-accumulated reheating/outflow diagnostic | Reset each snapshot |
 | `DiskScaleRadius` | float32 | Exponential disk scale length | Persistent structure state |
 | `MergTime` | float32 | Dynamical-friction merger clock | Persistent event state; `999.9` means unset |
@@ -43,4 +50,14 @@ Persistent SAGE reservoirs remain `float32` because upstream deliberately preser
 
 The baryonic ledger counts `ColdGas + HotGas + EjectedGas + StellarMass + ICS + BlackHoleMass`. It does not add `BulgeMass`, because the bulge is already included in `StellarMass`, and it does not add transport buffers. The metal ledger follows the same rule and does not double-count `MetalsBulgeMass`.
 
-Current code: [`mimic_jax/sage16/types.py`](../mimic_jax/sage16/types.py) and [`mimic_jax/sage16/inheritance.py`](../mimic_jax/sage16/inheritance.py). Upstream structural sources: [`models/sage16/model_properties.yaml`](../models/sage16/model_properties.yaml), [`src/include/generated/property_defs.h`](../src/include/generated/property_defs.h), and [`src/core/inheritance.c`](../src/core/inheritance.c).
+The exact record and hybrid state serve different purposes; neither duplicates
+the report layer. Their relationship and the distinction among state, forcing,
+projection, and event variables are documented in
+[`sage16_hybrid_system.md`](sage16_hybrid_system.md).
+
+Current code: [`types.py`](../mimic_jax/sage16/types.py),
+[`hybrid.py`](../mimic_jax/sage16/hybrid.py), and
+[`inheritance.py`](../mimic_jax/sage16/inheritance.py). Upstream structural
+sources: [`model_properties.yaml`](../models/sage16/model_properties.yaml),
+[`property_defs.h`](../src/include/generated/property_defs.h), and
+[`inheritance.c`](../src/core/inheritance.c).
