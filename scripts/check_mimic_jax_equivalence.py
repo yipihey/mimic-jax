@@ -2,6 +2,7 @@
 """Compile SAGE16 C reference cases and compare their outputs with mimic-jax."""
 
 import argparse
+import math
 import os
 import subprocess
 from pathlib import Path
@@ -15,11 +16,14 @@ from mimic_jax.sage16 import (  # noqa: E402
     apply_metal_enrichment,
     apply_reincorporation,
     apply_star_formation_supernova,
+    calculate_cooling_budget,
     calculate_star_formation_budget,
     calculate_supernova_feedback_budget,
     fiducial_parameters,
     initial_galaxy_state,
     initial_halo_forcing,
+    load_cooling_tables,
+    metal_dependent_cooling_rate,
     sage16_units,
     step_context,
 )
@@ -27,6 +31,9 @@ from mimic_jax.sage16 import (  # noqa: E402
 REFERENCE_PREFIX = "MIMIC_JAX_REFERENCE "
 REFERENCE_TEST = "models/sage16/modules/_tests/test_unit_mimic_jax_reference.c"
 REFERENCE_LOG = "tests/unit/build/test_unit_mimic_jax_reference.run.log"
+CASE_TOLERANCES = {
+    "cooling_budget": (1.0e-13, 0.0),
+}
 
 
 def parse_arguments():
@@ -62,6 +69,8 @@ def parse_c_reference(path: Path):
         records[case] = {name: float(value) for name, value in values.items()}
     required = {
         "cooling",
+        "cooling_budget",
+        "cooling_interpolation",
         "reincorporation",
         "star_formation_budget",
         "star_formation_final",
@@ -79,6 +88,25 @@ def select(record, names):
 def calculate_jax_reference():
     parameters = fiducial_parameters()
     units = sage16_units()
+    cooling_tables = load_cooling_tables()
+
+    log_z_sun = math.log10(0.02)
+    interpolation = {
+        "midpoint": float(metal_dependent_cooling_rate(5.025, log_z_sun - 0.75, cooling_tables)),
+        "low_temperature": float(metal_dependent_cooling_rate(3.0, log_z_sun, cooling_tables)),
+        "high_temperature": float(metal_dependent_cooling_rate(9.0, log_z_sun, cooling_tables)),
+        "primordial": float(metal_dependent_cooling_rate(5.5, -10.0, cooling_tables)),
+    }
+
+    cooling_budget_state = initial_galaxy_state(HotGas=8.0, MetalsHotGas=0.16)
+    cooling_budget_halo = initial_halo_forcing(Rvir=0.2, Vvir=200.0, dT=0.01)
+    cooling_budget = calculate_cooling_budget(
+        cooling_budget_state,
+        cooling_budget_halo,
+        step_context(num_substeps=10, time_interval=0.01),
+        units,
+        cooling_tables,
+    ).state
 
     cooling_state = initial_galaxy_state(
         ColdGas=2.0,
@@ -155,6 +183,11 @@ def calculate_jax_reference():
     ).galaxy
 
     return {
+        "cooling_interpolation": interpolation,
+        "cooling_budget": select(
+            cooling_budget,
+            ("CoolingGas", "Rcool", "CoolingLambda"),
+        ),
         "cooling": select(
             cooled,
             ("ColdGas", "HotGas", "MetalsColdGas", "MetalsHotGas", "Cooling"),
@@ -189,6 +222,7 @@ def calculate_jax_reference():
 def compare_records(c_reference, jax_reference) -> None:
     discrepancies = []
     compared = 0
+    exact = 0
     for case, c_values in c_reference.items():
         jax_values = jax_reference[case]
         if set(c_values) != set(jax_values):
@@ -199,15 +233,24 @@ def compare_records(c_reference, jax_reference) -> None:
         for name, c_value in c_values.items():
             compared += 1
             jax_value = jax_values[name]
-            if jax_value != c_value:
+            relative_tolerance, absolute_tolerance = CASE_TOLERANCES.get(case, (0.0, 0.0))
+            if jax_value == c_value:
+                exact += 1
+            elif not math.isclose(
+                jax_value,
+                c_value,
+                rel_tol=relative_tolerance,
+                abs_tol=absolute_tolerance,
+            ):
                 discrepancies.append(
                     f"{case}.{name}: C={c_value:.17g}, JAX={jax_value:.17g}, "
-                    f"abs_diff={abs(jax_value - c_value):.3e}"
+                    f"abs_diff={abs(jax_value - c_value):.3e}, "
+                    f"rtol={relative_tolerance:.1e}, atol={absolute_tolerance:.1e}"
                 )
     if discrepancies:
         raise AssertionError("C/JAX equivalence failed:\n" + "\n".join(discrepancies))
-    print(f"MIMIC-JAX equivalence: {compared} fields match compiled SAGE16 exactly")
-    print("Tolerance: rtol=0, atol=0 for these controlled CPU reference cases")
+    print(f"MIMIC-JAX equivalence: {compared} fields match compiled SAGE16 " f"({exact} exactly)")
+    print("Tolerances: cooling budget rtol=1e-13; every other controlled field exact")
 
 
 def main() -> int:

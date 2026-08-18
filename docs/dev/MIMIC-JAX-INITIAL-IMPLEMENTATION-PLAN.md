@@ -28,11 +28,11 @@ The first scientific application program is [`../mimic_jax_scientific_program.md
 
 ## Deferred Fidelity Work
 
-The next slices, in order, are the Sutherland-Dopita cooling-table interpolation and cooling budget, radio-mode AGN heating, infall/reionization, shared-central satellite stripping, disk instability/quasar/starburst, and finally ordered merger/disruption event maps plus tree inheritance. Full-tree and final-catalogue equivalence is not claimed until these processes and the C tree interface are present.
+The Sutherland-Dopita cooling-table interpolation and cooling budget are now implemented. The next slices, in order, are radio-mode AGN heating, infall/reionization, shared-central satellite stripping, disk instability/quasar/starburst, and finally ordered merger/disruption event maps plus tree inheritance. Full-tree and final-catalogue equivalence is not claimed until these processes and the C tree interface are present.
 
 ## Initial Milestone Evidence
 
-The first slice landed in commits `9f6d27d2` and `1ce7a135`. Twenty-one Python tests cover the complete state, process formulas, conservation, transforms, normalization safety, scan histories, and finite-difference validation. Seven relevant upstream C suites pass, including an executable oracle that compares 23 fields from cooling, reincorporation, and quiescent SF/SN/enrichment cases at `rtol=0`, `atol=0` on the controlled CPU fixtures. These are process-level results, not full-tree or Mini-Millennium equivalence.
+The first slice landed in commits `9f6d27d2` and `1ce7a135`. Twenty-one Python tests cover the complete state, process formulas, conservation, transforms, normalization safety, scan histories, and finite-difference validation. The next cooling-budget slice adds six focused Python tests. Relevant upstream C suites pass, including an executable oracle that compares 30 fields from cooling-table, cooling-budget/application, reincorporation, and quiescent SF/SN/enrichment cases. Twenty-seven controlled CPU fields are exact; three cooling-budget fields use `rtol=1e-13`, `atol=0` for C-libm/XLA transcendental ordering. These are process-level results, not full-tree or Mini-Millennium equivalence.
 
 ## Gates
 

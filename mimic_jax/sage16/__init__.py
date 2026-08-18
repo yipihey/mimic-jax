@@ -1,6 +1,11 @@
 """Fiducial SAGE16 state, parameters, transfers, and physics kernels."""
 
 from mimic_jax.sage16.conservation import baryonic_mass, metal_mass
+from mimic_jax.sage16.cooling_tables import (
+    CoolingTables,
+    load_cooling_tables,
+    metal_dependent_cooling_rate,
+)
 from mimic_jax.sage16.evolve import central_quiescent_step, evolve_central_history
 from mimic_jax.sage16.perturbations import (
     PROCESS_NAMES,
@@ -13,6 +18,7 @@ from mimic_jax.sage16.processes import (
     apply_metal_enrichment,
     apply_reincorporation,
     apply_star_formation_supernova,
+    calculate_cooling_budget,
     calculate_star_formation_budget,
     calculate_supernova_feedback_budget,
     quiescent_disk_step,
@@ -20,6 +26,8 @@ from mimic_jax.sage16.processes import (
 from mimic_jax.sage16.transfers import (
     CentralHistoryResult,
     CentralStepDiagnostics,
+    CoolingBudget,
+    CoolingBudgetResult,
     CoolingTransfer,
     MetalEnrichmentTransfer,
     QuiescentStepResult,
@@ -43,6 +51,9 @@ from mimic_jax.sage16.types import (
 __all__ = [
     "CentralHistoryResult",
     "CentralStepDiagnostics",
+    "CoolingBudget",
+    "CoolingBudgetResult",
+    "CoolingTables",
     "GalaxyState",
     "HaloForcing",
     "Sage16Parameters",
@@ -62,12 +73,15 @@ __all__ = [
     "apply_star_formation_supernova",
     "baryonic_mass",
     "calculate_star_formation_budget",
+    "calculate_cooling_budget",
     "calculate_supernova_feedback_budget",
     "central_quiescent_step",
     "evolve_central_history",
     "fiducial_parameters",
     "initial_galaxy_state",
     "initial_halo_forcing",
+    "load_cooling_tables",
+    "metal_dependent_cooling_rate",
     "metal_mass",
     "perturbations_from_matrix",
     "process_perturbations",

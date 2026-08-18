@@ -15,15 +15,21 @@
 #include "include/globals.h"
 #include "include/proto.h"
 #include "include/types.h"
+#include "../sage_calculate_cooling_budget/cooling_tables.h"
 #include "util/error.h"
 #include "util/memory.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "modules/_tests/sage_test_fixtures.h"
 
 extern int sage_apply_cooling_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
+extern int sage_calculate_cooling_budget_init(void);
+extern int sage_calculate_cooling_budget_process(struct ModuleContext *ctx, struct Halo *halos,
+                                                 int ngal);
+extern int sage_calculate_cooling_budget_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
@@ -109,11 +115,30 @@ static int test_emit_reference_cases(void) {
   reset_config();
   configure_fiducial_slice();
 
+  TEST_ASSERT(sage_calculate_cooling_budget_init() == 0, "Cooling-budget init should succeed");
   TEST_ASSERT(sage_reincorporation_init() == 0, "Reincorporation init should succeed");
   TEST_ASSERT(sage_calculate_star_formation_init() == 0, "SF init should succeed");
   TEST_ASSERT(sage_calculate_supernova_feedback_init() == 0, "SN init should succeed");
   TEST_ASSERT(sage_apply_star_formation_supernova_init() == 0, "SF/SN apply init should succeed");
   TEST_ASSERT(sage_apply_metal_enrichment_init() == 0, "Metal enrichment init should succeed");
+
+  const double log_z_sun = log10(0.02);
+  printf("MIMIC_JAX_REFERENCE case=cooling_interpolation midpoint=%.17g low_temperature=%.17g "
+         "high_temperature=%.17g primordial=%.17g\n",
+         get_metaldependent_cooling_rate(5.025, log_z_sun - 0.75),
+         get_metaldependent_cooling_rate(3.0, log_z_sun),
+         get_metaldependent_cooling_rate(9.0, log_z_sun),
+         get_metaldependent_cooling_rate(5.5, -10.0));
+
+  setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
+  setup_context(&context, &halo, 10);
+  galaxy.HotGas = 8.0f;
+  galaxy.MetalsHotGas = 0.16f;
+  TEST_ASSERT(sage_calculate_cooling_budget_process(&context, &halo, 1) == 0,
+              "Cooling-budget reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=cooling_budget CoolingGas=%.17g Rcool=%.17g "
+         "CoolingLambda=%.17g\n",
+         galaxy.CoolingGas, galaxy.Rcool, galaxy.CoolingLambda);
 
   setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
   setup_context(&context, &halo, 1);
@@ -179,6 +204,7 @@ static int test_emit_reference_cases(void) {
   sage_calculate_supernova_feedback_cleanup();
   sage_calculate_star_formation_cleanup();
   sage_reincorporation_cleanup();
+  sage_calculate_cooling_budget_cleanup();
   test_free_substep_phases();
   check_memory_leaks();
   return TEST_PASS;

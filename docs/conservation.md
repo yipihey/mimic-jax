@@ -6,6 +6,7 @@ The closed baryonic total used by the initial slice is `M_b = M_cold + M_hot + M
 
 | Operation | Baryonic behavior | Metal behavior |
 | --- | --- | --- |
+| Cooling-budget calculation | unchanged; writes transport/diagnostic fields only | unchanged |
 | Cooling application | conserved, hot to cold | conserved, hot to cold at hot-gas metallicity |
 | Reincorporation | conserved, ejected to hot | conserved, ejected to hot at ejected-gas metallicity |
 | Star formation plus recycling | conserved across cold gas and long-lived stars | pre-existing metals conserved across cold gas and stars |

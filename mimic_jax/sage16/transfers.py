@@ -19,6 +19,19 @@ class CoolingResult(NamedTuple):
     transfer: CoolingTransfer
 
 
+class CoolingBudget(NamedTuple):
+    """Finite cooling budget and diagnostics calculated before AGN heating."""
+
+    gas: Array
+    radius: Array
+    cooling_lambda: Array
+
+
+class CoolingBudgetResult(NamedTuple):
+    state: GalaxyState
+    budget: CoolingBudget
+
+
 class ReincorporationTransfer(NamedTuple):
     """Ejected-to-hot transfer committed by ``sage_reincorporation``."""
 

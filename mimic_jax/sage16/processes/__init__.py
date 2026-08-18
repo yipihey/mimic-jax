@@ -1,6 +1,7 @@
 """Small pure JAX functions corresponding to fiducial SAGE16 process modules."""
 
 from mimic_jax.sage16.processes.cooling import apply_cooling
+from mimic_jax.sage16.processes.cooling_budget import calculate_cooling_budget
 from mimic_jax.sage16.processes.reincorporation import apply_reincorporation
 from mimic_jax.sage16.processes.star_formation import (
     apply_metal_enrichment,
@@ -12,6 +13,7 @@ from mimic_jax.sage16.processes.star_formation import (
 
 __all__ = [
     "apply_cooling",
+    "calculate_cooling_budget",
     "apply_metal_enrichment",
     "apply_reincorporation",
     "apply_star_formation_supernova",

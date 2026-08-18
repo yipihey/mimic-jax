@@ -6,6 +6,7 @@ mimic-jax keeps upstream SAGE16 prescriptions recognizable and separates two que
 
 | Process | Upstream implementation | Explicit transfer | Reservoir action |
 | --- | --- | --- | --- |
+| Cooling budget | [`sage_calculate_cooling_budget.c`](../models/sage16/modules/sage_calculate_cooling_budget/sage_calculate_cooling_budget.c) | `CoolingBudget(gas, radius, cooling_lambda)` | calculates transport only |
 | Cooling application | [`sage_apply_cooling.c`](../models/sage16/modules/sage_apply_cooling/sage_apply_cooling.c) | `CoolingTransfer(gas, metals)` | hot to cold |
 | Reincorporation | [`sage_reincorporation.c`](../models/sage16/modules/sage_reincorporation/sage_reincorporation.c) | `ReincorporationTransfer(gas, metals)` | ejected to hot |
 | Quiescent star formation | [`sage_calculate_star_formation.c`](../models/sage16/modules/sage_calculate_star_formation/sage_calculate_star_formation.c) | `StarFormationBudget.NewStellarMass` | cold to long-lived stars after recycling |
@@ -26,3 +27,5 @@ The faithful calculation is always the zero-perturbation path. Sensitivity exper
 This construction means a process response has a direct interpretation: `d ln(O) / d epsilon = -0.4` means that making that process 1% stronger during the selected finite epoch changes the final positive observable by approximately -0.4% near the fiducial history.
 
 Current code: [`mimic_jax/sage16/transfers.py`](../mimic_jax/sage16/transfers.py), [`mimic_jax/sage16/processes/`](../mimic_jax/sage16/processes/), and [`mimic_jax/sage16/perturbations.py`](../mimic_jax/sage16/perturbations.py).
+
+Cooling-table interpolation and the two cooling regimes are documented separately in [`cooling.md`](cooling.md).
