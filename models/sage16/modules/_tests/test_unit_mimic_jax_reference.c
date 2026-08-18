@@ -12,6 +12,8 @@
 #include "../../../../tests/framework/test_phase_config.h"
 #include "core/module_interface.h"
 #include "core/module_registry.h"
+#include "core/galaxy_pool.h"
+#include "core/inheritance.h"
 #include "include/globals.h"
 #include "include/proto.h"
 #include "include/types.h"
@@ -357,6 +359,96 @@ static int test_emit_reference_cases(void) {
          (double)event_halos[2].Type, (double)event_galaxies[1].MergTime,
          (double)event_galaxies[2].MergTime);
 
+  struct Halo inheritance_source;
+  struct GalaxyData inheritance_source_galaxy;
+  struct Halo inheritance_workspace[1];
+  setup_halo(&inheritance_source, &inheritance_source_galaxy, 100.0, 1.0, 200.0, 1.0);
+  inheritance_source.SnapNum = 4;
+  inheritance_source.Type = 0;
+  inheritance_source.CentralHalo = -1;
+  inheritance_source.HaloNr = 7;
+  inheritance_source.UniqueGalaxyID = 4444;
+  inheritance_source.UniqueCentralGalaxyID = 3333;
+  inheritance_source.Len = 500;
+  inheritance_source.deltaMvir = 4.0;
+  inheritance_source.infallMvir = -1.0;
+  inheritance_source.infallVvir = -1.0;
+  inheritance_source.infallVmax = -1.0;
+  inheritance_source.Pos[0] = 1.0f;
+  inheritance_source.Pos[1] = 2.0f;
+  inheritance_source.Pos[2] = 3.0f;
+  inheritance_source.Vel[0] = 2.0f;
+  inheritance_source.Vel[1] = 3.0f;
+  inheritance_source.Vel[2] = 4.0f;
+  inheritance_source.Spin[0] = 3.0f;
+  inheritance_source.Spin[1] = 4.0f;
+  inheritance_source.Spin[2] = 5.0f;
+  inheritance_source.Vmax = 210.0f;
+  inheritance_source.VelDisp = 90.0f;
+  inheritance_source.MostBoundID = 100;
+  inheritance_source_galaxy.ColdGas = 4.0f;
+  inheritance_source_galaxy.StarFormationRate = 6.0f;
+  inheritance_source_galaxy.Rheat = 0.2f;
+  inheritance_source_galaxy.MergTime = 2.0f;
+  inheritance_source_galaxy.InfallingGas = 9.0;
+
+  struct InheritanceDescendant inheritance_descendant;
+  memset(&inheritance_descendant, 0, sizeof(inheritance_descendant));
+  inheritance_descendant.halo_nr = 42;
+  inheritance_descendant.current_snap = 5;
+  inheritance_descendant.current_time = 10.0;
+  inheritance_descendant.new_halo_dt = 2.5;
+  inheritance_descendant.virial_mass = 150.0;
+  inheritance_descendant.virial_radius = 1.5;
+  inheritance_descendant.virial_velocity = 250.0;
+  inheritance_descendant.is_fof_central = 1;
+  inheritance_descendant.unique_galaxy_id = 111000222;
+  inheritance_descendant.halo_payload.SnapNum = 5;
+  inheritance_descendant.halo_payload.Len = 1234;
+  inheritance_descendant.halo_payload.Mvir = 150.0;
+  inheritance_descendant.halo_payload.Rvir = 1.5;
+  inheritance_descendant.halo_payload.Vvir = 250.0;
+  inheritance_descendant.halo_payload.Pos[0] = 10.0f;
+  inheritance_descendant.halo_payload.Pos[1] = 11.0f;
+  inheritance_descendant.halo_payload.Pos[2] = 12.0f;
+  inheritance_descendant.halo_payload.Vel[0] = 20.0f;
+  inheritance_descendant.halo_payload.Vel[1] = 21.0f;
+  inheritance_descendant.halo_payload.Vel[2] = 22.0f;
+  inheritance_descendant.halo_payload.Spin[0] = 0.1f;
+  inheritance_descendant.halo_payload.Spin[1] = 0.11f;
+  inheritance_descendant.halo_payload.Spin[2] = 0.12f;
+  inheritance_descendant.halo_payload.Vmax = 300.0f;
+  inheritance_descendant.halo_payload.VelDisp = 120.0f;
+  inheritance_descendant.halo_payload.MostBoundID = 987654321;
+
+  const struct InheritanceProgenitorGalaxy inheritance_progenitor = {
+      .source = &inheritance_source,
+      .source_time = 14.0,
+      .is_main_branch = 1,
+  };
+  memset(inheritance_workspace, 0, sizeof(inheritance_workspace));
+  TEST_ASSERT(inherit_descendant_halos(inheritance_workspace, 0, 1, &inheritance_descendant,
+                                       &inheritance_progenitor, 1) == 1,
+              "Inheritance reference case should retain one main-branch galaxy");
+  printf("MIMIC_JAX_REFERENCE case=inheritance ColdGas=%.17g StarFormationRate=%.17g "
+         "Rheat=%.17g MergTime=%.17g InfallingGas=%.17g Type=%.17g SnapNum=%.17g "
+         "HaloNr=%.17g CentralHalo=%.17g dT=%.17g Len=%.17g Mvir=%.17g "
+         "deltaMvir=%.17g Rvir=%.17g Vvir=%.17g infallMvir=%.17g infallVvir=%.17g "
+         "infallVmax=%.17g Vmax=%.17g Pos0=%.17g Spin2=%.17g MostBoundID=%.17g\n",
+         (double)inheritance_workspace[0].galaxy->ColdGas,
+         (double)inheritance_workspace[0].galaxy->StarFormationRate,
+         (double)inheritance_workspace[0].galaxy->Rheat,
+         (double)inheritance_workspace[0].galaxy->MergTime,
+         inheritance_workspace[0].galaxy->InfallingGas, (double)inheritance_workspace[0].Type,
+         (double)inheritance_workspace[0].SnapNum, (double)inheritance_workspace[0].HaloNr,
+         (double)inheritance_workspace[0].CentralHalo, inheritance_workspace[0].dT,
+         (double)inheritance_workspace[0].Len, inheritance_workspace[0].Mvir,
+         inheritance_workspace[0].deltaMvir, inheritance_workspace[0].Rvir,
+         inheritance_workspace[0].Vvir, inheritance_workspace[0].infallMvir,
+         inheritance_workspace[0].infallVvir, inheritance_workspace[0].infallVmax,
+         (double)inheritance_workspace[0].Vmax, (double)inheritance_workspace[0].Pos[0],
+         (double)inheritance_workspace[0].Spin[2], (double)inheritance_workspace[0].MostBoundID);
+
   struct Halo infall_halos[2];
   struct GalaxyData infall_galaxies[2];
   setup_halo(&infall_halos[0], &infall_galaxies[0], 100.0, 0.2, 200.0, 0.01);
@@ -642,6 +734,7 @@ static int test_emit_reference_cases(void) {
   sage_calculate_cooling_budget_cleanup();
   test_free_substep_phases();
   test_free_pre_timestep();
+  galaxy_pool_destroy();
   check_memory_leaks();
   return TEST_PASS;
 }

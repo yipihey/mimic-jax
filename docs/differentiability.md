@@ -28,6 +28,7 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Starburst formation, recycling, and SN transport | piecewise smooth | responses are local to the active trigger, balance, ejection-cap, and yield branches |
 | Merger/disruption choice, target identity, and major/minor classification | discrete event | preserved as a live ordered jump map; conditional consumer derivatives do not differentiate event occurrence |
 | Merger-tree topology and galaxy identity | discrete | not differentiated by the initial model |
+| Persistent-state inheritance on a fixed branch | smooth identity/copy map | later observables can be differentiated with respect to inherited baryonic state |
 
 The current pre-timestep/baryon-supply/satellite-stripping/cooling/radio-mode/quiescent/instability/quasar/starburst slice is compatible with JAX transformations at its pure-process boundary. Tests exercise `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev` as appropriate, evaluate derivatives away from thresholds, and compare process/parameter derivatives with symmetric finite differences at several perturbation sizes. A derivative near a branch boundary should be reported with the active branch and, when scientifically relevant, a finite perturbation study across the boundary.
 

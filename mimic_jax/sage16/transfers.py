@@ -163,6 +163,19 @@ class MergerResolutionResult(NamedTuple):
     success: Array
 
 
+class InheritanceResult(NamedTuple):
+    state: GalaxyState
+    halo: Any
+    retained: Array
+    created: Array
+
+
+class LocalCentralResult(NamedTuple):
+    halos: Any
+    central_index: Array
+    valid: Array
+
+
 class DiskInstabilityTransfer(NamedTuple):
     """Structural disk response and same-step unstable-gas trigger."""
 

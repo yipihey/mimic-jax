@@ -23,7 +23,7 @@ The prescriptions have different numerical meanings:
 
 Disk-radius and merger-clock initialization are neither rate integrations nor reservoir transfers. They are pre-timestep state maps: the first derives Type-0 disk structure from current halo forcing, while the second sets or resets persistent event clocks from type and sentinel state. Subcycling does not rerun either map.
 
-`halo.dT` is the per-object tree-interval duration. `mimic_object_substep_dt` divides it by the configured substep count. Diagnostic rates such as SFR, cooling energy rate, and heating energy rate may divide committed amounts by the full `halo.dT`; those diagnostics should not be mistaken for the timestep used to calculate each transfer.
+`halo.dT` is the per-object tree-interval duration inherited as `source progenitor time - descendant time`. It can differ among records in one live FoF workspace. `mimic_object_substep_dt` divides it by the configured substep count. The shared `context.time_interval` is derived from the FoF central's retained progenitor snapshot and is used for scheduler metadata, not as a substitute for object-local physics time. Diagnostic rates such as SFR, cooling energy rate, and heating energy rate may divide committed amounts by the full `halo.dT`; those diagnostics should not be mistaken for the timestep used to calculate each transfer.
 
 The disk-instability burst is a concrete example: the structural trigger is recomputed each substep, but its `StarFormationRate` and `SupernovaOutflowRate` increments divide by the full `halo.dT`, not the substep duration. The burst mass is a finite trigger-driven transfer. It must not be treated as a rate-times-`dt` term in a higher-order integrator.
 

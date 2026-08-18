@@ -47,6 +47,6 @@ Changing the substep count can change both the clock-crossing epoch and the orde
 
 The compiled oracle covers a disruption followed by a minor merger into the same central, including ownership transfers, quasar growth/wind, merger burst, post-minor instability recheck, second quasar/burst chain, event times, clocks, and source Type changes. All 23 controlled event fields match compiled SAGE16 exactly. Python tests cover the disruption BH sink, major history updates, live one-hop redirects, object-local timing and halo-mass interpolation, fail-fast behavior, JIT, VMAP over equal-sized groups, and derivative-level ownership conservation.
 
-This establishes the isolated fiducial event phase. Full-tree equivalence still requires the tree inheritance map and a complete group driver that interleaves ordinary galaxy-major physics with shared-central writes before invoking this phase.
+This establishes the isolated fiducial event phase. The numerical tree-inheritance maps are now documented in [`tree_inheritance.md`](tree_inheritance.md); full-tree equivalence still requires a complete driver that gathers ragged progenitor slices and interleaves ordinary galaxy-major physics with shared-central writes before invoking this phase.
 
 Current code: [`mergers.py`](../mimic_jax/sage16/processes/mergers.py) and [`transfers.py`](../mimic_jax/sage16/transfers.py). Tests: [`test_mergers.py`](../tests/mimic_jax/test_mergers.py).

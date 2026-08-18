@@ -52,6 +52,8 @@ class HaloForcing(NamedTuple):
     Type: Array
     CentralHalo: Array
     HaloNr: Array
+    UniqueGalaxyID: Array
+    UniqueCentralGalaxyID: Array
     SnapNum: Array
     Len: Array
     Mvir: Array
@@ -63,8 +65,27 @@ class HaloForcing(NamedTuple):
     infallVvir: Array
     infallVmax: Array
     Vmax: Array
+    Pos: Array
+    Vel: Array
+    VelDisp: Array
     Spin: Array
+    MostBoundID: Array
     dT: Array
+
+
+class InheritanceDescendant(NamedTuple):
+    """Driver-supplied descendant identity, time, and halo payload."""
+
+    halo_nr: Array
+    current_snap: Array
+    current_time: Array
+    new_halo_dt: Array
+    virial_mass: Array
+    virial_radius: Array
+    virial_velocity: Array
+    is_fof_central: Array
+    unique_galaxy_id: Array
+    payload: HaloForcing
 
 
 class Sage16Parameters(NamedTuple):
@@ -189,6 +210,8 @@ def initial_halo_forcing(**overrides: float) -> HaloForcing:
         "Type": 0,
         "CentralHalo": 0,
         "HaloNr": 0,
+        "UniqueGalaxyID": 0,
+        "UniqueCentralGalaxyID": 0,
         "SnapNum": 63,
         "Len": 1000,
         "Mvir": 100.0,
@@ -200,7 +223,11 @@ def initial_halo_forcing(**overrides: float) -> HaloForcing:
         "infallVvir": -1.0,
         "infallVmax": -1.0,
         "Vmax": 200.0,
+        "Pos": (0.0, 0.0, 0.0),
+        "Vel": (0.0, 0.0, 0.0),
+        "VelDisp": 0.0,
         "Spin": (0.0, 0.0, 0.0),
+        "MostBoundID": 0,
         "dT": 0.01,
     }
     unknown = set(overrides) - set(defaults)
@@ -212,6 +239,8 @@ def initial_halo_forcing(**overrides: float) -> HaloForcing:
         Type=jnp.asarray(defaults["Type"], dtype=jnp.int32),
         CentralHalo=jnp.asarray(defaults["CentralHalo"], dtype=jnp.int32),
         HaloNr=jnp.asarray(defaults["HaloNr"], dtype=jnp.int32),
+        UniqueGalaxyID=jnp.asarray(defaults["UniqueGalaxyID"], dtype=jnp.int64),
+        UniqueCentralGalaxyID=jnp.asarray(defaults["UniqueCentralGalaxyID"], dtype=jnp.int64),
         SnapNum=jnp.asarray(defaults["SnapNum"], dtype=jnp.int32),
         Len=jnp.asarray(defaults["Len"], dtype=jnp.int32),
         Mvir=jnp.asarray(defaults["Mvir"], dtype=jnp.float64),
@@ -223,8 +252,51 @@ def initial_halo_forcing(**overrides: float) -> HaloForcing:
         infallVvir=jnp.asarray(defaults["infallVvir"], dtype=jnp.float64),
         infallVmax=jnp.asarray(defaults["infallVmax"], dtype=jnp.float64),
         Vmax=jnp.asarray(defaults["Vmax"], dtype=jnp.float32),
+        Pos=jnp.asarray(defaults["Pos"], dtype=jnp.float32),
+        Vel=jnp.asarray(defaults["Vel"], dtype=jnp.float32),
+        VelDisp=jnp.asarray(defaults["VelDisp"], dtype=jnp.float32),
         Spin=jnp.asarray(defaults["Spin"], dtype=jnp.float32),
+        MostBoundID=jnp.asarray(defaults["MostBoundID"], dtype=jnp.int64),
         dT=jnp.asarray(defaults["dT"], dtype=jnp.float64),
+    )
+
+
+def inheritance_descendant(
+    *,
+    payload: HaloForcing = None,
+    halo_nr: int = 42,
+    current_snap: int = 5,
+    current_time: float = 10.0,
+    new_halo_dt: float = 2.5,
+    virial_mass: float = 150.0,
+    virial_radius: float = 1.5,
+    virial_velocity: float = 250.0,
+    is_fof_central: bool = True,
+    unique_galaxy_id: int = 111000222,
+) -> InheritanceDescendant:
+    """Construct a JAX-compatible counterpart of upstream's descendant payload."""
+
+    require_x64()
+    if payload is None:
+        payload = initial_halo_forcing(
+            SnapNum=current_snap,
+            Len=1234,
+            Mvir=virial_mass,
+            Rvir=virial_radius,
+            Vvir=virial_velocity,
+            Vmax=300.0,
+        )
+    return InheritanceDescendant(
+        halo_nr=jnp.asarray(halo_nr, dtype=jnp.int32),
+        current_snap=jnp.asarray(current_snap, dtype=jnp.int32),
+        current_time=jnp.asarray(current_time, dtype=jnp.float64),
+        new_halo_dt=jnp.asarray(new_halo_dt, dtype=jnp.float64),
+        virial_mass=jnp.asarray(virial_mass, dtype=jnp.float64),
+        virial_radius=jnp.asarray(virial_radius, dtype=jnp.float64),
+        virial_velocity=jnp.asarray(virial_velocity, dtype=jnp.float64),
+        is_fof_central=jnp.asarray(is_fof_central, dtype=jnp.bool_),
+        unique_galaxy_id=jnp.asarray(unique_galaxy_id, dtype=jnp.int64),
+        payload=payload,
     )
 
 
