@@ -8,6 +8,7 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Reionization era/mass/Type guards | thresholded/discrete | retain exact `z=8`, `z=7`, mass, and Type-3 decisions |
 | Positive infall partition | smooth within float-storage resolution | fractional supply responses pass through the fixed snapshot budget |
 | Negative infall priority and reservoir depletion | piecewise smooth | derivatives describe the active ejected/hot depletion branch |
+| Type-1 satellite stripping above the excess threshold | piecewise smooth | fractional process responses describe the active live-excess branch; Type and excess decisions remain exact |
 | Cooling-table interpolation within one table interval | piecewise smooth | derivative exists within the interval; knots change the local formula |
 | Cooling and reincorporation formulas away from caps | smooth | ordinary JAX derivatives are meaningful |
 | Fiducial Bondi radio-mode rate within fixed caps | smooth | parameter and process responses are meaningful on the active branch |
@@ -22,7 +23,7 @@ Differentiability is a property of a particular SAGE16 branch and numerical exec
 | Merger/disruption choice and major/minor classification | discrete event | preserve as an ordered jump map; do not replace with a sigmoid for equivalence |
 | Merger-tree topology and galaxy identity | discrete | not differentiated by the initial model |
 
-The current baryon-supply/cooling/radio-mode/quiescent slice is compatible with `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev`. Tests evaluate derivatives away from thresholds and compare them with symmetric finite differences at several perturbation sizes. A derivative near a branch boundary should be reported with the active branch and, when scientifically relevant, a finite perturbation study across the boundary.
+The current baryon-supply/satellite-stripping/cooling/radio-mode/quiescent slice is compatible with `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev` at its pure-process boundary. Tests evaluate derivatives away from thresholds and compare them with symmetric finite differences at several perturbation sizes. A derivative near a branch boundary should be reported with the active branch and, when scientifically relevant, a finite perturbation study across the boundary.
 
 Persistent SAGE reservoirs are float32 for parity. JAX can differentiate through a float64 calculation followed by a float32 write, but finite differences of the stored value eventually hit float32 resolution. This is one reason validation uses several perturbation sizes rather than declaring the smallest step the most accurate.
 

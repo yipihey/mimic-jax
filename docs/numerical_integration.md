@@ -16,7 +16,7 @@ The prescriptions have different numerical meanings:
 | --- | --- | --- |
 | Rate multiplied by object substep duration | cooling budget, quiescent star formation, reincorporation, radio-mode BH accretion | uses `halo.dT / num_substeps`, followed by thresholds and source-reservoir caps |
 | Snapshot budget partitioned across substeps | cosmological infall | prepares `InfallingGas` once, then applies `InfallingGas / num_substeps` |
-| Recomputed fractional finite transfer | satellite stripping | recomputes the current excess and removes a configured substep fraction |
+| Recomputed fractional finite transfer | satellite stripping | recomputes the current excess and removes `excess / num_substeps`; over a fixed interval the stripped fraction is `1 - (1 - 1/N)^N`, not exactly one |
 | Downstream finite transfer | cooling application, SN reheating/ejection, recycling, metal enrichment | consumes an earlier transport budget and commits bounded reservoir moves or explicit sources |
 | Thresholded finite map | disk instability, quasar feedback, starburst feedback | applies a finite redistribution after a trigger; it is not automatically an ODE right-hand side |
 | Discrete event/jump map | merger or disruption and its immediate consumers | preserves event order and tree identity; it is not passed to a continuous integrator |
@@ -28,6 +28,8 @@ The prescriptions have different numerical meanings:
 `upstream_sequential_central_step` implements the exact module order for the currently ported per-central subset. The FoF-wide `prepare_infall_budget` operation runs once before it, not inside the substep map. `subcycle_upstream_sequential_central(..., num_substeps=N)` holds the halo forcing and prepared infall budget fixed over one tree interval and repeats the reference map `N` times, while each rate-based module uses `halo.dT / N` and infall applies one `InfallingGas / N` partition. This is the initial, explicitly labeled `piecewise_constant` forcing assumption.
 
 The merger-tree sampling and baryonic integration resolution are separate concepts. Future forcing interpolation must be selected explicitly and recorded in outputs. Piecewise-constant and linear interpolation will be compared before anything more elaborate is considered. Interpolation must not alter event times or invent smooth tree topology.
+
+Satellite stripping supplies an especially important numerical counterexample to a generic ODE interpretation. Its transfer is independent of `halo.dT`; changing only `num_substeps` changes the finite interval map, approaching a stripped excess fraction of `1 - 1/e` as `N` grows. This inherited behavior is retained in `upstream_sequential`. It must be measured separately from convergence of genuinely rate-times-`dt` processes, and it must not be silently “corrected” in an equivalence run.
 
 ## Executable numerical diagnostics
 

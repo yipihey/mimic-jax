@@ -136,6 +136,7 @@ def history_example():
             baseline.diagnostics.reincorporation.gas,
             baseline.diagnostics.radio_mode.heating_mass,
             baseline.diagnostics.infall.requested,
+            jnp.zeros_like(baseline.diagnostics.infall.requested),
         ]
     )
     response = process_response_tensor(

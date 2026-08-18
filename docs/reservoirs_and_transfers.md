@@ -9,6 +9,7 @@ mimic-jax keeps upstream SAGE16 prescriptions recognizable and separates two que
 | Reionization | [`sage_reionization.c`](../models/sage16/modules/sage_reionization/sage_reionization.c) | `ReionizationResult.modifier` | sets the halo's allowed baryon fraction; moves no reservoir |
 | Infall preparation | [`sage_prepare_infall_budget.c`](../models/sage16/modules/sage_prepare_infall_budget/sage_prepare_infall_budget.c) | `InfallBudgetTransfer` | consolidates satellite ejecta/ICS and calculates a signed snapshot budget |
 | Infall application | [`sage_apply_infall.c`](../models/sage16/modules/sage_apply_infall/sage_apply_infall.c) | `InfallTransfer` | positive external source to hot gas; negative external sink from ejected then hot gas |
+| Satellite stripping | [`sage_satellite_stripping.c`](../models/sage16/modules/sage_satellite_stripping/sage_satellite_stripping.c) | `SatelliteStrippingTransfer` | Type-1 satellite hot gas and its metals to the FoF central hot atmosphere |
 | Cooling budget | [`sage_calculate_cooling_budget.c`](../models/sage16/modules/sage_calculate_cooling_budget/sage_calculate_cooling_budget.c) | `CoolingBudget(gas, radius, cooling_lambda)` | calculates transport only |
 | Radio-mode AGN | [`sage_radio_mode_heating.c`](../models/sage16/modules/sage_radio_mode_heating/sage_radio_mode_heating.c) | `RadioModeHeatingTransfer` | prior `Rheat` suppresses cooling; hot gas feeds BH growth and future heating radius |
 | Cooling application | [`sage_apply_cooling.c`](../models/sage16/modules/sage_apply_cooling/sage_apply_cooling.c) | `CoolingTransfer(gas, metals)` | hot to cold |
@@ -26,7 +27,7 @@ The disk yield is not a conserved transfer: `Yield * NewStellarMass` is newly pr
 
 ## Process perturbations
 
-The faithful calculation is always the zero-perturbation path. Sensitivity experiments wrap a named transfer or requested budget as `m -> m exp(epsilon)` before the ordinary SAGE capacity limits and downstream application. At `epsilon = 0`, the compiled C equivalence cases remain unchanged. The currently implemented names are `cooling`, `star_formation`, `sn_reheating`, `sn_ejection`, `reincorporation`, `agn_heating`, and `infall`. `agn_heating` scales the coupled upstream radio-mode accretion/heating rate; it does not invent independent BH-growth and heating physics. `infall` scales the signed fixed snapshot budget and preserves whether that epoch is a source or sink.
+The faithful calculation is always the zero-perturbation path. Sensitivity experiments wrap a named transfer or requested budget as `m -> m exp(epsilon)` before the ordinary SAGE capacity limits and downstream application. At `epsilon = 0`, the compiled C equivalence cases remain unchanged. The currently implemented names are `cooling`, `star_formation`, `sn_reheating`, `sn_ejection`, `reincorporation`, `agn_heating`, `infall`, and `satellite_stripping`. `agn_heating` scales the coupled upstream radio-mode accretion/heating rate; it does not invent independent BH-growth and heating physics. `infall` scales the signed fixed snapshot budget and preserves whether that epoch is a source or sink. `satellite_stripping` scales the live excess requested on one substep before the upstream source-reservoir caps.
 
 This construction means a process response has a direct interpretation: `d ln(O) / d epsilon = -0.4` means that making that process 1% stronger during the selected finite epoch changes the final positive observable by approximately -0.4% near the fiducial history.
 
@@ -37,3 +38,5 @@ Cooling-table interpolation and the two cooling regimes are documented separatel
 Radio-mode ordering, ledgers, caps, and perturbation semantics are documented in [`radio_mode_heating.md`](radio_mode_heating.md). The exact sequential stepping semantics and numerical-analysis boundary are documented in [`numerical_integration.md`](numerical_integration.md).
 
 Group consolidation, signed supply/removal, and reionization are documented in [`infall_and_reionization.md`](infall_and_reionization.md).
+
+Shared-central ownership, galaxy-major ordering, and the exact substep dependence of stripping are documented in [`satellite_stripping.md`](satellite_stripping.md).

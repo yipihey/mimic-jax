@@ -19,6 +19,7 @@ from mimic_jax.sage16 import (  # noqa: E402
     apply_radio_mode_heating,
     apply_reincorporation,
     apply_reionization,
+    apply_satellite_stripping,
     apply_star_formation_supernova,
     calculate_cooling_budget,
     calculate_star_formation_budget,
@@ -84,6 +85,7 @@ def parse_c_reference(path: Path):
         "reincorporation",
         "radio_mode",
         "reionization",
+        "satellite_stripping",
         "star_formation_budget",
         "star_formation_final",
     }
@@ -159,6 +161,23 @@ def calculate_jax_reference():
         ),
         step_context(),
     ).state
+
+    stripping = apply_satellite_stripping(
+        initial_galaxy_state(
+            HaloBaryonFraction=0.17,
+            StellarMass=0.4,
+            ColdGas=0.3,
+            HotGas=5.0,
+            EjectedGas=0.2,
+            BlackHoleMass=0.05,
+            ICS=0.1,
+            MetalsHotGas=0.1,
+        ),
+        initial_galaxy_state(HotGas=100.0, MetalsHotGas=2.0),
+        initial_halo_forcing(Type=1, Mvir=10.0),
+        step_context(num_substeps=10),
+        parameters,
+    )
 
     cooling_budget_state = initial_galaxy_state(HotGas=8.0, MetalsHotGas=0.16)
     cooling_budget_halo = initial_halo_forcing(Rvir=0.2, Vvir=200.0, dT=0.01)
@@ -283,6 +302,12 @@ def calculate_jax_reference():
             negative_infall,
             ("EjectedGas", "MetalsEjectedGas", "HotGas", "MetalsHotGas"),
         ),
+        "satellite_stripping": {
+            "SatelliteHotGas": float(stripping.satellite.HotGas),
+            "SatelliteMetalsHotGas": float(stripping.satellite.MetalsHotGas),
+            "CentralHotGas": float(stripping.central.HotGas),
+            "CentralMetalsHotGas": float(stripping.central.MetalsHotGas),
+        },
         "cooling_interpolation": interpolation,
         "cooling_budget": select(
             cooling_budget,

@@ -71,6 +71,21 @@ class InfallResult(NamedTuple):
     transfer: InfallTransfer
 
 
+class SatelliteStrippingTransfer(NamedTuple):
+    """Hot gas and metals stripped from one Type-1 satellite to its FoF central."""
+
+    gas: Array
+    metals: Array
+    allowed_baryons: Array
+    satellite_baryons_before: Array
+
+
+class SatelliteStrippingResult(NamedTuple):
+    satellite: GalaxyState
+    central: GalaxyState
+    transfer: SatelliteStrippingTransfer
+
+
 class RadioModeHeatingTransfer(NamedTuple):
     """Coupled cooling suppression, BH growth, and heating from radio-mode AGN."""
 

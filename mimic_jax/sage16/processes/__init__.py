@@ -9,6 +9,7 @@ from mimic_jax.sage16.processes.reionization import (
     apply_reionization,
     reionization_modifier,
 )
+from mimic_jax.sage16.processes.satellite_stripping import apply_satellite_stripping
 from mimic_jax.sage16.processes.star_formation import (
     apply_metal_enrichment,
     apply_star_formation_supernova,
@@ -24,6 +25,7 @@ __all__ = [
     "apply_metal_enrichment",
     "apply_reincorporation",
     "apply_reionization",
+    "apply_satellite_stripping",
     "apply_radio_mode_heating",
     "apply_star_formation_supernova",
     "calculate_star_formation_budget",

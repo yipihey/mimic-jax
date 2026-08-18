@@ -102,6 +102,7 @@ def evolve_central_history(
             reincorporation=0.0 * cooling_gas,
             agn_heating=0.0 * cooling_gas,
             infall=0.0 * cooling_gas,
+            satellite_stripping=0.0 * cooling_gas,
         )
 
     def scan_step(state, inputs):
@@ -218,6 +219,7 @@ def evolve_upstream_sequential_central_history(
             reincorporation=zero,
             agn_heating=zero,
             infall=zero,
+            satellite_stripping=zero,
         )
 
     def scan_step(state, inputs):
@@ -271,6 +273,7 @@ def subcycle_upstream_sequential_central(
             reincorporation=zero,
             agn_heating=zero,
             infall=zero,
+            satellite_stripping=zero,
         )
 
     def expand(value):

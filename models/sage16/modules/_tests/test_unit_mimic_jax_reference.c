@@ -36,6 +36,10 @@ extern int sage_calculate_cooling_budget_cleanup(void);
 extern int sage_reincorporation_init(void);
 extern int sage_reincorporation_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reincorporation_cleanup(void);
+extern int sage_satellite_stripping_init(void);
+extern int sage_satellite_stripping_process(struct ModuleContext *ctx, struct Halo *halos,
+                                            int ngal);
+extern int sage_satellite_stripping_cleanup(void);
 extern int sage_reionization_init(void);
 extern int sage_reionization_process(struct ModuleContext *ctx, struct Halo *halos, int ngal);
 extern int sage_reionization_cleanup(void);
@@ -91,10 +95,11 @@ static void configure_fiducial_slice(void) {
   test_pre_timestep_add("sage_reionization", PROCESSING_MODE_FULL_HALO);
   test_pre_timestep_add("sage_prepare_infall_budget", PROCESSING_MODE_FULL_HALO);
   test_phase_add("galaxy_physics", "sage_apply_infall", PROCESSING_MODE_FULL_HALO);
+  test_phase_add("galaxy_physics", "sage_reincorporation", PROCESSING_MODE_FULL_HALO);
+  test_phase_add("galaxy_physics", "sage_satellite_stripping", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_calculate_cooling_budget", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_radio_mode_heating", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_cooling", PROCESSING_MODE_BY_GALAXY);
-  test_phase_add("galaxy_physics", "sage_reincorporation", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_calculate_star_formation", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_calculate_supernova_feedback", PROCESSING_MODE_BY_GALAXY);
   test_phase_add("galaxy_physics", "sage_apply_star_formation_supernova",
@@ -139,6 +144,7 @@ static int test_emit_reference_cases(void) {
   TEST_ASSERT(sage_reionization_init() == 0, "Reionization init should succeed");
   TEST_ASSERT(sage_prepare_infall_budget_init() == 0, "Infall-budget init should succeed");
   TEST_ASSERT(sage_apply_infall_init() == 0, "Infall-application init should succeed");
+  TEST_ASSERT(sage_satellite_stripping_init() == 0, "Satellite-stripping init should succeed");
   TEST_ASSERT(sage_reincorporation_init() == 0, "Reincorporation init should succeed");
   TEST_ASSERT(sage_radio_mode_heating_init() == 0, "Radio-mode init should succeed");
   TEST_ASSERT(sage_calculate_star_formation_init() == 0, "SF init should succeed");
@@ -215,6 +221,29 @@ static int test_emit_reference_cases(void) {
          "HotGas=%.17g MetalsHotGas=%.17g\n",
          (double)galaxy.EjectedGas, (double)galaxy.MetalsEjectedGas, (double)galaxy.HotGas,
          (double)galaxy.MetalsHotGas);
+
+  struct Halo stripping_halos[2];
+  struct GalaxyData stripping_galaxies[2];
+  setup_halo(&stripping_halos[0], &stripping_galaxies[0], 100.0, 0.2, 200.0, 0.01);
+  setup_halo(&stripping_halos[1], &stripping_galaxies[1], 10.0, 0.1, 100.0, 0.01);
+  stripping_halos[1].Type = 1;
+  setup_context(&context, &stripping_halos[0], 10);
+  stripping_galaxies[0].HotGas = 100.0f;
+  stripping_galaxies[0].MetalsHotGas = 2.0f;
+  stripping_galaxies[1].HaloBaryonFraction = 0.17f;
+  stripping_galaxies[1].StellarMass = 0.4f;
+  stripping_galaxies[1].ColdGas = 0.3f;
+  stripping_galaxies[1].HotGas = 5.0f;
+  stripping_galaxies[1].EjectedGas = 0.2f;
+  stripping_galaxies[1].BlackHoleMass = 0.05f;
+  stripping_galaxies[1].ICS = 0.1f;
+  stripping_galaxies[1].MetalsHotGas = 0.1f;
+  TEST_ASSERT(sage_satellite_stripping_process(&context, &stripping_halos[1], 1) == 0,
+              "Satellite-stripping reference case should succeed");
+  printf("MIMIC_JAX_REFERENCE case=satellite_stripping SatelliteHotGas=%.17g "
+         "SatelliteMetalsHotGas=%.17g CentralHotGas=%.17g CentralMetalsHotGas=%.17g\n",
+         (double)stripping_galaxies[1].HotGas, (double)stripping_galaxies[1].MetalsHotGas,
+         (double)stripping_galaxies[0].HotGas, (double)stripping_galaxies[0].MetalsHotGas);
 
   setup_halo(&halo, &galaxy, 100.0, 0.2, 200.0, 0.01);
   setup_context(&context, &halo, 10);
@@ -306,6 +335,7 @@ static int test_emit_reference_cases(void) {
   sage_calculate_supernova_feedback_cleanup();
   sage_calculate_star_formation_cleanup();
   sage_reincorporation_cleanup();
+  sage_satellite_stripping_cleanup();
   sage_apply_infall_cleanup();
   sage_prepare_infall_budget_cleanup();
   sage_reionization_cleanup();
