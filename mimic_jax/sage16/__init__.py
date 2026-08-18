@@ -44,6 +44,7 @@ from mimic_jax.sage16.hybrid import (
     hybrid_baryonic_mass,
     hybrid_metal_mass,
     hybrid_state_from_galaxy,
+    integrate_sage16_hybrid_flow_adaptive,
     prepared_infall_forcing,
     sage16_hybrid_rhs,
     sage16_hybrid_rhs_and_rates,
@@ -55,6 +56,10 @@ from mimic_jax.sage16.inheritance import (
     reset_snapshot_accumulators,
     set_local_central,
 )
+from mimic_jax.sage16.observables import (
+    soft_stellar_mass_bin_weights,
+    soft_stellar_mass_function,
+)
 from mimic_jax.sage16.ode import (
     ODE_STATE_NAMES,
     SAGE16_ODE_RATE_SUBSET,
@@ -64,6 +69,7 @@ from mimic_jax.sage16.ode import (
     Sage16OdeState,
     galaxy_from_ode_state,
     integrate_sage16_ode,
+    integrate_sage16_ode_adaptive,
     ode_state_from_galaxy,
     sage16_ode_rhs,
     sage16_ode_rhs_and_rates,
@@ -167,6 +173,12 @@ from mimic_jax.sage16.tree_evolve import (
     virial_radius,
     virial_velocity,
 )
+from mimic_jax.sage16.tree_sensitivity import (
+    LinearizedPartitionEvolutionResult,
+    linearize_lhalo_partition,
+    state_field_array,
+    state_tangent_matrix,
+)
 from mimic_jax.sage16.types import (
     GalaxyState,
     HaloForcing,
@@ -214,6 +226,7 @@ __all__ = [
     "ContinuousStrippingRates",
     "HeatingRadiusProjectionResult",
     "LocalCentralResult",
+    "LinearizedPartitionEvolutionResult",
     "MetalEnrichmentTransfer",
     "ODE_STATE_NAMES",
     "MergerClockDiagnostics",
@@ -285,6 +298,7 @@ __all__ = [
     "evolve_central_history",
     "evolve_lhalo_partition",
     "evolve_lhalo_tree",
+    "linearize_lhalo_partition",
     "evolve_upstream_sequential_central_history",
     "evolve_upstream_sequential_group_interval",
     "evolve_upstream_sequential_group_final",
@@ -302,6 +316,8 @@ __all__ = [
     "initialise_new_central",
     "initialise_merger_clocks",
     "integrate_sage16_ode",
+    "integrate_sage16_ode_adaptive",
+    "integrate_sage16_hybrid_flow_adaptive",
     "load_cooling_tables",
     "load_scale_factors",
     "metal_dependent_cooling_rate",
@@ -328,7 +344,11 @@ __all__ = [
     "step_context",
     "apply_heating_radius_projection",
     "snapshot_timing",
+    "soft_stellar_mass_bin_weights",
+    "soft_stellar_mass_function",
     "stellar_mass_function",
+    "state_field_array",
+    "state_tangent_matrix",
     "subcycle_upstream_sequential_central",
     "subcycle_upstream_rate_subset",
     "upstream_sequential_central_step",

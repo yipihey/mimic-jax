@@ -8,7 +8,10 @@ import pytest
 from mimic_jax.io import open_lhalo_partition
 from mimic_jax.sage16 import (
     evolve_lhalo_partition,
+    fiducial_parameters,
+    linearize_lhalo_partition,
     load_scale_factors,
+    process_perturbations,
     record_to_catalogue,
     snapshot_timing,
 )
@@ -94,3 +97,82 @@ def test_two_linear_trees_batch_to_upstream_z0_catalogue_values():
                     atol=2.0e-6,
                     err_msg=name,
                 )
+
+
+def test_tree_parameter_tangent_matches_a_symmetric_full_rerun():
+    partition = open_lhalo_partition(Path(__file__).parents[1] / "data/input/trees_063.0")
+    timing = snapshot_timing(
+        load_scale_factors(ROOT / "simulations/mini-millennium/mini-millennium.a_list")
+    )
+    parameter_name = "SfrEfficiency"
+    parameters = fiducial_parameters()
+    step = 1.0e-3 * float(parameters.SfrEfficiency)
+
+    linearized = linearize_lhalo_partition(
+        partition,
+        timing,
+        tree_indices=(1575,),
+        parameter_names=(parameter_name,),
+        output_snapshots=(63,),
+        batch_size=2,
+        member_binning="power_of_two",
+    )
+    automatic = float(linearized.records_by_snapshot[63][0].state_tangent.StellarMass[0])
+    perturbed = []
+    for direction in (-1.0, 1.0):
+        current = parameters._replace(SfrEfficiency=parameters.SfrEfficiency + direction * step)
+        result = evolve_lhalo_partition(
+            partition,
+            timing,
+            tree_indices=(1575,),
+            parameters=current,
+            output_snapshots=(63,),
+            batch_size=2,
+            member_binning="power_of_two",
+        )
+        perturbed.append(float(result.records_by_snapshot[63][0].state.StellarMass))
+    finite_difference = (perturbed[1] - perturbed[0]) / (2.0 * step)
+
+    assert linearized.success
+    assert linearized.control_names == (parameter_name,)
+    np.testing.assert_allclose(automatic, finite_difference, rtol=6.0e-4, atol=1.0e-7)
+
+
+def test_tree_process_tangent_matches_a_symmetric_finite_epoch_rerun():
+    partition = open_lhalo_partition(Path(__file__).parents[1] / "data/input/trees_063.0")
+    timing = snapshot_timing(
+        load_scale_factors(ROOT / "simulations/mini-millennium/mini-millennium.a_list")
+    )
+    edges = np.asarray(
+        [np.log(timing.scale_factor[0]), np.log(timing.scale_factor[-1])],
+        dtype=np.float64,
+    )
+    linearized = linearize_lhalo_partition(
+        partition,
+        timing,
+        tree_indices=(1575,),
+        process_names=("cooling",),
+        ln_scale_factor_edges=edges,
+        output_snapshots=(63,),
+        batch_size=2,
+        member_binning="power_of_two",
+    )
+    automatic = float(linearized.records_by_snapshot[63][0].state_tangent.StellarMass[0])
+    step = 1.0e-3
+    perturbed = []
+    for direction in (-1.0, 1.0):
+        result = evolve_lhalo_partition(
+            partition,
+            timing,
+            tree_indices=(1575,),
+            perturbations=process_perturbations(cooling=direction * step),
+            output_snapshots=(63,),
+            batch_size=2,
+            member_binning="power_of_two",
+        )
+        perturbed.append(float(result.records_by_snapshot[63][0].state.StellarMass))
+    finite_difference = (perturbed[1] - perturbed[0]) / (2.0 * step)
+
+    assert linearized.success
+    assert linearized.control_names == ("cooling:epoch_0",)
+    np.testing.assert_allclose(automatic, finite_difference, rtol=6.0e-4, atol=1.0e-7)

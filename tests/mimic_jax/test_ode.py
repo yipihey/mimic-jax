@@ -5,6 +5,7 @@ import jax.numpy as jnp
 import numpy as np
 
 from mimic_jax import (
+    ADAPTIVE_SUCCESS,
     FORWARD_EULER,
     HEUN_RK2,
     RK4,
@@ -21,6 +22,7 @@ from mimic_jax.sage16 import (
     initial_galaxy_state,
     initial_halo_forcing,
     integrate_sage16_ode,
+    integrate_sage16_ode_adaptive,
     load_cooling_tables,
     ode_state_from_galaxy,
     sage16_ode_rhs_and_rates,
@@ -249,3 +251,86 @@ def test_ode_integration_is_jittable_differentiable_positive_and_conservative():
     initial_baryons = sum(float(getattr(initial, name)) for name in ODE_STATE_NAMES[:4])
     final_baryons = sum(float(getattr(eager, name)) for name in ODE_STATE_NAMES[:4])
     assert abs(final_baryons - initial_baryons) < 5.0e-13
+
+
+def test_adaptive_ode_converges_preserves_baryons_and_validates_its_gradient():
+    galaxy, halo, _, parameters, units, tables = _ode_case()
+    initial = ode_state_from_galaxy(galaxy)
+    reference = integrate_sage16_ode(
+        initial,
+        halo,
+        galaxy.DiskScaleRadius,
+        parameters,
+        units,
+        tables,
+        num_steps=2048,
+        method=RK4,
+    ).final_state
+    reference_values = np.asarray(_observables(reference))
+    solutions = []
+    errors = []
+    for tolerance in (1.0e-3, 1.0e-5, 1.0e-7):
+        solution = integrate_sage16_ode_adaptive(
+            initial,
+            halo,
+            galaxy.DiskScaleRadius,
+            parameters,
+            units,
+            tables,
+            relative_tolerance=tolerance,
+            absolute_tolerance=tolerance * 1.0e-3,
+            initial_step=halo.dT,
+            jacobian_stability_factor=1.0,
+            max_steps=128,
+            max_attempts=512,
+        )
+        assert int(solution.status) == ADAPTIVE_SUCCESS
+        solutions.append(solution)
+        values = np.asarray(_observables(solution.final_state))
+        errors.append(np.max(np.abs((values - reference_values) / reference_values)))
+        assert np.min(values) > 0.0
+        accepted = int(solution.accepted_steps)
+        assert np.all(
+            np.asarray(solution.accepted_step_sizes[:accepted])
+            * np.asarray(solution.accepted_jacobian_norms[:accepted])
+            <= 1.0 + 1.0e-12
+        )
+        initial_baryons = sum(float(getattr(initial, name)) for name in ODE_STATE_NAMES[:4])
+        final_baryons = sum(
+            float(getattr(solution.final_state, name)) for name in ODE_STATE_NAMES[:4]
+        )
+        assert abs(final_baryons - initial_baryons) < 2.0e-12
+    assert errors[1] < errors[0]
+    assert errors[2] < errors[1]
+    assert errors[2] < 2.0e-8
+
+    def final_stellar_mass(efficiency):
+        varied = parameters._replace(SfrEfficiency=efficiency)
+        return integrate_sage16_ode_adaptive(
+            initial,
+            halo,
+            galaxy.DiskScaleRadius,
+            varied,
+            units,
+            tables,
+            relative_tolerance=1.0e-6,
+            absolute_tolerance=1.0e-9,
+            initial_step=halo.dT,
+            jacobian_stability_factor=0.5,
+            max_steps=64,
+            max_attempts=128,
+        ).final_state.StellarMass
+
+    automatic = jax.grad(final_stellar_mass)(parameters.SfrEfficiency)
+    epsilon = 1.0e-4
+    finite_difference = (
+        final_stellar_mass(parameters.SfrEfficiency * (1.0 + epsilon))
+        - final_stellar_mass(parameters.SfrEfficiency * (1.0 - epsilon))
+    ) / (2.0 * epsilon * parameters.SfrEfficiency)
+    np.testing.assert_allclose(automatic, finite_difference, rtol=1.0e-6)
+    np.testing.assert_allclose(
+        jax.jit(final_stellar_mass)(parameters.SfrEfficiency),
+        final_stellar_mass(parameters.SfrEfficiency),
+        rtol=0.0,
+        atol=0.0,
+    )

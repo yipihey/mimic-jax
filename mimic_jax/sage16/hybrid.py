@@ -11,6 +11,7 @@ from typing import Any, NamedTuple
 import jax
 import jax.numpy as jnp
 
+from mimic_jax.numerics import AdaptiveSolution, integrate_adaptive
 from mimic_jax.sage16.cooling_tables import CoolingTables
 from mimic_jax.sage16.ode import (
     Sage16OdeState,
@@ -493,6 +494,83 @@ def sage16_hybrid_rhs(*args, **kwargs) -> Sage16HybridState:
     """Return only the continuous derivative for integration and AD."""
 
     return sage16_hybrid_rhs_and_rates(*args, **kwargs).derivative
+
+
+def integrate_sage16_hybrid_flow_adaptive(
+    initial_state: Sage16HybridState,
+    halo: HaloForcing,
+    parameters: Sage16Parameters,
+    units: Sage16Units,
+    cooling_tables: CoolingTables,
+    *,
+    duration,
+    relative_tolerance: float,
+    absolute_tolerance,
+    infall_forcing: PreparedInfallForcing = None,
+    perturbations=None,
+    initial_step=None,
+    minimum_step=None,
+    maximum_step=None,
+    max_steps: int = 4096,
+    max_attempts: int = 16384,
+    jacobian_stability_factor=1.0,
+) -> AdaptiveSolution:
+    """Integrate continuous hybrid flows between fixed map/event boundaries.
+
+    Persistent ``Rheat`` is read by the flow but its monotone projection is not
+    applied at adaptive internal steps. Call
+    :func:`apply_heating_radius_projection` only on the externally selected
+    projection schedule. This prevents solver step acceptance from redefining
+    the physical/event model.
+    """
+
+    def rhs(time, state):
+        return sage16_hybrid_rhs(
+            time,
+            state,
+            halo,
+            parameters,
+            units,
+            cooling_tables,
+            infall_forcing=infall_forcing,
+            perturbations=perturbations,
+        )
+
+    nonnegative_names = (
+        "ColdGas",
+        "HotGas",
+        "EjectedGas",
+        "StellarMass",
+        "BulgeMass",
+        "ICS",
+        "BlackHoleMass",
+        "MetalsColdGas",
+        "MetalsHotGas",
+        "MetalsEjectedGas",
+        "MetalsStellarMass",
+        "MetalsBulgeMass",
+        "MetalsICS",
+        "Rheat",
+        "DiskScaleRadius",
+    )
+
+    def physically_valid(state):
+        return jnp.all(jnp.stack([getattr(state, name) >= 0.0 for name in nonnegative_names]))
+
+    return integrate_adaptive(
+        rhs,
+        initial_state,
+        duration=duration,
+        relative_tolerance=relative_tolerance,
+        absolute_tolerance=absolute_tolerance,
+        initial_step=initial_step,
+        minimum_step=minimum_step,
+        maximum_step=maximum_step,
+        max_steps=max_steps,
+        max_attempts=max_attempts,
+        jacobian_stability_factor=jacobian_stability_factor,
+        state_is_valid=physically_valid,
+    )
 
 
 def apply_heating_radius_projection(

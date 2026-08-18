@@ -5,7 +5,12 @@ from typing import Any, NamedTuple
 import jax
 import jax.numpy as jnp
 
-from mimic_jax.numerics import FixedStepSolution, integrate_fixed_step
+from mimic_jax.numerics import (
+    AdaptiveSolution,
+    FixedStepSolution,
+    integrate_adaptive,
+    integrate_fixed_step,
+)
 from mimic_jax.sage16.cooling_tables import CoolingTables, metal_dependent_cooling_rate
 from mimic_jax.sage16.perturbations import log_fractionally_perturb, process_perturbations
 from mimic_jax.sage16.precision import as_float64, require_x64
@@ -364,6 +369,64 @@ def integrate_sage16_ode(
         duration=duration,
         num_steps=num_steps,
         method=method,
+    )
+
+
+def integrate_sage16_ode_adaptive(
+    initial_state: Sage16OdeState,
+    halo: HaloForcing,
+    disk_scale_radius,
+    parameters: Sage16Parameters,
+    units: Sage16Units,
+    cooling_tables: CoolingTables,
+    *,
+    duration=None,
+    relative_tolerance: float,
+    absolute_tolerance,
+    initial_step=None,
+    minimum_step=None,
+    maximum_step=None,
+    max_steps: int = 4096,
+    max_attempts: int = 16384,
+    jacobian_stability_factor=1.0,
+    perturbations=None,
+) -> AdaptiveSolution:
+    """Adaptively integrate the fixed-forcing continuous SAGE16 rate subset.
+
+    The embedded Dormand--Prince estimate controls accuracy, while the optional
+    Jacobian factor limits explicit steps using the local reservoir-response
+    timescale. All eight stored masses and metal masses must remain nonnegative.
+    Finite SAGE maps and event timing are deliberately outside this function.
+    """
+
+    if duration is None:
+        duration = halo.dT
+
+    def rhs(time, state):
+        return sage16_ode_rhs(
+            time,
+            state,
+            halo,
+            disk_scale_radius,
+            parameters,
+            units,
+            cooling_tables,
+            perturbations,
+        )
+
+    return integrate_adaptive(
+        rhs,
+        initial_state,
+        duration=duration,
+        relative_tolerance=relative_tolerance,
+        absolute_tolerance=absolute_tolerance,
+        initial_step=initial_step,
+        minimum_step=minimum_step,
+        maximum_step=maximum_step,
+        max_steps=max_steps,
+        max_attempts=max_attempts,
+        jacobian_stability_factor=jacobian_stability_factor,
+        require_nonnegative=True,
     )
 
 

@@ -5,7 +5,11 @@ import jax.numpy as jnp
 import numpy as np
 
 from mimic_jax import (
+    ADAPTIVE_SUCCESS,
     conservation_residual,
+    integrate_adaptive,
+    rhs_jacobian,
+    scaled_jacobian_infinity_norm,
     step_to_timescale_ratio,
     timestep_refinement_study,
 )
@@ -132,3 +136,48 @@ def test_radio_mode_parameter_gradient_survives_upstream_subcycling():
     derivative = jax.grad(final_black_hole_mass)(parameters.RadioModeEfficiency)
     assert bool(jnp.isfinite(derivative))
     assert float(derivative) > 0.0
+
+
+def test_adaptive_error_and_scaled_jacobian_control_are_jittable_and_differentiable():
+    rate = jnp.asarray(2.0, dtype=jnp.float64)
+
+    def solve(current_rate):
+        return integrate_adaptive(
+            lambda _time, value: -current_rate * value,
+            jnp.asarray(1.0, dtype=jnp.float64),
+            duration=1.0,
+            relative_tolerance=1.0e-8,
+            absolute_tolerance=1.0e-11,
+            initial_step=0.5,
+            jacobian_stability_factor=1.0,
+            require_nonnegative=True,
+            max_steps=128,
+            max_attempts=512,
+        )
+
+    solution = solve(rate)
+    assert int(solution.status) == ADAPTIVE_SUCCESS
+    accepted = int(solution.accepted_steps)
+    assert accepted > 1
+    np.testing.assert_allclose(solution.final_state, np.exp(-2.0), rtol=0.0, atol=7.0e-10)
+    assert bool(
+        jnp.all(
+            solution.accepted_step_sizes[:accepted] * solution.accepted_jacobian_norms[:accepted]
+            <= 1.0 + 1.0e-12
+        )
+    )
+    np.testing.assert_allclose(jax.jit(lambda value: solve(value).final_state)(rate), np.exp(-2.0))
+    derivative = jax.grad(lambda value: solve(value).final_state)(rate)
+    np.testing.assert_allclose(derivative, -np.exp(-2.0), rtol=3.0e-7)
+
+    rhs = lambda _time, value: -rate * value
+    np.testing.assert_allclose(rhs_jacobian(rhs, 0.0, jnp.asarray(1.0)), [[-2.0]])
+    np.testing.assert_allclose(
+        scaled_jacobian_infinity_norm(
+            rhs,
+            0.0,
+            jnp.asarray(1.0),
+            jnp.asarray(0.1),
+        ),
+        2.0,
+    )

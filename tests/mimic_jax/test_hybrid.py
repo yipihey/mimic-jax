@@ -4,7 +4,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 
-from mimic_jax.numerics import integrate_fixed_step
+from mimic_jax.numerics import ADAPTIVE_SUCCESS, integrate_fixed_step
 from mimic_jax.sage16 import (
     StrippingPairState,
     apply_heating_radius_projection,
@@ -19,8 +19,10 @@ from mimic_jax.sage16 import (
     hybrid_state_from_galaxy,
     initial_galaxy_state,
     initial_halo_forcing,
+    integrate_sage16_hybrid_flow_adaptive,
     load_cooling_tables,
     prepared_infall_forcing,
+    sage16_hybrid_rhs,
     sage16_hybrid_rhs_and_rates,
     sage16_units,
     step_context,
@@ -206,6 +208,77 @@ def test_continuous_stripping_is_conservative_and_matches_the_upstream_limit():
         hybrid_metal_mass(pair.satellite) + hybrid_metal_mass(pair.central),
         rtol=0.0,
         atol=2.0e-13,
+    )
+
+
+def test_adaptive_hybrid_flow_converges_before_a_fixed_rheat_projection():
+    galaxy, halo, parameters, units, tables = _hybrid_case()
+    initial = hybrid_state_from_galaxy(galaxy)
+
+    def rhs(time, state):
+        return sage16_hybrid_rhs(time, state, halo, parameters, units, tables)
+
+    reference = integrate_fixed_step(
+        rhs,
+        initial,
+        duration=halo.dT,
+        num_steps=2048,
+        method="rk4",
+    ).final_state
+    solution = integrate_sage16_hybrid_flow_adaptive(
+        initial,
+        halo,
+        parameters,
+        units,
+        tables,
+        duration=halo.dT,
+        relative_tolerance=1.0e-8,
+        absolute_tolerance=1.0e-11,
+        initial_step=halo.dT,
+        jacobian_stability_factor=1.0,
+        max_steps=128,
+        max_attempts=512,
+    )
+    assert int(solution.status) == ADAPTIVE_SUCCESS
+    np.testing.assert_allclose(
+        np.asarray(solution.final_state),
+        np.asarray(reference),
+        rtol=0.0,
+        atol=4.0e-9,
+    )
+    np.testing.assert_array_equal(solution.final_state.Rheat, initial.Rheat)
+    np.testing.assert_allclose(
+        hybrid_baryonic_mass(solution.final_state),
+        hybrid_baryonic_mass(initial),
+        rtol=0.0,
+        atol=2.0e-12,
+    )
+
+    adaptive_rates = sage16_hybrid_rhs_and_rates(
+        halo.dT,
+        solution.final_state,
+        halo,
+        parameters,
+        units,
+        tables,
+    ).rates
+    reference_rates = sage16_hybrid_rhs_and_rates(
+        halo.dT,
+        reference,
+        halo,
+        parameters,
+        units,
+        tables,
+    ).rates
+    adaptive_projection = apply_heating_radius_projection(
+        solution.final_state,
+        adaptive_rates,
+    ).state
+    reference_projection = apply_heating_radius_projection(reference, reference_rates).state
+    np.testing.assert_allclose(
+        adaptive_projection.Rheat,
+        reference_projection.Rheat,
+        rtol=2.0e-8,
     )
 
 

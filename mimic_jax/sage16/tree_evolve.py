@@ -15,6 +15,7 @@ from mimic_jax.sage16.group_evolve import (
     evolve_upstream_sequential_group_final,
     evolve_upstream_sequential_group_interval,
 )
+from mimic_jax.sage16.perturbations import process_perturbations
 from mimic_jax.sage16.transfers import UpstreamGroupFinalResult
 from mimic_jax.sage16.types import (
     GalaxyState,
@@ -36,6 +37,7 @@ class GalaxyRecord(NamedTuple):
     state: GalaxyState
     halo: HaloForcing
     source_halo: int
+    state_tangent: Optional[GalaxyState] = None
 
 
 @dataclass(frozen=True)
@@ -89,6 +91,7 @@ class _PreparedGroup:
     context: StepContext
     central_index: int
     segments: Tuple[Tuple[int, int, int], ...]
+    state_tangents: Optional[GalaxyState] = None
 
 
 def load_scale_factors(path) -> np.ndarray:
@@ -240,6 +243,42 @@ def _host_reset_snapshot_accumulators(state):
     )
 
 
+def _host_zero_state_tangent(state, tangent_dimension):
+    """Construct one parameter/process tangent record beside a host state."""
+
+    return jax.tree_util.tree_map(
+        lambda value: np.zeros(
+            (tangent_dimension,) + np.shape(value), dtype=np.asarray(value).dtype
+        ),
+        state,
+    )
+
+
+def _host_reset_snapshot_accumulator_tangents(tangent):
+    """Apply the snapshot-reset map to a tangent record."""
+
+    return tangent._replace(
+        **{
+            name: np.zeros_like(getattr(tangent, name))
+            for name in (
+                "InfallingGas",
+                "CoolingGas",
+                "NewStellarMass",
+                "StarFormationRate",
+                "QuasarModeBHaccretionMass",
+                "SupernovaReheatedMass",
+                "SupernovaEjectedMass",
+                "Cooling",
+                "Heating",
+                "Rcool",
+                "CoolingLambda",
+                "SupernovaOutflowRate",
+                "UnstableDiskGasFraction",
+            )
+        }
+    )
+
+
 def _host_inherit_progenitor(state, halo, descendant, source_time, is_main_branch):
     state = _host_reset_snapshot_accumulators(state)
     halo = halo._replace(
@@ -349,7 +388,7 @@ def _compiled_group_runner(member_count, central_index, num_substeps):
     del member_count
 
     @jax.jit
-    def run(states, halos, context, parameters, units, cooling_tables):
+    def run(states, halos, context, parameters, units, cooling_tables, perturbations):
         return evolve_upstream_sequential_group_final(
             states,
             halos,
@@ -359,6 +398,7 @@ def _compiled_group_runner(member_count, central_index, num_substeps):
             units,
             cooling_tables,
             num_substeps=num_substeps,
+            perturbations=perturbations,
         )
 
     return run
@@ -368,7 +408,16 @@ def _compiled_group_runner(member_count, central_index, num_substeps):
 def _compiled_batched_group_runner(member_count, num_substeps, batch_size):
     del member_count, batch_size
 
-    def evolve_one(states, halos, context, central_index, parameters, units, cooling_tables):
+    def evolve_one(
+        states,
+        halos,
+        context,
+        central_index,
+        parameters,
+        units,
+        cooling_tables,
+        perturbations,
+    ):
         return evolve_upstream_sequential_group_final(
             states,
             halos,
@@ -378,9 +427,27 @@ def _compiled_batched_group_runner(member_count, num_substeps, batch_size):
             units,
             cooling_tables,
             num_substeps=num_substeps,
+            perturbations=perturbations,
         )
 
-    return jax.jit(jax.vmap(evolve_one, in_axes=(0, 0, 0, 0, None, None, None)))
+    return jax.jit(jax.vmap(evolve_one, in_axes=(0, 0, 0, 0, None, None, None, None)))
+
+
+def _perturbations_at_snapshot(perturbations, snapshot, snapshot_count):
+    """Select scalar process controls from scalar or per-snapshot schedules."""
+
+    def select(value):
+        value = np.asarray(value)
+        if value.ndim == 0:
+            return value
+        if value.ndim == 1 and value.shape[0] == snapshot_count:
+            return value[snapshot]
+        raise ValueError(
+            "tree process perturbations must be scalar or one-dimensional with "
+            "one value per snapshot"
+        )
+
+    return jax.tree_util.tree_map(select, perturbations)
 
 
 def _member_bin(member_count, policy):
@@ -473,12 +540,14 @@ def _prepare_group(
     num_substeps,
     *,
     discard_consumed_progenitors,
+    tangent_dimension=None,
 ):
     tree = workspace.tree
     snapshot = int(tree["SnapNum"][root])
     members = _fof_members(tree, root)
     workspace_states = []
     workspace_halos = []
+    workspace_tangents = [] if tangent_dimension is not None else None
     segments = []
     central_catalog_mass = virial_mass(tree, root, particle_mass)
 
@@ -518,6 +587,12 @@ def _prepare_group(
                 if retained:
                     workspace_states.append(inherited_state)
                     workspace_halos.append(inherited_halo)
+                    if workspace_tangents is not None:
+                        if source.state_tangent is None:
+                            raise ValueError("linearized inheritance requires progenitor tangents")
+                        workspace_tangents.append(
+                            _host_reset_snapshot_accumulator_tangents(source.state_tangent)
+                        )
             if discard_consumed_progenitors:
                 workspace.processed[progenitor] = []
 
@@ -525,6 +600,10 @@ def _prepare_group(
             created_state, created_halo = _host_initialise_new_central(descendant)
             workspace_states.append(created_state)
             workspace_halos.append(created_halo)
+            if workspace_tangents is not None:
+                workspace_tangents.append(
+                    _host_zero_state_tangent(created_state, tangent_dimension)
+                )
 
         end = len(workspace_states)
         if end > start:
@@ -581,10 +660,18 @@ def _prepare_group(
         context=context,
         central_index=central_index,
         segments=tuple(segments),
+        state_tangents=(
+            None
+            if workspace_tangents is None
+            else jax.tree_util.tree_map(
+                lambda *values: np.moveaxis(np.stack(values), 0, 1),
+                *workspace_tangents,
+            )
+        ),
     )
 
 
-def _marshal_group(task, result, output_snapshots):
+def _marshal_group(task, result, output_snapshots, state_tangents=None):
     workspace = task.workspace
     snapshot = task.snapshot
     workspace.success = workspace.success and bool(np.asarray(result.success))
@@ -598,7 +685,17 @@ def _marshal_group(task, result, output_snapshots):
             if int(halo.Type) == 3:
                 continue
             halo = halo._replace(SnapNum=np.int32(snapshot))
-            record = GalaxyRecord(_record_at(result.final_states, index), halo, descendant_index)
+            tangent = (
+                None
+                if state_tangents is None
+                else jax.tree_util.tree_map(lambda values: values[:, index], state_tangents)
+            )
+            record = GalaxyRecord(
+                _record_at(result.final_states, index),
+                halo,
+                descendant_index,
+                tangent,
+            )
             output_segment.append(record)
             if retain_output:
                 workspace.records_by_snapshot.setdefault(snapshot, []).append(record)
@@ -625,6 +722,7 @@ def evolve_lhalo_tree(
     parameters: Sage16Parameters = None,
     units: Sage16Units = None,
     cooling_tables: CoolingTables = None,
+    perturbations=None,
     jit_physics: bool = True,
 ) -> TreeEvolutionResult:
     """Evolve one raw Mini-Millennium tree with upstream inheritance and ordering.
@@ -640,6 +738,8 @@ def evolve_lhalo_tree(
         units = sage16_units()
     if cooling_tables is None:
         cooling_tables = load_cooling_tables()
+    if perturbations is None:
+        perturbations = process_perturbations()
     if num_substeps <= 0:
         raise ValueError("num_substeps must be positive")
     workspace = _new_tree_workspace(tree, timing, tree_index, global_tree_offset)
@@ -665,6 +765,11 @@ def evolve_lhalo_tree(
                     parameters,
                     units,
                     cooling_tables,
+                    _perturbations_at_snapshot(
+                        perturbations,
+                        snapshot,
+                        len(timing.scale_factor),
+                    ),
                 )
             else:
                 result = evolve_upstream_sequential_group_interval(
@@ -676,6 +781,11 @@ def evolve_lhalo_tree(
                     units,
                     cooling_tables,
                     num_substeps=num_substeps,
+                    perturbations=_perturbations_at_snapshot(
+                        perturbations,
+                        snapshot,
+                        len(timing.scale_factor),
+                    ),
                 )
             result = jax.device_get(result)
             _marshal_group(task, result, None)
@@ -697,6 +807,7 @@ def evolve_lhalo_partition(
     parameters: Sage16Parameters = None,
     units: Sage16Units = None,
     cooling_tables: CoolingTables = None,
+    perturbations=None,
     progress_callback=None,
 ) -> PartitionEvolutionResult:
     """Evolve independent same-snapshot FoF groups in fixed-shape VMAP batches.
@@ -713,6 +824,8 @@ def evolve_lhalo_partition(
         units = sage16_units()
     if cooling_tables is None:
         cooling_tables = load_cooling_tables()
+    if perturbations is None:
+        perturbations = process_perturbations()
     if not isinstance(batch_size, int) or batch_size <= 0:
         raise ValueError("batch_size must be a positive Python integer")
     if not isinstance(max_batch_members, int) or max_batch_members <= 0:
@@ -743,6 +856,11 @@ def evolve_lhalo_partition(
     )
 
     for snapshot in snapshots:
+        snapshot_perturbations = _perturbations_at_snapshot(
+            perturbations,
+            snapshot,
+            len(timing.scale_factor),
+        )
         buckets = {}
         for workspace in workspaces:
             for root in workspace.roots_by_snapshot.get(snapshot, ()):
@@ -819,6 +937,7 @@ def evolve_lhalo_partition(
                     parameters,
                     units,
                     cooling_tables,
+                    snapshot_perturbations,
                 )
                 batched = jax.device_get(batched)
                 batch_elapsed = time.perf_counter() - batch_started
