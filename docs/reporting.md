@@ -24,6 +24,8 @@ The report manifest has five stable concepts:
 - **Artifacts**: relative, checksum-capable references to figures, configurations, logs, JSON, and compressed numerical arrays.
 - **Provenance**: git state, command, configuration and input checksums, software versions, backend/hardware, seeds, and any upstream MIMIC version record.
 
+`ReportSection.body` optionally carries ordinary Markdown for equation-rich pedagogical sections. It is stored in the same machine-readable manifest and rendered before the section artifacts; it does not create a parallel report source or let presentation enter the physics kernels.
+
 Comparison reports use a separate manifest with explicit baseline and candidate runs. Scalar comparisons retain both values, the absolute difference, and a fractional difference only when the baseline supplies a meaningful nonzero scale. A derivative prediction can be recorded alongside the measured finite change without conflating the two.
 
 ## Durable outputs
@@ -153,6 +155,21 @@ JAX_ENABLE_X64=1 mimic_venv/bin/python \
 ```
 
 The result is `reports/mini-millennium-sage16-science-program/index.md`. The hard-bin stellar mass function remains the upstream-equivalence observable. A labeled Gaussian-CDF finite-volume estimator is used only for population derivatives because the pathwise derivative of fixed hard-bin membership is zero almost everywhere. Historical responses use finite bins in `ln(a)` with redshift labels, and all report claims retain sample sizes and derivative-validation caveats.
+
+The standalone galaxy-memory report is another two-stage product. The science command samples real fiducial trajectories, batches JAX Jacobians, validates a finite cooling pulse against the full nonlinear flow, and stores response/mode/map arrays. The presentation command reads only those durable products:
+
+```bash
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    scripts/analyze_sage16_linear_response.py \
+    --tree-count 96 \
+    --output-json archive/mini-millennium-sage16-linear-response.json \
+    --output-arrays archive/mini-millennium-sage16-linear-response.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    examples/build_sage16_linear_response_report.py
+```
+
+The result is `reports/sage16-linear-response/index.md`. Its public narrative is organized around SAGE questions—galaxy memory, gas-supply filtering, reservoir participation, and AGN regulation—while the local frozen-coefficient assumptions, transfer function, poles, and hybrid-map limitations remain explicit underneath.
 
 For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
 

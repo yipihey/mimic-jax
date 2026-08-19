@@ -1,0 +1,662 @@
+{
+  "headline_artifacts": [
+    {
+      "description": "SAGE16 reservoirs and transfers, with continuous flows distinguished from hybrid maps.",
+      "key": "baryon_cycle",
+      "media_type": "image/svg+xml",
+      "path": "assets/baryon_cycle.svg",
+      "role": "figure",
+      "sha256": "ec298fe5d02ded8f2181bac3f4004420b8579991b4d2a075c2bfeda505d69071",
+      "size_bytes": 14979,
+      "title": "A familiar SAGE baryon cycle"
+    },
+    {
+      "description": "A 1% nonlinear cooling pulse compared with the frozen local prediction and an amplitude-sweep validity test.",
+      "key": "cooling_pulse",
+      "media_type": "image/svg+xml",
+      "path": "assets/cooling_pulse.svg",
+      "role": "figure",
+      "sha256": "3044a8f7b1769edf850dae8824fe76988c93cd828ea4c11b51f76e0d1e2666cb",
+      "size_bytes": 42707,
+      "title": "How long does extra cooling matter?"
+    },
+    {
+      "description": "Fractional cold-gas and SFR response versus inverse angular frequency in Gyr.",
+      "key": "filter",
+      "media_type": "image/svg+xml",
+      "path": "assets/filter.svg",
+      "role": "figure",
+      "sha256": "b894a3988a112bdddaf20e2a688d84777dd06f37a9849a25d05fec216e5a576a",
+      "size_bytes": 36810,
+      "title": "Which gas-supply variations reach star formation?"
+    },
+    {
+      "description": "Cooling-to-cold-gas and cooling-to-SFR gain at one fiducial massive state, with the local AGN coupling retained or removed.",
+      "key": "agn_response",
+      "media_type": "image/svg+xml",
+      "path": "assets/agn_response.svg",
+      "role": "figure",
+      "sha256": "8d2db5bf98900aaaf0ca4b41ac9e852408b6bb2aa4987057cf0fe7efe15901ef",
+      "size_bytes": 87972,
+      "title": "How AGN regulation changes the response"
+    }
+  ],
+  "health": [
+    {
+      "artifacts": [],
+      "key": "upstream_equivalence",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "Not rerun by this local-response analysis; the same physics core is validated in the linked Mini-Millennium report.",
+      "title": "Upstream SAGE16 equivalence",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [
+        {
+          "description": "A 1% nonlinear cooling pulse compared with the frozen local prediction and an amplitude-sweep validity test.",
+          "key": "cooling_pulse",
+          "media_type": "image/svg+xml",
+          "path": "assets/cooling_pulse.svg",
+          "role": "figure",
+          "sha256": "3044a8f7b1769edf850dae8824fe76988c93cd828ea4c11b51f76e0d1e2666cb",
+          "size_bytes": 42707,
+          "title": "How long does extra cooling matter?"
+        },
+        {
+          "description": "Pulse responses, transfer functions, poles, mode compositions, and mass-redshift maps.",
+          "key": "linear_response_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-linear-response.npz",
+          "role": "data",
+          "sha256": "1184e89a470ffbac00a44a669bd0f429782d9cb866a8394744824e8d0d428387",
+          "size_bytes": 107568,
+          "title": "Linear-response scientific arrays"
+        }
+      ],
+      "key": "local_linear_validity",
+      "method": "full nonlinear fixed-forcing SAGE flow versus exact matrix-exponential response of the frozen local Jacobian",
+      "metrics": [
+        {
+          "description": "",
+          "key": "one_percent_rmse",
+          "label": "1% pulse maximum normalized RMSE",
+          "unit": "",
+          "value": 0.00892847942200928
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "For the representative 1% cooling pulse, the maximum cold-gas/SFR normalized RMSE is 0.89%.",
+      "title": "Local nonlinear-response validation",
+      "tolerance": "maximum normalized RMSE <= 0.05 at a 1% cooling pulse"
+    },
+    {
+      "artifacts": [],
+      "key": "hybrid_scope",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "The local AGN flow reads the stored heating radius, but its monotone Rheat projection and genuine mergers remain explicit maps outside each frozen transfer function.",
+      "title": "Hybrid event boundary",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "conservation",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "This report reuses the structurally conservative RHS but does not repeat the separate baryon/metal conservation campaign.",
+      "title": "Conservation in this analysis",
+      "tolerance": ""
+    }
+  ],
+  "identity": {
+    "dataset": "Mini-Millennium partition 1; 96 stratified trees at 7 epochs",
+    "integration_method": "upstream-sequential trajectory; frozen local continuous RHS",
+    "model": "fiducial SAGE16",
+    "parameter_set": "fiducial",
+    "run_id": "sage16-galaxy-memory",
+    "summary": "A practitioner-facing measurement of how SAGE16 responds to changes in gas supply, which reservoirs set its response times, and how stored AGN heating changes that response.",
+    "title": "How long does SAGE remember?"
+  },
+  "kind": "run",
+  "links": [
+    {
+      "target": "../mini-millennium-sage16-science-program/index.md",
+      "title": "Mini-Millennium science program"
+    },
+    {
+      "target": "../mini-millennium-sage16-initial/index.md",
+      "title": "Initial equivalence report"
+    },
+    {
+      "target": "assets/mini-millennium-sage16-linear-response.npz",
+      "title": "Machine-readable response arrays"
+    }
+  ],
+  "overview_metrics": [
+    {
+      "description": "",
+      "key": "trajectory_points",
+      "label": "Local trajectory points",
+      "unit": "",
+      "value": 915
+    },
+    {
+      "description": "",
+      "key": "epochs",
+      "label": "Sampled epochs",
+      "unit": "",
+      "value": 7
+    },
+    {
+      "description": "",
+      "key": "response_time",
+      "label": "Representative cooling memory",
+      "unit": "Gyr",
+      "value": 0.5686533754799772
+    },
+    {
+      "description": "",
+      "key": "analysis_runtime",
+      "label": "Science analysis wall time",
+      "unit": "s",
+      "value": 132.753358416
+    }
+  ],
+  "parameters": [
+    {
+      "description": "",
+      "name": "GlobalBaryonFraction",
+      "unit": "dimensionless",
+      "value": 0.17
+    },
+    {
+      "description": "",
+      "name": "SfrEfficiency",
+      "unit": "dimensionless",
+      "value": 0.05
+    },
+    {
+      "description": "",
+      "name": "StarFormingDiskFactor",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "",
+      "name": "FeedbackReheatingEpsilon",
+      "unit": "dimensionless",
+      "value": 3.0
+    },
+    {
+      "description": "",
+      "name": "FeedbackEjectionEfficiency",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "",
+      "name": "ReIncorporationFactor",
+      "unit": "dimensionless",
+      "value": 0.15
+    },
+    {
+      "description": "",
+      "name": "AGNrecipe",
+      "unit": "dimensionless",
+      "value": 2
+    },
+    {
+      "description": "",
+      "name": "RadioModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.08
+    },
+    {
+      "description": "",
+      "name": "BlackHoleGrowthRate",
+      "unit": "dimensionless",
+      "value": 0.015
+    },
+    {
+      "description": "",
+      "name": "QuasarModeEfficiency",
+      "unit": "dimensionless",
+      "value": 0.005
+    },
+    {
+      "description": "",
+      "name": "RecycleFraction",
+      "unit": "dimensionless",
+      "value": 0.43
+    },
+    {
+      "description": "",
+      "name": "Yield",
+      "unit": "dimensionless",
+      "value": 0.025
+    },
+    {
+      "description": "",
+      "name": "FracZleaveDisk",
+      "unit": "dimensionless",
+      "value": 0.0
+    },
+    {
+      "description": "",
+      "name": "ThresholdMajorMerger",
+      "unit": "dimensionless",
+      "value": 0.3
+    },
+    {
+      "description": "",
+      "name": "ThresholdSatDisruption",
+      "unit": "dimensionless",
+      "value": 1.0
+    }
+  ],
+  "provenance": {
+    "command": [
+      "/Users/tabel/Projects/mimic-jax/mimic_venv/bin/python",
+      "examples/build_sage16_linear_response_report.py",
+      "--input-json",
+      "archive/mini-millennium-sage16-linear-response.json",
+      "--input-arrays",
+      "archive/mini-millennium-sage16-linear-response.npz"
+    ],
+    "files": [
+      {
+        "path": "models/sage16/input/sage16_mini-millennium.yaml",
+        "role": "configuration",
+        "sha256": "9e1e5212817ee324a9c13e3b1faa86aec1b2979571c0655f070cd6c234e39cf1",
+        "size_bytes": 3747
+      },
+      {
+        "path": "simulations/mini-millennium/snapshots/trees_063.1",
+        "role": "input",
+        "sha256": "4ca40244b16cdd88cefdf0e2b3198ecb9b76960a72bd144afbddf4cb40920be4",
+        "size_bytes": 15737928
+      },
+      {
+        "path": "simulations/mini-millennium/mini-millennium.a_list",
+        "role": "input",
+        "sha256": "2866412ae276939c625afef8a92a1da442fcc4bd8490dda191f38a0f5028164f",
+        "size_bytes": 577
+      },
+      {
+        "path": "archive/mini-millennium-sage16-linear-response.json",
+        "role": "input",
+        "sha256": "b9e7433d81b63f2e8759b3618707f93cfd7b8ee34e3eea4545a50a3489a31002",
+        "size_bytes": 3936
+      },
+      {
+        "path": "archive/mini-millennium-sage16-linear-response.npz",
+        "role": "input",
+        "sha256": "1184e89a470ffbac00a44a669bd0f429782d9cb866a8394744824e8d0d428387",
+        "size_bytes": 107568
+      }
+    ],
+    "generated_at": "2026-08-19T06:37:51Z",
+    "git_branch": "main",
+    "git_commit": "722259e801fba523720f02bc05181541b98e66a7",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "PyYAML": "6.0.3",
+      "h5py": "3.14.0",
+      "jax": "0.4.30",
+      "jaxlib": "0.4.30",
+      "matplotlib": "3.9.4",
+      "numpy": "2.0.2",
+      "python": "3.9.6"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [],
+      "body": "",
+      "diagnostics": [],
+      "key": "findings",
+      "links": [],
+      "notes": [
+        "A 1% cooling pulse in the representative z=0.32 central is reproduced by the local model to 0.89% normalized RMSE and has a dominant response time of 0.57 Gyr.",
+        "The local cold-gas-regulator recipe estimate is 0.56 Gyr, close to the strongest coupled mode at 0.57 Gyr; a weaker 22.9 Gyr collective mode is also present in this operating point.",
+        "The coupled cooling-to-SFR response peaks near inverse angular frequency 0.50 Gyr at 3.9 times its very-slow gain, so the actual local baryon cycle is more structured than a one-reservoir low-pass regulator.",
+        "At the same fixed SAGE state, locally suppressing SN reheating/ejection changes the dominant response time from 0.57 to 0.85 Gyr, while suppressing reincorporation changes it to 0.67 Gyr.",
+        "Across the stratified trajectory survey, the median dominant cooling-memory time spans 0.04–8.62 Gyr across the resolved mass/redshift cells.",
+        "At the selected massive fiducial state, retained AGN heating suppresses the slow cooling-to-SFR gain by 99.98% relative to locally removing the AGN coupling."
+      ],
+      "summary": "These findings are computed from the archived response arrays and are deliberately phrased as galaxy-formation results, not as claims about mathematical technique.",
+      "title": "What did SAGE tell us?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "SAGE16 reservoirs and transfers, with continuous flows distinguished from hybrid maps.",
+          "key": "baryon_cycle",
+          "media_type": "image/svg+xml",
+          "path": "assets/baryon_cycle.svg",
+          "role": "figure",
+          "sha256": "ec298fe5d02ded8f2181bac3f4004420b8579991b4d2a075c2bfeda505d69071",
+          "size_bytes": 14979,
+          "title": "A familiar SAGE baryon cycle"
+        }
+      ],
+      "body": "Between genuine events, the implemented continuous subset can be written schematically as\n\n$$\\dot{x}=f(x,h(t),\\theta),$$\n\nwhere $x$ contains the hot, cold, ejected, stellar, and metal reservoirs and $h(t)$ is the halo/tree forcing. Mergers, topology changes, threshold projections, and the stored AGN-heating-radius update remain explicit maps $x^+=J(x^-)$. Nothing in this notation replaces a SAGE prescription; it only makes the transfers explicit.",
+      "diagnostics": [],
+      "key": "baryon_cycle",
+      "links": [
+        {
+          "target": "../../docs/sage16_hybrid_system.md",
+          "title": "Hybrid SAGE16 structure"
+        },
+        {
+          "target": "../mini-millennium-sage16-science-program/index.md",
+          "title": "Mini-Millennium science report"
+        }
+      ],
+      "notes": [],
+      "summary": "The starting point is the SAGE16 baryon cycle: familiar reservoirs connected by familiar prescriptions, with the merger tree supplying the halo history.",
+      "title": "A familiar SAGE galaxy"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "A 1% nonlinear cooling pulse compared with the frozen local prediction and an amplitude-sweep validity test.",
+          "key": "cooling_pulse",
+          "media_type": "image/svg+xml",
+          "path": "assets/cooling_pulse.svg",
+          "role": "figure",
+          "sha256": "3044a8f7b1769edf850dae8824fe76988c93cd828ea4c11b51f76e0d1e2666cb",
+          "size_bytes": 42707,
+          "title": "How long does extra cooling matter?"
+        }
+      ],
+      "body": "We perturb the faithful cooling rate as $\\dot M_{\\rm cool}\\rightarrow\\dot M_{\\rm cool}\\exp(\\epsilon)$ for a finite interval. The solid curves are two full nonlinear SAGE-flow evolutions—perturbed minus unperturbed—under the same frozen halo forcing. The dashed curves are predicted from the Jacobian at the initial fiducial state.\n\nThe impulse response, or Green function, is $g(t)=\\mathcal{L}^{-1}\\{H(s)\\}$: it says how the influence of an infinitesimal parcel-like perturbation propagates into later observables. A sustained step integrates that response. The finite rectangular pulse plotted here is the difference between a step beginning at $t=0$ and the same step beginning when the cooling enhancement ends.\n\nThe right panel is the quantitative validity test. A 1% intervention is small enough for the local model here; this is measured rather than assumed. The decreasing relative error at 5% occurs for this finite pulse and normalization and must not be read as a general extension of the linear regime.",
+      "diagnostics": [],
+      "key": "cooling_perturbation",
+      "links": [],
+      "notes": [],
+      "summary": "A temporary 1% increase in the cooling transfer raises cold gas and SFR, then the coupled baryon cycle erases the perturbation on a measured 0.57 Gyr dominant timescale.",
+      "title": "How long does a SAGE galaxy remember extra cooling?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Fractional cold-gas and SFR response versus inverse angular frequency in Gyr.",
+          "key": "filter",
+          "media_type": "image/svg+xml",
+          "path": "assets/filter.svg",
+          "role": "figure",
+          "sha256": "b894a3988a112bdddaf20e2a688d84777dd06f37a9849a25d05fec216e5a576a",
+          "size_bytes": 36810,
+          "title": "Which gas-supply variations reach star formation?"
+        }
+      ],
+      "body": "The simplest local cold-gas regulator is $\\dot M_{\\rm cold}=\\dot M_{\\rm cool}-(1-R+\\eta)\\psi$ with $\\psi\\simeq M_{\\rm cold}/\\tau_\\star$. Its equilibration time is $\\tau_{\\rm eq}=\\tau_\\star/(1-R+\\eta)$. Taking the Laplace transform replaces the time derivative by multiplication by $s$ and gives the cooling-to-SFR response\n\n$$\\frac{\\Psi(s)}{\\dot M_{\\rm cool}(s)}=\\frac{1/\\tau_\\star}{s+1/\\tau_{\\rm eq}}.$$\n\nThe horizontal coordinate is $1/\\omega$ in Gyr, not abstract angular frequency. Moving right means asking about progressively slower supply variations. The dashed one-reservoir curve is shape-matched at low frequency; the solid curves come from the actual coupled SAGE Jacobian. Their intermediate-timescale maximum and the pulse undershoot are the signature of the damped coupled mode measured in the next section. This is a result SAGE supplies; it is not inserted by the transform.",
+      "diagnostics": [],
+      "key": "simple_regulator",
+      "links": [],
+      "notes": [],
+      "summary": "Rapid cooling variations are attenuated, but the actual coupled response is not a featureless low-pass filter: the SFR gain reaches a maximum near inverse angular frequency 0.50 Gyr, 3.9 times its very-slow value.",
+      "title": "Which variations in gas supply reach the SFR?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Coupled local modes compared with prescription timescales and decomposed by reservoir participation.",
+          "key": "modes",
+          "media_type": "image/svg+xml",
+          "path": "assets/modes.svg",
+          "role": "figure",
+          "sha256": "b1a32d097a21f1ec1ecc169c525118242f5e05e1fd3b009dc105deb20c5db635",
+          "size_bytes": 24623,
+          "title": "Which reservoirs set the response times?"
+        }
+      ],
+      "body": "Around the actual nonlinear trajectory $x_0(t)$, write $x=x_0+\\delta x$. On a branch where the prescriptions are differentiable,\n\n$$\\delta\\dot{x}=A(t)\\,\\delta x+B(t)\\,\\delta u,\\qquad A=\\left.\\frac{\\partial f}{\\partial x}\\right|_{x_0},\\quad B=\\left.\\frac{\\partial f}{\\partial u}\\right|_{x_0}.$$\n\nFor coefficients frozen at one epoch, stable poles $s_k=\\operatorname{eig}(A)$ give decay times $\\tau_k=-1/\\Re(s_k)$. Two neutral directions are present in this eight-state representation and are not assigned finite forgetting times. The mode bars show the absolute shares of the mass-reservoir components; metal components enter the eigenproblem but are omitted from the composition display so the baryonic transport remains readable.",
+      "diagnostics": [],
+      "key": "coupled_response",
+      "links": [],
+      "notes": [],
+      "summary": "The coupled SAGE timescales need not equal any one timescale written into a recipe. The strongest local response closely follows the regulator estimate here, while a much slower, weakly coupled collective mode also appears.",
+      "title": "Which reservoirs set the galaxy response time?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Median dominant cooling-to-cold-gas response time; every displayed cell includes its retained sample count.",
+          "key": "memory_map",
+          "media_type": "image/svg+xml",
+          "path": "assets/memory_map.svg",
+          "role": "figure",
+          "sha256": "d648a44e2a0176ec7f8bbea5535edc2cfc99ad465406e65ba2eb0c04ea25595a",
+          "size_bytes": 49256,
+          "title": "Galaxy memory across halo mass and redshift"
+        },
+        {
+          "description": "Pulse responses, transfer functions, poles, mode compositions, and mass-redshift maps.",
+          "key": "linear_response_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-linear-response.npz",
+          "role": "data",
+          "sha256": "1184e89a470ffbac00a44a669bd0f429782d9cb866a8394744824e8d0d428387",
+          "size_bytes": 107568,
+          "title": "Linear-response scientific arrays"
+        }
+      ],
+      "body": "Each cell is the median decay time of the stable mode with the largest cooling-to-cold-gas residue. The sample deliberately combines uniform tree coverage with the largest trees and caps each mass/snapshot cell; it is a trajectory diagnostic, not an abundance-weighted Mini-Millennium statistic. Cells require at least three retained centrals, and counts are printed in the map.\n\nBecause $A=A[x(t),h(t)]$, this is a sequence of local frozen-coefficient measurements, not one transfer function for a galaxy from high redshift to $z=0$.",
+      "diagnostics": [],
+      "key": "cosmic_history",
+      "links": [],
+      "notes": [],
+      "summary": "The dominant local cooling-to-cold-gas response generally becomes longer toward larger halo mass and later cosmic time in the cells resolved by this stratified survey.",
+      "title": "How does galaxy memory change with halo mass and epoch?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Local cooling-to-SFR responses and dominant times with fiducial flows or one feedback link suppressed.",
+          "key": "feedback_response",
+          "media_type": "image/svg+xml",
+          "path": "assets/feedback_response.svg",
+          "role": "figure",
+          "sha256": "0e03a3680cdbc3ec8fa5cebb22136a8b0df6790bb09081ceccd9c600ed27aca2",
+          "size_bytes": 40348,
+          "title": "How SN feedback and reincorporation change memory"
+        }
+      ],
+      "body": "These are local coupling-removal experiments around one already formed fiducial SAGE galaxy. The SN-reheating/ejection or reincorporation rate is multiplied by `exp(-50)` while the state, halo, parameters, cooling input, and all other flows are held fixed. This isolates how each link changes the local response; it is not a new self-consistent feedback-off history.\n\nThe response curves show whether each flow changes only the overall gain or also shifts the fluctuation timescales that reach star formation. The adjacent mode-time bars report the strongest cooling-to-SFR pole after each local intervention.",
+      "diagnostics": [],
+      "key": "feedback_memory",
+      "links": [],
+      "notes": [],
+      "summary": "At the representative fixed state, removing the local SN reheating/ejection flow changes the dominant response time from 0.57 to 0.85 Gyr; removing local reincorporation changes it to 0.67 Gyr.",
+      "title": "How do SN feedback and reincorporation alter galaxy memory?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Cooling-to-cold-gas and cooling-to-SFR gain at one fiducial massive state, with the local AGN coupling retained or removed.",
+          "key": "agn_response",
+          "media_type": "image/svg+xml",
+          "path": "assets/agn_response.svg",
+          "role": "figure",
+          "sha256": "8d2db5bf98900aaaf0ca4b41ac9e852408b6bb2aa4987057cf0fe7efe15901ef",
+          "size_bytes": 87972,
+          "title": "How AGN regulation changes the response"
+        }
+      ],
+      "body": "The solid response uses the actual fiducial trajectory state, including its stored heating radius. The dashed response holds that same state and halo fixed but sets `AGNrecipe=0` only in the local flow. This asks what the existing AGN coupling changes dynamically; it is not an AGN-off rerun and does not erase the history that produced the background galaxy.\n\nThe SAGE16 heating radius is Markov state but advances through a monotone projection on the prescribed schedule. It therefore supplies genuine memory to the hybrid model without becoming an ordinary continuous pole in this frozen interval. Treating that projection as if it were a smooth global feedback equation would manufacture dynamics that SAGE does not implement.",
+      "diagnostics": [],
+      "key": "agn_response",
+      "links": [
+        {
+          "target": "../../docs/radio_mode_heating.md",
+          "title": "Radio-mode heating prescription"
+        }
+      ],
+      "notes": [],
+      "summary": "At the selected massive state, prior radio-mode heating has already reduced instantaneous cooling by 99.97% and lowers the long-timescale cooling-to-SFR gain by 99.98%.",
+      "title": "What changes dynamically when AGN regulation becomes important?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Instantaneous fraction of raw cooling suppressed by the stored SAGE heating radius.",
+          "key": "agn_map",
+          "media_type": "image/svg+xml",
+          "path": "assets/agn_map.svg",
+          "role": "figure",
+          "sha256": "6e4401e5a97b522b9abd5f67b79ce4bc300be08b0b772f9dfb98025a97c54962",
+          "size_bytes": 46852,
+          "title": "Where prior AGN heating suppresses cooling"
+        }
+      ],
+      "body": "The map shows $1-\\dot M_{\\rm cool,after\\ prior\\ heating}/\\dot M_{\\rm cool,raw}$. It is an instantaneous regulation diagnostic, not by itself a causal statement about the final stellar mass. The existing finite-epoch response report provides that complementary historical question.",
+      "diagnostics": [],
+      "key": "agn_transition",
+      "links": [
+        {
+          "target": "../mini-millennium-sage16-science-program/index.md#when-does-each-baryonic-process-matter",
+          "title": "Historical process responses"
+        }
+      ],
+      "notes": [],
+      "summary": "The direct SAGE quantity shown here is the fraction of raw local cooling suppressed by the previously accumulated heating radius. In the sampled trajectories, strong suppression appears first in the higher-mass halo bins.",
+      "title": "Where does stored AGN heating take over from cooling supply?"
+    },
+    {
+      "artifacts": [],
+      "body": "For a selected input $B$ and observable $C$, the locally frozen response is\n\n$$H(s)=C(sI-A)^{-1}B.$$\n\nHere `B` says where extra cooling or another fractional process perturbation enters, `A` says how SAGE transports it among reservoirs, and `C` says whether we read out cold gas, SFR, metallicity, or another property. The inverse transform gives impulse/step responses; the eigenvalues give local response times; evaluating at $s=i\\omega$ asks which fluctuation timescales propagate.\n\nParameter response asks: what happens if I change a SAGE parameter? Dynamical response asks: what happens if a physical input varies on this timescale? Historical response asks: when in the past did a process matter for today’s observable? They are complementary projections of the same explicit model, but none requires a practitioner to use the word Jacobian to interpret the result.",
+      "diagnostics": [],
+      "key": "mathematical_connection",
+      "links": [
+        {
+          "target": "../../docs/sensitivity.md",
+          "title": "Fractional parameter and process responses"
+        }
+      ],
+      "notes": [],
+      "summary": "The same derivatives already used for parameter and historical responses also predict the response to time-dependent physical inputs.",
+      "title": "How are all these SAGE questions connected?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Illustrative variability propagated through the measured cooling-to-SFR response.",
+          "key": "stochastic",
+          "media_type": "image/svg+xml",
+          "path": "assets/stochastic.svg",
+          "role": "figure",
+          "sha256": "6f2e4aef20a6a301d907ff6152d653246166f9ac7359ae1d49daf07b9bdf4b8f",
+          "size_bytes": 51985,
+          "title": "How SAGE filters illustrative stochastic supply"
+        }
+      ],
+      "body": "For a scalar input, $P_y(\\omega)=|H(i\\omega)|^2P_u(\\omega)$. For multivariate fluctuations, $S_y(\\omega)=H(i\\omega)S_u(\\omega)H^\\dagger(i\\omega)$. The figure uses an explicitly illustrative input spectrum with arbitrary normalization; it is a demonstration of propagation, not a calibrated stochastic halo-accretion model.",
+      "diagnostics": [],
+      "key": "stochastic_variability",
+      "links": [],
+      "notes": [],
+      "summary": "Once the deterministic response is measured, an assumed spectrum of cooling/accretion variability can be propagated into an SFR-variability prediction without rerunning one realization per fluctuation.",
+      "title": "Which stochastic fluctuations survive the baryon cycle?"
+    },
+    {
+      "artifacts": [],
+      "body": "This report freezes $A(t)$, $B(t)$, and $C(t)$ at a real trajectory point. The approximation is useful while the perturbation remains small, stays on the same piecewise-smooth branch, and evolves on a timescale short enough that the background state and halo forcing do not move substantially. The nonlinear pulse comparison measures that regime for one representative state.\n\nFor a genuinely time-dependent linear perturbation, the correct object is the propagator $\\Phi(t,t')$, not one resolvent. For mergers and other jumps, sensitivities pass through the derivative of the explicit event map. For the heating-radius projection, the response includes the projection schedule. Larger perturbations must be checked against the full nonlinear hybrid evolution.",
+      "diagnostics": [
+        {
+          "artifacts": [
+            {
+              "description": "A 1% nonlinear cooling pulse compared with the frozen local prediction and an amplitude-sweep validity test.",
+              "key": "cooling_pulse",
+              "media_type": "image/svg+xml",
+              "path": "assets/cooling_pulse.svg",
+              "role": "figure",
+              "sha256": "3044a8f7b1769edf850dae8824fe76988c93cd828ea4c11b51f76e0d1e2666cb",
+              "size_bytes": 42707,
+              "title": "How long does extra cooling matter?"
+            },
+            {
+              "description": "Pulse responses, transfer functions, poles, mode compositions, and mass-redshift maps.",
+              "key": "linear_response_arrays",
+              "media_type": "application/x-npz",
+              "path": "assets/mini-millennium-sage16-linear-response.npz",
+              "role": "data",
+              "sha256": "1184e89a470ffbac00a44a669bd0f429782d9cb866a8394744824e8d0d428387",
+              "size_bytes": 107568,
+              "title": "Linear-response scientific arrays"
+            }
+          ],
+          "key": "local_linear_validity",
+          "method": "full nonlinear fixed-forcing SAGE flow versus exact matrix-exponential response of the frozen local Jacobian",
+          "metrics": [
+            {
+              "description": "",
+              "key": "one_percent_rmse",
+              "label": "1% pulse maximum normalized RMSE",
+              "unit": "",
+              "value": 0.00892847942200928
+            }
+          ],
+          "notes": [],
+          "status": "passed",
+          "summary": "For the representative 1% cooling pulse, the maximum cold-gas/SFR normalized RMSE is 0.89%.",
+          "title": "Local nonlinear-response validation",
+          "tolerance": "maximum normalized RMSE <= 0.05 at a 1% cooling pulse"
+        },
+        {
+          "artifacts": [],
+          "key": "hybrid_scope",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "warning",
+          "summary": "The local AGN flow reads the stored heating radius, but its monotone Rheat projection and genuine mergers remain explicit maps outside each frozen transfer function.",
+          "title": "Hybrid event boundary",
+          "tolerance": ""
+        }
+      ],
+      "key": "validity",
+      "links": [],
+      "notes": [],
+      "summary": "SAGE is nonlinear, cosmologically time dependent, thresholded, tree-forced, and interrupted by events. There is no single global transfer function for an entire galaxy history.",
+      "title": "When is this analysis valid?"
+    },
+    {
+      "artifacts": [],
+      "body": "",
+      "diagnostics": [],
+      "key": "practical_value",
+      "links": [],
+      "notes": [
+        "Measure a galaxy response time without defining it from an arbitrary rerun spacing.",
+        "Distinguish timescales written into recipes from collective timescales of the coupled reservoirs.",
+        "Locate where cooling supply ceases to control the response and stored AGN heating suppresses it.",
+        "Connect deterministic responses to parameter sensitivity, historical response, and eventually stochastic variability using the same differentiated SAGE implementation."
+      ],
+      "summary": "The new capability is not the Laplace transform itself. It is the ability to ask SAGE directly how long galaxies remember gas supply, which reservoirs carry that memory, which variability reaches star formation, and how feedback changes those answers.",
+      "title": "What does this buy a SAGE practitioner?"
+    }
+  ]
+}
