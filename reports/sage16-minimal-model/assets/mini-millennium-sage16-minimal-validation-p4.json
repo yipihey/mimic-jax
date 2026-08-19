@@ -1,0 +1,173 @@
+{
+  "acceptance": {
+    "autonomous_population_pass": true,
+    "diagnostic_smf_bin_width_dex": 0.2,
+    "fractional_tolerance": 0.3,
+    "gated_smf_bin_width_dex": 0.4,
+    "individual_stellar_mass_pass": true,
+    "matched_population_pass": true,
+    "minimum_individual_fraction": 0.7,
+    "minimum_smf_count": 20,
+    "overall_pass": true
+  },
+  "claim": "A four-state, nine-coefficient reduction reproduces held-out SAGE16 z=0 stellar masses for at least 70% of resolved galaxies and the stellar mass function within 30% in 0.4-dex bins containing at least 20 SAGE galaxies.",
+  "complexity": {
+    "discarded_explicit_state": [
+      "separate hot and ejected reservoirs",
+      "metals",
+      "bulge",
+      "physical black-hole mass and detailed accretion history",
+      "disk radius",
+      "AGN heating radius",
+      "merger clocks"
+    ],
+    "faithful_sage16_parameters": 15,
+    "faithful_sage16_state_fields": 32,
+    "reduced_fitted_coefficients": 9,
+    "reduced_state_fields": 4,
+    "reduced_state_names": [
+      "CircumgalacticGas",
+      "ColdGas",
+      "StellarMass",
+      "BlackHoleProxy"
+    ],
+    "static_fitted_coefficients": 4,
+    "static_state_fields": 0
+  },
+  "development": {
+    "partitions": [
+      {
+        "fine_smf_maximum_fractional_difference": 0.2542955326460481,
+        "node_count": 151216,
+        "teacher_galaxies": 3595,
+        "tree_count": 2864
+      },
+      {
+        "fine_smf_maximum_fractional_difference": 0.6,
+        "node_count": 244615,
+        "teacher_galaxies": 5647,
+        "tree_count": 4475
+      },
+      {
+        "fine_smf_maximum_fractional_difference": 0.3111111111111111,
+        "node_count": 305830,
+        "teacher_galaxies": 6600,
+        "tree_count": 4928
+      }
+    ],
+    "reference_files": [
+      "output/sage16-mini-millennium/model_001.hdf5",
+      "output/sage16-mini-millennium/model_002.hdf5",
+      "output/sage16-mini-millennium/model_003.hdf5"
+    ],
+    "tree_files": [
+      "simulations/mini-millennium/snapshots/trees_063.1",
+      "simulations/mini-millennium/snapshots/trees_063.2",
+      "simulations/mini-millennium/snapshots/trees_063.3"
+    ]
+  },
+  "fit": {
+    "development_load_seconds": 2.9469010419998085,
+    "fit_seconds": 9.694002958989586,
+    "number_of_function_evaluations": 15,
+    "objective": "robust log10 stellar-mass residual on all resolved development galaxies",
+    "test_seconds": 1.2176882079947973
+  },
+  "limitations": [
+    "The reduced model is calibrated to SAGE16, not to observations.",
+    "Only z=0 stellar mass and the stellar mass function are acceptance-gated.",
+    "Gas, SFR, and quenching are out-of-sample diagnostics and may fail badly.",
+    "The event treatment merges raw progenitor states additively and omits SAGE merger clocks.",
+    "The result is tested on a third Mini-Millennium file partition, not another simulation.",
+    "The 0.2-dex SMF remains a diagnostic because the first reduction failed on the known fine-scale ringing.",
+    "A fifth diffuse-stellar reservoir was tested and rejected because its fitted stripping fraction saturated near one and worsened held-out SMF agreement."
+  ],
+  "parameters": {
+    "BlackHoleQuenchingMass": 0.00046114024382894805,
+    "ColdGasThresholdPerSpin": 0.22080761291427697,
+    "CoolingRedshiftExponent": 1.6210711324966152,
+    "CoolingTimescaleGyr": 1.1598134980907884,
+    "FeedbackHaloMassSlope": 1.9202311623782213,
+    "FeedbackMassLoadingAtPivot": 0.16681891740658625,
+    "QuenchingHaloMass": 10.000000000000005,
+    "QuenchingSlope": 0.823382842539607,
+    "StarFormationTimescaleGyr": 0.35904804244801414
+  },
+  "schema_version": "mimic-jax-sage16-reduction/v2",
+  "static_parameters": {
+    "CharacteristicHaloMass": 56.77353955789342,
+    "HighMassSlope": 1.0822091062190922,
+    "LowMassSlope": 0.9512492469800393,
+    "PeakEfficiency": 0.04928318101186855
+  },
+  "test": {
+    "node_count": 167008,
+    "raw_terminal_nodes": 4252,
+    "reference_file": "output/sage16-mini-millennium/model_004.hdf5",
+    "teacher_galaxies": 4198,
+    "tree_count": 3508,
+    "tree_file": "simulations/mini-millennium/snapshots/trees_063.4",
+    "unmatched_raw_terminal_nodes": 54
+  },
+  "test_metrics": {
+    "maximum_local_conservation_residual": 2.2737367544323206e-13,
+    "reduced_coarse_autonomous_smf": {
+      "all_resolved_bins_within_30_percent": true,
+      "maximum_resolved_fractional_difference": 0.14754098360655737
+    },
+    "reduced_coarse_matched_smf": {
+      "all_resolved_bins_within_30_percent": true,
+      "maximum_resolved_fractional_difference": 0.14754098360655737
+    },
+    "reduced_cold_gas": {
+      "fraction_within_30_percent": 0.4140625,
+      "median_absolute_fractional_error": 0.34024625063911074,
+      "number_of_objects": 3840,
+      "p90_absolute_fractional_error": 1.1105069499732745
+    },
+    "reduced_fine_autonomous_smf": {
+      "all_resolved_bins_within_30_percent": false,
+      "maximum_resolved_fractional_difference": 0.3522727272727273
+    },
+    "reduced_fine_matched_smf": {
+      "all_resolved_bins_within_30_percent": false,
+      "maximum_resolved_fractional_difference": 0.3522727272727273
+    },
+    "reduced_quenched_classification": {
+      "accuracy": 0.5815358067299397,
+      "number_of_centrals": 2318,
+      "reduced_quenched_fraction": 0.03192407247627265,
+      "sage_quenched_fraction": 0.43917169974115616
+    },
+    "reduced_star_formation_rate": {
+      "fraction_within_30_percent": 0.23346116970278044,
+      "median_absolute_fractional_error": 0.7082524883415513,
+      "number_of_objects": 2086,
+      "p90_absolute_fractional_error": 6.951967641750233
+    },
+    "reduced_stellar_mass": {
+      "fraction_within_30_percent": 0.722121977625406,
+      "median_absolute_fractional_error": 0.17519789174878797,
+      "number_of_galaxies": 2771,
+      "number_of_non_positive_predictions": 0,
+      "p90_absolute_fractional_error": 0.5778880889231011,
+      "rmse_dex_for_positive_predictions": 0.24118474530997883
+    },
+    "static_coarse_matched_smf": {
+      "all_resolved_bins_within_30_percent": false,
+      "maximum_resolved_fractional_difference": 0.5467075038284839
+    },
+    "static_fine_matched_smf": {
+      "all_resolved_bins_within_30_percent": false,
+      "maximum_resolved_fractional_difference": 1.0333333333333334
+    },
+    "static_stellar_mass": {
+      "fraction_within_30_percent": 0.5546734031035727,
+      "median_absolute_fractional_error": 0.2605712066403917,
+      "number_of_galaxies": 2771,
+      "number_of_non_positive_predictions": 0,
+      "p90_absolute_fractional_error": 1.193244353283211,
+      "rmse_dex_for_positive_predictions": 0.3009553745784862
+    }
+  }
+}

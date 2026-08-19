@@ -1,0 +1,55 @@
+{
+  "coarse_smf_maximum_fractional_difference": 0.14754098360655737,
+  "development_partitions": [
+    1,
+    2,
+    3
+  ],
+  "fine_smf_maximum_fractional_difference": 0.3522727272727273,
+  "maximum_local_conservation_residual": 2.2737367544323206e-13,
+  "optimizer_evaluations": 30,
+  "overall_pass": true,
+  "parameter_names": [
+    "StarFormationTimescaleGyr",
+    "CoolingTimescaleGyr",
+    "FeedbackMassLoadingAtPivot",
+    "FeedbackHaloMassSlope",
+    "QuenchingHaloMass",
+    "QuenchingSlope",
+    "ColdGasThresholdPerSpin",
+    "CoolingRedshiftExponent",
+    "BlackHoleQuenchingMass",
+    "ReincorporationTimescaleGyr",
+    "EjectionHaloMass"
+  ],
+  "parameter_values": [
+    0.3583805730164776,
+    1.1611781948826898,
+    0.16688924767658264,
+    1.920006295453769,
+    10.000000002547997,
+    0.8228017194094774,
+    0.21970258916227164,
+    1.6223804215206512,
+    0.00045886615978361824,
+    0.010000000003394294,
+    1.0000000277407388
+  ],
+  "schema_version": "mimic-jax-sage16-reduction-delayed/v1",
+  "state_fields": [
+    "HotGas",
+    "ColdGas",
+    "EjectedGas",
+    "StellarMass",
+    "BlackHoleProxy"
+  ],
+  "stellar_mass": {
+    "fraction_within_30_percent": 0.7217610970768675,
+    "median_absolute_fractional_error": 0.17512588382265437,
+    "number_of_galaxies": 2771,
+    "number_of_non_positive_predictions": 0,
+    "p90_absolute_fractional_error": 0.5779661016586504,
+    "rmse_dex_for_positive_predictions": 0.24118891731120823
+  },
+  "untouched_test_partition": 4
+}

@@ -1,0 +1,519 @@
+{
+  "headline_artifacts": [
+    {
+      "description": "The retained reservoirs, forcing, transfers, and explicitly discarded SAGE16 detail.",
+      "key": "structure",
+      "media_type": "image/svg+xml",
+      "path": "assets/structure.svg",
+      "role": "figure",
+      "sha256": "24b9034482e25adcd304c23202faa06567bcc2b6972efca750340f00d4af7737",
+      "size_bytes": 11848,
+      "title": "The selected four-state model"
+    },
+    {
+      "description": "SAGE16, a static halo mapping, and the four-state model on untouched partition 5.",
+      "key": "smf",
+      "media_type": "image/svg+xml",
+      "path": "assets/smf.svg",
+      "role": "figure",
+      "sha256": "1c4f94c68109f5234e3fa8ad47aada2aca79425e365db574d114f751da320e5c",
+      "size_bytes": 35357,
+      "title": "Held-out stellar mass function"
+    },
+    {
+      "description": "Within-30% rates and the failed quenched-fraction prediction.",
+      "key": "scope",
+      "media_type": "image/svg+xml",
+      "path": "assets/scope.svg",
+      "role": "figure",
+      "sha256": "7aad097e6b32d41e887c22e88374cc9db9473bd506ccf65b85a618829e6dab47",
+      "size_bytes": 16898,
+      "title": "What the reduction does and does not preserve"
+    }
+  ],
+  "health": [
+    {
+      "artifacts": [],
+      "key": "stellar_contract",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "passed",
+      "summary": "70.6% of resolved galaxies are within 30%, only 0.6 percentage points above the gate; the worst populated 0.4-dex SMF bin differs by 13.4%.",
+      "title": "Predeclared stellar-mass contract",
+      "tolerance": "at least 70% of individual masses within 30%, and every 0.4-dex bin with at least 20 SAGE galaxies within 30%"
+    },
+    {
+      "artifacts": [],
+      "key": "fine_smf",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "The worst populated 0.2-dex bin differs by 48.6%, outside 30%.",
+      "title": "Fine-bin stellar mass function",
+      "tolerance": "diagnostic only; not part of the locked acceptance gate"
+    },
+    {
+      "artifacts": [],
+      "key": "secondary_predictions",
+      "method": "",
+      "metrics": [],
+      "notes": [
+        "These were declared secondary diagnostics before fitting, not silently promoted after seeing the result."
+      ],
+      "status": "failed",
+      "summary": "Only 40.0% of cold-gas masses and 23.6% of SFRs are within 30%; the quenched fraction is 3.5% versus 44.5% in SAGE.",
+      "title": "Cold gas, SFR, and quenching",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "conservation",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "passed",
+      "summary": "Every local cooling/star-formation/feedback update is an explicit transfer; the maximum held-out residual is 1.137e-13 in SAGE mass units.",
+      "title": "Reduced baryon conservation",
+      "tolerance": ""
+    }
+  ],
+  "identity": {
+    "dataset": "Mini-Millennium partitions 1--3 development; partition 4 model selection; partition 5 untouched replication",
+    "integration_method": "two conservative analytic transfer substeps per tree interval",
+    "model": "SAGE16 teacher / four-state reduced baryon cycle",
+    "parameter_set": "nine coefficients fitted to SAGE16 z=0 stellar mass",
+    "run_id": "sage16-minimal-model",
+    "summary": "A held-out test of how much SAGE16 z=0 stellar-mass information survives in a much smaller reservoir model.",
+    "title": "How much of SAGE can we remove?"
+  },
+  "kind": "run",
+  "links": [
+    {
+      "target": "../mini-millennium-sage16-science-program/index.md",
+      "title": "Mini-Millennium science report"
+    },
+    {
+      "target": "../mini-millennium-sage16-initial/index.md",
+      "title": "Faithful SAGE16 implementation"
+    },
+    {
+      "target": "assets/mini-millennium-sage16-minimal.npz",
+      "title": "Machine-readable arrays"
+    }
+  ],
+  "overview_metrics": [
+    {
+      "description": "",
+      "key": "states",
+      "label": "Reduced state fields",
+      "unit": "",
+      "value": 4
+    },
+    {
+      "description": "",
+      "key": "coefficients",
+      "label": "Fitted coefficients",
+      "unit": "",
+      "value": 9
+    },
+    {
+      "description": "",
+      "key": "stellar_within_30",
+      "label": "Resolved galaxies within 30%",
+      "unit": "%",
+      "value": 70.56222362602654
+    },
+    {
+      "description": "",
+      "key": "coarse_smf_error",
+      "label": "Worst populated 0.4-dex SMF error",
+      "unit": "%",
+      "value": 13.404825737265416
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Regulation-memory scale; not a faithful SAGE black-hole mass.",
+      "name": "BlackHoleQuenchingMass",
+      "unit": "1e10 Msun/h proxy",
+      "value": 0.00046114024382894805
+    },
+    {
+      "description": "Cold-gas threshold per unit halo-spin magnitude.",
+      "name": "ColdGasThresholdPerSpin",
+      "unit": "1e10 Msun/h",
+      "value": 0.22080761291427697
+    },
+    {
+      "description": "Power-law redshift dependence of effective cooling.",
+      "name": "CoolingRedshiftExponent",
+      "unit": "dimensionless",
+      "value": 1.6210711324966152
+    },
+    {
+      "description": "Effective circumgalactic cooling timescale.",
+      "name": "CoolingTimescaleGyr",
+      "unit": "Gyr",
+      "value": 1.1598134980907884
+    },
+    {
+      "description": "Halo-mass slope of the effective feedback loading.",
+      "name": "FeedbackHaloMassSlope",
+      "unit": "dimensionless",
+      "value": 1.9202311623782213
+    },
+    {
+      "description": "Cold-to-circumgalactic mass loading at the fixed halo-mass pivot.",
+      "name": "FeedbackMassLoadingAtPivot",
+      "unit": "dimensionless",
+      "value": 0.16681891740658625
+    },
+    {
+      "description": "Effective halo-mass scale that suppresses cooling.",
+      "name": "QuenchingHaloMass",
+      "unit": "1e10 Msun/h",
+      "value": 10.000000000000005
+    },
+    {
+      "description": "Sharpness of halo-mass cooling suppression.",
+      "name": "QuenchingSlope",
+      "unit": "dimensionless",
+      "value": 0.823382842539607
+    },
+    {
+      "description": "Effective cold-gas processing timescale.",
+      "name": "StarFormationTimescaleGyr",
+      "unit": "Gyr",
+      "value": 0.35904804244801414
+    }
+  ],
+  "provenance": {
+    "command": [
+      "/Users/tabel/Projects/mimic-jax/.venv/bin/python",
+      "examples/build_sage16_minimal_model_report.py",
+      "--input-json",
+      "/Users/tabel/Projects/mimic-jax/archive/mini-millennium-sage16-minimal.json",
+      "--input-arrays",
+      "/Users/tabel/Projects/mimic-jax/archive/mini-millennium-sage16-minimal.npz",
+      "--validation-json",
+      "/Users/tabel/Projects/mimic-jax/archive/mini-millennium-sage16-reduction-p4.json",
+      "--rejected-candidate-json",
+      "/Users/tabel/Projects/mimic-jax/archive/mini-millennium-sage16-reduction-delayed.json"
+    ],
+    "files": [
+      {
+        "path": "archive/mini-millennium-sage16-minimal.json",
+        "role": "input",
+        "sha256": "8990b619d487f8d823f35c381d699a0625e9d37b02d688859ca186b1d05570c6",
+        "size_bytes": 7355
+      },
+      {
+        "path": "archive/mini-millennium-sage16-minimal.npz",
+        "role": "input",
+        "sha256": "b2571f87b37442b93fc447572bd1f288821e71eb519f44a5b2cafdaa8c1ef0e5",
+        "size_bytes": 201950
+      },
+      {
+        "path": "archive/mini-millennium-sage16-reduction-p4.json",
+        "role": "input",
+        "sha256": "bef0a417b7d74a14698aa6534ebcd00a4ddda0274dca81868eaf3858295cf534",
+        "size_bytes": 6680
+      },
+      {
+        "path": "archive/mini-millennium-sage16-reduction-delayed.json",
+        "role": "input",
+        "sha256": "06c9ec0b434246de0a9009e6d16665e1ef9c0f0253f33b110c2d78f41ecd7289",
+        "size_bytes": 1497
+      }
+    ],
+    "generated_at": "2026-08-19T14:07:44Z",
+    "git_branch": "main",
+    "git_commit": "35654446bb0c175d1ceefe1501a372efed19d5f4",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [
+        {
+          "description": "The retained reservoirs, forcing, transfers, and explicitly discarded SAGE16 detail.",
+          "key": "structure",
+          "media_type": "image/svg+xml",
+          "path": "assets/structure.svg",
+          "role": "figure",
+          "sha256": "24b9034482e25adcd304c23202faa06567bcc2b6972efca750340f00d4af7737",
+          "size_bytes": 11848,
+          "title": "The selected four-state model"
+        }
+      ],
+      "body": "The answer is **yes for a deliberately narrow prediction, and no for SAGE as a whole**.\n\n- The four-state model passes the locked z=0 stellar-mass test on the untouched replication partition, but narrowly: **70.6%** of resolved galaxies are within 30%, only **0.6 percentage points** above the gate. The worst populated 0.4-dex mass-function bin is **13.4%** from SAGE.\n\n- A static halo-to-stellar-mass mapping reaches only **52.2%** within 30%; explicit gas history and merger topology carry useful information.\n\n- Fine 0.2-dex structure is not fully reproduced: the worst populated bin misses by **48.6%**.\n\n- The same model does **not** reproduce gas or ongoing activity: its quenched-central fraction is **3.5%**, versus **44.5%** for SAGE.\n\n- Partition 4 was used for candidate selection: the four-state model reached **72.21%** within 30%, versus **72.18%** for a five-state model with explicit ejected gas; both had a **14.75%** worst coarse-bin error. The five-state fit also drove its reincorporation time to **0.01 Gyr**, the lower bound, so that state was removed before partition 5 was opened.",
+      "diagnostics": [],
+      "key": "answer",
+      "links": [],
+      "notes": [],
+      "summary": "The minimal model preserves much of the integrated z=0 stellar-mass prediction, but not the present-day baryon cycle or quenching state.",
+      "title": "How much of SAGE can four variables reproduce?"
+    },
+    {
+      "artifacts": [],
+      "body": "Development used Mini-Millennium partitions 1--3. Partition 4 compared locked four- and five-state candidates and selected the simpler model because the extra ejected reservoir did not improve the target. The rejected candidate sent a mass-dependent fraction of feedback to a separate ejected reservoir and returned it exponentially on one fitted reincorporation timescale. The four-state form, coefficients, fitting data, mass resolution, binning, and thresholds were then frozen before partition 5 was opened.\n\nThe primary gate requires at least 70% of resolved individual z=0 stellar masses to lie within 30% of SAGE16, plus every 0.4-dex stellar-mass-function bin containing at least 20 SAGE galaxies to lie within 30%. The familiar 0.2-dex SMF is retained as a stricter diagnostic. Cold gas, SFR, and quenching were declared secondary tests rather than optimized acceptance quantities.\n\nThis is therefore a claim about **z=0 stellar mass**, not a claim that the reduced model is interchangeable with SAGE16 for arbitrary observables or histories.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "stellar_contract",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "70.6% of resolved galaxies are within 30%, only 0.6 percentage points above the gate; the worst populated 0.4-dex SMF bin differs by 13.4%.",
+          "title": "Predeclared stellar-mass contract",
+          "tolerance": "at least 70% of individual masses within 30%, and every 0.4-dex bin with at least 20 SAGE galaxies within 30%"
+        },
+        {
+          "artifacts": [],
+          "key": "fine_smf",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "warning",
+          "summary": "The worst populated 0.2-dex bin differs by 48.6%, outside 30%.",
+          "title": "Fine-bin stellar mass function",
+          "tolerance": "diagnostic only; not part of the locked acceptance gate"
+        }
+      ],
+      "key": "contract",
+      "links": [],
+      "notes": [],
+      "summary": "The 30% statement was made testable before the final replication catalogue was opened.",
+      "title": "What did we require before fitting?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "A static mapping compared with the history-dependent four-state baryon cycle.",
+          "key": "scatter",
+          "media_type": "image/svg+xml",
+          "path": "assets/scatter.svg",
+          "role": "figure",
+          "sha256": "d526f23a9b01fee0fdd21f90c5188c35d7055222846c0da1cb08eeeb8a0e2c5c",
+          "size_bytes": 282004,
+          "title": "Held-out individual stellar masses"
+        }
+      ],
+      "body": "The static comparison has four fitted coefficients but no memory. The dynamical model retains the same raw halo merger trees and carries gas supply, star formation, feedback, and a minimal regulation memory forward through time.",
+      "diagnostics": [],
+      "key": "information",
+      "links": [],
+      "notes": [],
+      "summary": "Following four evolving states is substantially more faithful than mapping peak halo mass directly to stellar mass on the replication partition.",
+      "title": "What information does the merger-tree baryon cycle add?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "SAGE16, a static halo mapping, and the four-state model on untouched partition 5.",
+          "key": "smf",
+          "media_type": "image/svg+xml",
+          "path": "assets/smf.svg",
+          "role": "figure",
+          "sha256": "1c4f94c68109f5234e3fa8ad47aada2aca79425e365db574d114f751da320e5c",
+          "size_bytes": 35357,
+          "title": "Held-out stellar mass function"
+        }
+      ],
+      "body": "The upper panel is the conventional z=0 stellar mass function. The lower panel makes the 30% requirement visible. Only bins with at least 20 SAGE galaxies enter the residual test, so a single sparsely occupied high-mass bin cannot masquerade as a robust percentage statement.",
+      "diagnostics": [],
+      "key": "smf",
+      "links": [],
+      "notes": [],
+      "summary": "Yes at the predeclared 0.4-dex resolution; the 0.2-dex diagnostic still exposes a 48.6% local discrepancy.",
+      "title": "Does the minimal model preserve the stellar mass function?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Within-30% rates and the failed quenched-fraction prediction.",
+          "key": "scope",
+          "media_type": "image/svg+xml",
+          "path": "assets/scope.svg",
+          "role": "figure",
+          "sha256": "7aad097e6b32d41e887c22e88374cc9db9473bd506ccf65b85a618829e6dab47",
+          "size_bytes": 16898,
+          "title": "What the reduction does and does not preserve"
+        }
+      ],
+      "body": "The four-state fit only minimized robust log stellar-mass residuals. Its poor secondary predictions are therefore an honest out-of-objective test, not a surprise hidden by retuning.\n\nThe failure suggests that a future broader reduction must retain more of the regulation history or change its fitting target. It does **not** justify adding states until an untouched test shows that they improve a predeclared observable set.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "secondary_predictions",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "These were declared secondary diagnostics before fitting, not silently promoted after seeing the result."
+          ],
+          "status": "failed",
+          "summary": "Only 40.0% of cold-gas masses and 23.6% of SFRs are within 30%; the quenched fraction is 3.5% versus 44.5% in SAGE.",
+          "title": "Cold gas, SFR, and quenching",
+          "tolerance": ""
+        }
+      ],
+      "key": "scope",
+      "links": [],
+      "notes": [],
+      "summary": "Cold gas, current SFR, and the quenched population fail decisively; integrated stellar mass alone is an insufficient model-selection target.",
+      "title": "Which SAGE predictions did not survive the reduction?"
+    },
+    {
+      "artifacts": [],
+      "body": "The state is $x=(M_{\\rm CGM},M_{\\rm cold},M_\\star,M_{\\rm BH,proxy})$. Halo mass, spin, redshift, infall budgets, and the raw merger topology are external forcing/events.\n\nCooling transfers CGM gas to cold gas. Above a spin-dependent threshold, cold gas is processed into long-lived stars and feedback return. The mass-loading factor is a halo-mass power law. Cooling is reduced by a halo-mass term and by the accumulated black-hole proxy. All finite transfers are capped analytically through exponential depletion factors, so local reservoirs remain non-negative and baryon conservation is structural.\n\nThis is a teacher--student reduction calibrated to SAGE16. It is not a replacement physical model, and its coefficients should not be interpreted as newly measured SAGE parameters.",
+      "diagnostics": [],
+      "key": "model",
+      "links": [
+        {
+          "target": "https://github.com/yipihey/mimic-jax/blob/main/mimic_jax/sage16/reduced.py",
+          "title": "Reduced-model source"
+        }
+      ],
+      "notes": [],
+      "summary": "A conservative forced reservoir model with three mass reservoirs, one regulation-memory variable, nine fitted coefficients, and explicit merger events.",
+      "title": "What is the actual reduced model?"
+    },
+    {
+      "artifacts": [],
+      "body": "",
+      "diagnostics": [],
+      "key": "next",
+      "links": [],
+      "notes": [
+        "Define population-level cold-gas, SFR, and quenched-fraction tolerances, not only individual ratios near zero.",
+        "Fit the same four-state structure to that multi-observable objective and reserve a new Mini-Millennium partition for the final test.",
+        "Only then retest explicit ejected-gas/reincorporation or stored AGN-heating memory; keep a state only if it improves held-out observables.",
+        "Test redshift evolution after z=0 targets pass. A z=0 emulator can hide the wrong history."
+      ],
+      "summary": "Broaden the acceptance contract before adding complexity, then demand that every extra state improve an untouched partition.",
+      "title": "What is the next scientifically defensible test?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Acceptance contract, fitted coefficients, scalar tests, and limitations.",
+          "key": "minimal_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-minimal.json",
+          "role": "data",
+          "sha256": "8990b619d487f8d823f35c381d699a0625e9d37b02d688859ca186b1d05570c6",
+          "size_bytes": 7355,
+          "title": "Minimal-model analysis summary"
+        },
+        {
+          "description": "The held-out candidate-selection result preceding the untouched partition-5 replication.",
+          "key": "minimal_validation_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-minimal-validation-p4.json",
+          "role": "data",
+          "sha256": "bef0a417b7d74a14698aa6534ebcd00a4ddda0274dca81868eaf3858295cf534",
+          "size_bytes": 6680,
+          "title": "Partition-4 model-selection summary"
+        },
+        {
+          "description": "State, coefficients, boundary-saturating reincorporation time, and partition-4 metrics for the rejected five-state trial.",
+          "key": "minimal_rejected_candidate",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-minimal-rejected-ejected-p4.json",
+          "role": "data",
+          "sha256": "06c9ec0b434246de0a9009e6d16665e1ef9c0f0253f33b110c2d78f41ecd7289",
+          "size_bytes": 1497,
+          "title": "Rejected explicit-ejected-reservoir candidate"
+        },
+        {
+          "description": "Replication-partition galaxy predictions and stellar-mass-function arrays.",
+          "key": "minimal_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-minimal.npz",
+          "role": "data",
+          "sha256": "b2571f87b37442b93fc447572bd1f288821e71eb519f44a5b2cafdaa8c1ef0e5",
+          "size_bytes": 201950,
+          "title": "Minimal-model scientific arrays"
+        }
+      ],
+      "body": "",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "stellar_contract",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "70.6% of resolved galaxies are within 30%, only 0.6 percentage points above the gate; the worst populated 0.4-dex SMF bin differs by 13.4%.",
+          "title": "Predeclared stellar-mass contract",
+          "tolerance": "at least 70% of individual masses within 30%, and every 0.4-dex bin with at least 20 SAGE galaxies within 30%"
+        },
+        {
+          "artifacts": [],
+          "key": "fine_smf",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "warning",
+          "summary": "The worst populated 0.2-dex bin differs by 48.6%, outside 30%.",
+          "title": "Fine-bin stellar mass function",
+          "tolerance": "diagnostic only; not part of the locked acceptance gate"
+        },
+        {
+          "artifacts": [],
+          "key": "secondary_predictions",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "These were declared secondary diagnostics before fitting, not silently promoted after seeing the result."
+          ],
+          "status": "failed",
+          "summary": "Only 40.0% of cold-gas masses and 23.6% of SFRs are within 30%; the quenched fraction is 3.5% versus 44.5% in SAGE.",
+          "title": "Cold gas, SFR, and quenching",
+          "tolerance": ""
+        },
+        {
+          "artifacts": [],
+          "key": "conservation",
+          "method": "",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "Every local cooling/star-formation/feedback update is an explicit transfer; the maximum held-out residual is 1.137e-13 in SAGE mass units.",
+          "title": "Reduced baryon conservation",
+          "tolerance": ""
+        }
+      ],
+      "key": "validation",
+      "links": [],
+      "notes": [],
+      "summary": "The positive and negative claims are tied to explicit checks, and failed diagnostics remain visible.",
+      "title": "Why trust this conclusion?"
+    }
+  ]
+}

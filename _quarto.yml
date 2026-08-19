@@ -39,6 +39,8 @@ website:
         text: Galaxy response
       - href: reports/sage16-differentiable-calibration/index.md
         text: Fit SAGE
+      - href: reports/sage16-minimal-model/index.md
+        text: Minimal SAGE
       - href: docs/sage16_hybrid_system.md
         text: Hybrid SAGE16
   page-footer:
