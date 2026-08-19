@@ -1,6 +1,15 @@
 """JAX-native physics kernels that preserve MIMIC model semantics."""
 
 from mimic_jax import reporting, sage16
+from mimic_jax.linear_response import (
+    LocalStateSpace,
+    frequency_response,
+    impulse_response,
+    linearize_state_space,
+    local_poles,
+    step_response,
+    transfer_matrix,
+)
 from mimic_jax.numerics import (
     ADAPTIVE_MAX_ATTEMPTS,
     ADAPTIVE_MAX_STEPS,
@@ -56,6 +65,7 @@ __all__ = [
     "REFERENCE_SCALE",
     "HistoricalProcessResponse",
     "InvalidNormalizationError",
+    "LocalStateSpace",
     "FIXED_STEP_METHODS",
     "FORWARD_EULER",
     "FixedStepSolution",
@@ -69,10 +79,14 @@ __all__ = [
     "finite_epoch_magnitude_weights",
     "fixed_step_rhs_evaluations",
     "fixed_step_update",
+    "frequency_response",
+    "impulse_response",
     "integrate_adaptive",
     "integrate_fixed_step",
     "jacobian_infinity_norm",
     "ln_scale_factor",
+    "linearize_state_space",
+    "local_poles",
     "method_convergence_study",
     "parameter_response_matrix",
     "process_response_tensor",
@@ -83,7 +97,9 @@ __all__ = [
     "scaled_jacobian_infinity_norm",
     "sage16",
     "step_to_timescale_ratio",
+    "step_response",
     "timestep_refinement_study",
+    "transfer_matrix",
     "uniform_ln_scale_factor_edges",
     "validate_parameter_response",
     "validate_process_response",

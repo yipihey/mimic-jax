@@ -132,11 +132,14 @@ class ReportSection:
     artifacts: Tuple[Artifact, ...] = ()
     notes: Tuple[str, ...] = ()
     links: Tuple[ReportLink, ...] = ()
+    body: str = ""
 
     def __post_init__(self) -> None:
         _validate_key(self.key, "Section key")
         if not self.title or not self.summary:
             raise ValueError("Report sections require a title and summary")
+        if not isinstance(self.body, str):
+            raise TypeError("Report section bodies must be Markdown strings")
         _validate_unique(self.diagnostics, f"Section {self.key!r} diagnostic")
         _validate_unique(self.artifacts, f"Section {self.key!r} artifact")
 

@@ -223,6 +223,8 @@ def _render_diagnostic(diagnostic: Diagnostic, heading_level: int = 3) -> List[s
 
 def _render_section(section: ReportSection) -> List[str]:
     lines = [f"## {section.title}", "", section.summary, ""]
+    if section.body:
+        lines.extend([section.body.rstrip(), ""])
     lines.extend(_render_links(section.links))
     lines.extend(_render_artifacts(section.artifacts))
     for diagnostic in section.diagnostics:

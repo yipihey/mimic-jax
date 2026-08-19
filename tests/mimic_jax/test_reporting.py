@@ -73,6 +73,7 @@ def _sample_report(artifact):
                 key="familiar_science",
                 title="Familiar SAGE science",
                 summary="The upstream-style stellar mass function is shown first.",
+                body="The local relation is $\\delta \\dot{x}=A\\delta x$.",
                 artifacts=(artifact,),
             ),
         ),
@@ -106,6 +107,7 @@ def test_run_report_writes_deterministic_markdown_json_and_checksums(tmp_path):
     assert "✅ Passed" in markdown
     assert "⬚ Not evaluated" in markdown
     assert "![Stellar mass function](assets/stellar_mass_function.svg)" in markdown
+    assert "The local relation is $\\delta \\dot{x}=A\\delta x$." in markdown
     assert "mimic-jax run config.yaml --report" in markdown
 
     manifest = json.loads(first_manifest)
@@ -115,6 +117,7 @@ def test_run_report_writes_deterministic_markdown_json_and_checksums(tmp_path):
     expected_digest = hashlib.sha256(figure.read_bytes()).hexdigest()
     assert manifest["headline_artifacts"][0]["sha256"] == expected_digest
     assert manifest["headline_artifacts"][0]["size_bytes"] == figure.stat().st_size
+    assert manifest["sections"][0]["body"].startswith("The local relation")
 
 
 def test_report_rejects_escaping_and_missing_artifacts(tmp_path):

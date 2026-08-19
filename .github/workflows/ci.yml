@@ -52,11 +52,13 @@ jobs:
       run: |
         python scripts/check_reports.py
 
-    - name: Run mimic-jax reporting tests
+    - name: Run mimic-jax reporting and local-response tests
       env:
         JAX_ENABLE_X64: "1"
       run: |
-        python -m pytest -q tests/mimic_jax/test_reporting.py
+        python -m pytest -q \
+          tests/mimic_jax/test_reporting.py \
+          tests/mimic_jax/test_linear_response.py
 
     - name: Validate module metadata
       run: |
