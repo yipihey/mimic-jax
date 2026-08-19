@@ -303,10 +303,10 @@
         "size_bytes": 107568
       }
     ],
-    "generated_at": "2026-08-19T06:37:51Z",
+    "generated_at": "2026-08-19T07:20:36Z",
     "git_branch": "main",
-    "git_commit": "722259e801fba523720f02bc05181541b98e66a7",
-    "git_dirty": true,
+    "git_commit": "cb904f679196dad1ce51eea3620cc6079eda9aa1",
+    "git_dirty": false,
     "hardware": {
       "jax_backend": "cpu",
       "jax_devices": [
