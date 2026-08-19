@@ -60,6 +60,13 @@ from mimic_jax.sage16.observables import (
     soft_stellar_mass_bin_weights,
     soft_stellar_mass_function,
 )
+from mimic_jax.sage16.observations import (
+    BALDRY2008_CHABRIER_SHIFT_DEX,
+    BALDRY2008_COMPLETENESS_LOG_MASS,
+    BALDRY2008_DOI,
+    BinnedObservation,
+    load_baldry2008_stellar_mass_function,
+)
 from mimic_jax.sage16.ode import (
     ODE_STATE_NAMES,
     SAGE16_ODE_RATE_SUBSET,
@@ -225,6 +232,10 @@ __all__ = [
     "ContinuousInfallRates",
     "ContinuousStrippingRates",
     "HeatingRadiusProjectionResult",
+    "BALDRY2008_CHABRIER_SHIFT_DEX",
+    "BALDRY2008_COMPLETENESS_LOG_MASS",
+    "BALDRY2008_DOI",
+    "BinnedObservation",
     "LocalCentralResult",
     "LinearizedPartitionEvolutionResult",
     "MetalEnrichmentTransfer",
@@ -320,6 +331,7 @@ __all__ = [
     "integrate_sage16_hybrid_flow_adaptive",
     "load_cooling_tables",
     "load_scale_factors",
+    "load_baldry2008_stellar_mass_function",
     "metal_dependent_cooling_rate",
     "prepared_infall_forcing",
     "metal_mass",

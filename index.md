@@ -10,6 +10,7 @@ Mimic-jax reports connect familiar SAGE results to the evidence needed to trust 
 
 ## Published reference reports
 
+- [Fit SAGE with gradients: what one stellar mass function can—and cannot—constrain](reports/sage16-differentiable-calibration/index.md) — a real Baldry et al. stellar-mass-function fit showing the useful direction and local curvature from JAX responses, exact SAGE validation, a familiar MCMC comparison, and a deliberately rejected first emulator/error-bar claim.
 - [How long does SAGE remember?](reports/sage16-linear-response/index.md) — a science-led introduction to local galaxy response times, gas-supply filtering, coupled baryon-cycle modes, reservoir participation, mass/redshift memory, and the dynamical effect of stored AGN heating.
 - [What controls galaxies in SAGE16?](reports/mini-millennium-sage16-science-program/index.md) — the complete-partition stellar mass function, its seven-parameter fractional response, an observable–parameter response matrix, parameter similarities, finite-epoch baryon-cycle responses, a cooling/AGN comparison, halo–stellar growth histories, population timestep refinement, and Jacobian-aware adaptive convergence of the separated continuous flows.
 - [SAGE16 Mini-Millennium: from equivalence to baryon-cycle insight](reports/mini-millennium-sage16-initial/index.md) — a complete input-partition stellar mass function, explicit FoF baryon inventory, quantified object-level residuals, larger-sample performance, controlled derivative evidence, and complete provenance.

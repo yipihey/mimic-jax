@@ -1,0 +1,718 @@
+{
+  "headline_artifacts": [
+    {
+      "description": "Baldry et al. stellar mass function, fiducial SAGE16, and the exact evaluated response-selected point.",
+      "key": "stellar_mass_function",
+      "media_type": "image/svg+xml",
+      "path": "assets/stellar_mass_function.svg",
+      "role": "figure",
+      "sha256": "69cb35640b660f90d70068081c3dff2acdc7cbbe4351e2c6a39ac9c28dd2e10f",
+      "size_bytes": 37472,
+      "title": "A real SAGE calibration plot"
+    },
+    {
+      "description": "Fractional bin-abundance response to SN reheating and reincorporation.",
+      "key": "responses",
+      "media_type": "image/svg+xml",
+      "path": "assets/responses.svg",
+      "role": "figure",
+      "sha256": "82665dda5192c8f415192472eb3c17cd09c9a8ec9a56241f3c1f63a51379406d",
+      "size_bytes": 25814,
+      "title": "What one differentiated run tells us"
+    },
+    {
+      "description": "Working chi-square for fiducial, response predictions, and their exact SAGE evaluations.",
+      "key": "fit_path",
+      "media_type": "image/svg+xml",
+      "path": "assets/fit_path.svg",
+      "role": "figure",
+      "sha256": "fc36a5abdcf875237d05f4ae444700d03eea368ba5e6c532a9562dac5e6e916e",
+      "size_bytes": 19268,
+      "title": "Prediction versus exact validation"
+    },
+    {
+      "description": "Worst hard-bin residual at every predeclared held-out point and at the proposed optimum.",
+      "key": "emulator_validation",
+      "media_type": "image/svg+xml",
+      "path": "assets/emulator_validation.svg",
+      "role": "figure",
+      "sha256": "a083d5276a8b2abf749843a4176a278a583026b4ab357f3c0908946dc327dd01",
+      "size_bytes": 15220,
+      "title": "Does the emulator earn scientific use?"
+    }
+  ],
+  "health": [
+    {
+      "artifacts": [],
+      "key": "reference_equivalence",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "trees",
+          "label": "Merger trees",
+          "unit": "",
+          "value": 2864
+        },
+        {
+          "description": "",
+          "key": "records",
+          "label": "z=0 galaxies",
+          "unit": "",
+          "value": 3595
+        }
+      ],
+      "notes": [
+        "See the linked Mini-Millennium report for field-level and hard-bin equivalence evidence."
+      ],
+      "status": "passed",
+      "summary": "The underlying complete-partition path is the previously validated upstream-sequential SAGE16 map; this application changes parameters, not the physics implementation.",
+      "title": "Reference SAGE16 status",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "gradient_validation",
+      "method": "JAX chain-rule tangent versus symmetric multiplicative SAGE reruns",
+      "metrics": [],
+      "notes": [],
+      "status": "passed",
+      "summary": "The baseline seven-parameter SAGE response used here was previously checked against symmetric full-tree reruns to <=0.078 absolute elasticity error in resolved bins.",
+      "title": "Parameter-response validation",
+      "tolerance": "absolute elasticity error <= 0.1 in resolved bins"
+    },
+    {
+      "artifacts": [],
+      "key": "exact_fit_improvement",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "chi2_fiducial",
+          "label": "Fiducial chi-square",
+          "unit": "",
+          "value": 30.979075715070348
+        },
+        {
+          "description": "",
+          "key": "chi2_exact",
+          "label": "Exact selected-point chi-square",
+          "unit": "",
+          "value": 16.393781077000593
+        }
+      ],
+      "notes": [
+        "This is a fit to one observational relation under a deliberately simplified diagonal working likelihood, not a new SAGE calibration."
+      ],
+      "status": "passed",
+      "summary": "The exact evaluated SAGE point lowers the stated working chi-square by 47.1% relative to fiducial.",
+      "title": "Exact SAGE fit improvement",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "emulator_validation",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "maximum_error",
+          "label": "Worst held-out bin error",
+          "unit": "dex",
+          "value": 0.11535937913692844
+        },
+        {
+          "description": "",
+          "key": "gate",
+          "label": "Acceptance gate",
+          "unit": "dex",
+          "value": 0.05
+        }
+      ],
+      "notes": [],
+      "status": "failed",
+      "summary": "The gradient-constrained quadratic emulator failed the predeclared hard-SMF validation gate, so it is not accepted for scientific parameter intervals.",
+      "title": "Surrogate validation",
+      "tolerance": "maximum absolute hard-SMF error <= 0.05 dex at all held-out points"
+    },
+    {
+      "artifacts": [],
+      "key": "parameter_intervals",
+      "method": "",
+      "metrics": [],
+      "notes": [
+        "No unstated Gaussian prior was added to manufacture two-sided constraints.",
+        "The saved MCMC chain samples the rejected emulator and is retained only to diagnose the proposed workflow."
+      ],
+      "status": "failed",
+      "summary": "Unavailable: the optimum reaches the reincorporation design boundary and the emulator fails validation. Local curvature numbers are retained only as a forecast/diagnostic.",
+      "title": "Final parameter error bars",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "continuous_population_path",
+      "method": "",
+      "metrics": [],
+      "notes": [
+        "Using the continuous RHS here would make the implementation request sound complete at the cost of changing the scientific model being fitted."
+      ],
+      "status": "not_evaluated",
+      "summary": "The adaptive continuous/hybrid RHS is not yet a complete validated population driver through all merger-tree events; this report therefore uses the exact differentiable reference tree map.",
+      "title": "Continuous full-tree inference",
+      "tolerance": ""
+    }
+  ],
+  "identity": {
+    "dataset": "Mini-Millennium partition 1 + Baldry et al. (2008) z≈0 stellar mass function",
+    "integration_method": "exact upstream-sequential differentiable tree map",
+    "model": "fiducial SAGE16 with two varied physical parameters",
+    "parameter_set": "SN reheating and reincorporation varied in log space",
+    "run_id": "sage16-differentiable-calibration",
+    "summary": "A practitioner-facing comparison of JAX response fitting, exact SAGE validation, local curvature, MCMC, and a deliberately failed first surrogate.",
+    "title": "Fit SAGE with gradients: what one stellar mass function can—and cannot—constrain"
+  },
+  "kind": "run",
+  "links": [
+    {
+      "target": "../mini-millennium-sage16-science-program/index.md",
+      "title": "Mini-Millennium science program"
+    },
+    {
+      "target": "../../docs/sensitivity.md",
+      "title": "Fractional response API"
+    },
+    {
+      "target": "../../docs/reporting.md",
+      "title": "Report architecture"
+    }
+  ],
+  "overview_metrics": [
+    {
+      "description": "",
+      "key": "fit_bins",
+      "label": "Fitted SMF bins",
+      "unit": "",
+      "value": 27
+    },
+    {
+      "description": "",
+      "key": "trees",
+      "label": "Merger trees",
+      "unit": "",
+      "value": 2864
+    },
+    {
+      "description": "",
+      "key": "chi2_fiducial",
+      "label": "Fiducial working chi-square",
+      "unit": "",
+      "value": 30.979075715070348
+    },
+    {
+      "description": "",
+      "key": "chi2_exact",
+      "label": "Selected exact-run chi-square",
+      "unit": "",
+      "value": 16.393781077000593
+    },
+    {
+      "description": "",
+      "key": "emulator_error",
+      "label": "Worst held-out emulator error",
+      "unit": "dex",
+      "value": 0.11535937913692844
+    }
+  ],
+  "parameters": [],
+  "provenance": {
+    "command": [
+      "/Users/tabel/Projects/mimic-jax/.venv/bin/python",
+      "examples/build_sage16_differentiable_calibration_report.py",
+      "--input-json",
+      "archive/mini-millennium-sage16-differentiable-calibration.json",
+      "--input-arrays",
+      "archive/mini-millennium-sage16-differentiable-calibration.npz"
+    ],
+    "files": [
+      {
+        "path": "archive/mini-millennium-sage16-differentiable-calibration.json",
+        "role": "input",
+        "sha256": "ba7cd4b854d7bc60d8ae82a74510adc254821b9245137d16294578452c9a527e",
+        "size_bytes": 4402
+      },
+      {
+        "path": "archive/mini-millennium-sage16-differentiable-calibration.npz",
+        "role": "input",
+        "sha256": "e6f2e91473c5f699cf825997295567e376e1e0ff5f9725e2477d123db643e9b0",
+        "size_bytes": 180205
+      },
+      {
+        "path": "data/observations/baldry2008_stellar_mass_function.csv",
+        "role": "input",
+        "sha256": "8775324d2e2eb732a77eaf9ac6102d3ca1422a23bbc81e3f2c2ad4ea894d253b",
+        "size_bytes": 1612
+      },
+      {
+        "path": "simulations/mini-millennium/snapshots/trees_063.1",
+        "role": "input",
+        "sha256": "4ca40244b16cdd88cefdf0e2b3198ecb9b76960a72bd144afbddf4cb40920be4",
+        "size_bytes": 15737928
+      },
+      {
+        "path": "archive/mini-millennium-sage16-parameter-responses.npz",
+        "role": "input",
+        "sha256": "d154cbeee740a2fabf4bbe47a61d3220b0acc25ce1c5c653c024097b586b72fb",
+        "size_bytes": 11947
+      }
+    ],
+    "generated_at": "2026-08-19T13:43:09Z",
+    "git_branch": "main",
+    "git_commit": "48b246233a478a4baf34ab6d5036bd010599dd7a",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {
+      "mcmc": 481516
+    },
+    "software": {
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [],
+      "body": "",
+      "diagnostics": [],
+      "key": "findings",
+      "links": [],
+      "notes": [
+        "The exact SAGE point selected by the small response model reduces the working chi-square from 30.98 to 16.39 (47.1%).",
+        "The first derivative-only proposal already reaches chi-square 21.66, showing that one tangent calculation identifies a useful physical direction.",
+        "At fiducial, the diagonal working likelihood has local log-parameter widths of 4.5% and 4.8%, with response correlation +0.28; these are forecasts, not final error bars.",
+        "The seven-parameter JAX tangent cost 7.2 min, about 4.8× less than fourteen central-difference SAGE runs at the measured primal time.",
+        "The emulator's worst held-out hard-SMF error is 0.115 dex, above the 0.05-dex gate, so final error bars remain unavailable."
+      ],
+      "summary": "The evidence supports a useful fit direction and local precision forecast, but not final observational parameter intervals.",
+      "title": "What did we learn?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Baldry et al. stellar mass function, fiducial SAGE16, and the exact evaluated response-selected point.",
+          "key": "stellar_mass_function",
+          "media_type": "image/svg+xml",
+          "path": "assets/stellar_mass_function.svg",
+          "role": "figure",
+          "sha256": "69cb35640b660f90d70068081c3dff2acdc7cbbe4351e2c6a39ac9c28dd2e10f",
+          "size_bytes": 37472,
+          "title": "A real SAGE calibration plot"
+        }
+      ],
+      "body": "The observation is the same Baldry, Glazebrook & Driver (2008) table used by the upstream-style SAGE plot. We fit 27 bins from log10(M*/Msun)=8.5 to 11.15, require at least ten fiducial model galaxies per bin, and freeze the covariance before fitting.\n\nThe covariance is deliberately simple: the quoted observational width is treated as diagonal Gaussian uncertainty in ln(phi), with a fixed 1/N Mini-Millennium counting term. It omits observational covariance, stellar-mass systematics, cosmic variance beyond Poisson noise, and model discrepancy. Those omissions make this a workflow demonstration, not a publishable SAGE recalibration.",
+      "diagnostics": [],
+      "key": "real_observation",
+      "links": [
+        {
+          "target": "https://arxiv.org/abs/0804.2892",
+          "title": "Baldry et al. 2008"
+        },
+        {
+          "target": "https://arxiv.org/abs/1601.04709",
+          "title": "SAGE16 calibration paper"
+        }
+      ],
+      "notes": [],
+      "summary": "Yes. The exact selected SAGE run moves the familiar z≈0 stellar mass function substantially closer to the Baldry et al. observational band under the stated working likelihood.",
+      "title": "Can SAGE move closer to a real calibration observation?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Fractional bin-abundance response to SN reheating and reincorporation.",
+          "key": "responses",
+          "media_type": "image/svg+xml",
+          "path": "assets/responses.svg",
+          "role": "figure",
+          "sha256": "82665dda5192c8f415192472eb3c17cd09c9a8ec9a56241f3c1f63a51379406d",
+          "size_bytes": 25814,
+          "title": "What one differentiated run tells us"
+        },
+        {
+          "description": "Measured tangent/primal times and transparently derived finite-difference costs.",
+          "key": "cost",
+          "media_type": "image/svg+xml",
+          "path": "assets/cost.svg",
+          "role": "figure",
+          "sha256": "e3db37ef97ae93705f784670ac8887e8929ca74af006360b6049fe2ae4a4dc37",
+          "size_bytes": 18244,
+          "title": "Where differentiability saves SAGE reruns"
+        }
+      ],
+      "body": "The plotted quantity is $E_{\\alpha i}=\\partial\\ln\\phi_\\alpha/\\partial\\ln\\theta_i$. A value of −0.6 means that increasing the parameter by 1% lowers abundance in that mass bin by about 0.6% near the fiducial model.\n\nA two-sided finite difference needs two complete SAGE runs per parameter. The existing seven-parameter tangent pass carries all seven directions through one tree traversal. It is not free—forward tangents cost more than one primal run—but the measured cost is still far below fourteen separate reruns.",
+      "diagnostics": [],
+      "key": "one_gradient",
+      "links": [],
+      "notes": [],
+      "summary": "It returns the fractional movement of every fitted mass bin with respect to every selected parameter, so the optimizer receives direction and scale simultaneously.",
+      "title": "What does one differentiated SAGE run buy?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Working chi-square for fiducial, response predictions, and their exact SAGE evaluations.",
+          "key": "fit_path",
+          "media_type": "image/svg+xml",
+          "path": "assets/fit_path.svg",
+          "role": "figure",
+          "sha256": "fc36a5abdcf875237d05f4ae444700d03eea368ba5e6c532a9562dac5e6e916e",
+          "size_bytes": 19268,
+          "title": "Prediction versus exact validation"
+        }
+      ],
+      "body": "The first local solve proposes 0.947× the fiducial SN reheating parameter and 0.885× the reincorporation factor. That exact SAGE run improves the fit, but individual hard-SMF bins differ from the linear prediction by as much as 0.114 dex, failing the predeclared 0.05-dex gate.\n\nThis is not a failure of automatic differentiation: the derivative is local and was separately finite-difference validated. It is a failure of treating that local derivative as a global surrogate across a finite parameter step.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "gradient_validation",
+          "method": "JAX chain-rule tangent versus symmetric multiplicative SAGE reruns",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "The baseline seven-parameter SAGE response used here was previously checked against symmetric full-tree reruns to <=0.078 absolute elasticity error in resolved bins.",
+          "title": "Parameter-response validation",
+          "tolerance": "absolute elasticity error <= 0.1 in resolved bins"
+        }
+      ],
+      "key": "follow_gradient",
+      "links": [],
+      "notes": [],
+      "summary": "It gives a good first proposal, but exact SAGE validation is essential because thresholds, events, and hard population bins make the finite move nonlinear.",
+      "title": "Can we simply follow the gradient to the best fit?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Worst hard-bin residual at every predeclared held-out point and at the proposed optimum.",
+          "key": "emulator_validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/emulator_validation.svg",
+          "role": "figure",
+          "sha256": "a083d5276a8b2abf749843a4176a278a583026b4ab357f3c0908946dc327dd01",
+          "size_bytes": 15220,
+          "title": "Does the emulator earn scientific use?"
+        },
+        {
+          "description": "Observation, response, exact SAGE design, held-out residuals, fit geometry, and MCMC samples.",
+          "key": "calibration_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-differentiable-calibration.npz",
+          "role": "data",
+          "sha256": "e6f2e91473c5f699cf825997295567e376e1e0ff5f9725e2477d123db643e9b0",
+          "size_bytes": 180205,
+          "title": "Differentiable calibration arrays"
+        }
+      ],
+      "body": "The test uses a fixed 3×3 design in the two logarithmic parameters. Eight new exact SAGE runs supply curvature; the fiducial value and JAX elasticity are imposed exactly. Four cell centers and the optimizer-selected point are held out from training.\n\nThe quadratic emulator halves the worst error relative to a purely local response, but its 0.115-dex worst bin still exceeds the 0.05-dex contract. A smoother finite-volume SMF behaves better, suggesting that much of the remaining difficulty is hard-bin migration, but that post-hoc observation does not override the declared gate.\n\nThe next emulator should use a denser/adaptive design, multiple Mini-Millennium partitions, and a validation metric matched to the explicitly differentiable population estimator. A neural network is not required for this two-parameter problem; the validation design matters more than model fashion.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "emulator_validation",
+          "method": "",
+          "metrics": [
+            {
+              "description": "",
+              "key": "maximum_error",
+              "label": "Worst held-out bin error",
+              "unit": "dex",
+              "value": 0.11535937913692844
+            },
+            {
+              "description": "",
+              "key": "gate",
+              "label": "Acceptance gate",
+              "unit": "dex",
+              "value": 0.05
+            }
+          ],
+          "notes": [],
+          "status": "failed",
+          "summary": "The gradient-constrained quadratic emulator failed the predeclared hard-SMF validation gate, so it is not accepted for scientific parameter intervals.",
+          "title": "Surrogate validation",
+          "tolerance": "maximum absolute hard-SMF error <= 0.05 dex at all held-out points"
+        }
+      ],
+      "key": "emulator",
+      "links": [
+        {
+          "target": "https://arxiv.org/abs/2103.01072",
+          "title": "GALFORM emulator example (Elliott et al. 2021)"
+        },
+        {
+          "target": "https://arxiv.org/abs/2011.14530",
+          "title": "Meraxes/PRISM emulator example (van der Velden et al. 2020)"
+        }
+      ],
+      "notes": [],
+      "summary": "Yes in principle, because repeated posterior likelihoods are where emulation helps most—but this first small emulator is not yet accurate enough for the conventional hard-bin SMF.",
+      "title": "Should we build an emulator as part of the same workflow?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Training design, held-out points, and the boundary-selected fit on the rejected quadratic emulator.",
+          "key": "response_surface",
+          "media_type": "image/svg+xml",
+          "path": "assets/response_surface.svg",
+          "role": "figure",
+          "sha256": "ef78d4a4aa8c239cb3fc4e6481af900987c649dcc01bd9b8a989c69d1fbb93a1",
+          "size_bytes": 142077,
+          "title": "Diagnostic parameter-response surface"
+        }
+      ],
+      "body": "| SAGE parameter | Physical role | Fiducial | First gradient proposal | Best evaluated direction | Fiducial local 1σ forecast |\n|---|---|---:|---:|---:|---:|\n| `FeedbackReheatingEpsilon` | SN reheating mass loading | 3 | 0.947× fiducial | 0.864× fiducial | 4.5% |\n| `ReIncorporationFactor` | ejected-gas reincorporation | 0.15 | 0.885× fiducial | 0.787× fiducial | 4.8% |\n\nThe best evaluated direction corresponds to SN reheating 2.59 rather than 3.0 and reincorporation 0.118 rather than 0.15. It is shown because exact SAGE was run there, not because the emulator earned a global optimum claim.\n\nThe final response surface reaches the lower reincorporation boundary, and the surrogate fails held-out validation. The MCMC percentiles and local Hessian stored in the NPZ are therefore diagnostic only. Adding a narrow prior would produce neat contours, but those contours would describe the prior as much as the stellar mass function.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "parameter_intervals",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "No unstated Gaussian prior was added to manufacture two-sided constraints.",
+            "The saved MCMC chain samples the rejected emulator and is retained only to diagnose the proposed workflow."
+          ],
+          "status": "failed",
+          "summary": "Unavailable: the optimum reaches the reincorporation design boundary and the emulator fails validation. Local curvature numbers are retained only as a forecast/diagnostic.",
+          "title": "Final parameter error bars",
+          "tolerance": ""
+        }
+      ],
+      "key": "parameters",
+      "links": [],
+      "notes": [],
+      "summary": "We can report the direction and exact evaluated improvement. We cannot yet report validated final two-sided observational error bars.",
+      "title": "What parameter values and error bars can we report?"
+    },
+    {
+      "artifacts": [],
+      "body": "The saved 50,000-step random-walk chain samples exactly the same bounded emulator likelihood as the optimizer. It is retained to make the comparison familiar, but it cannot rescue an invalid emulator.\n\nThe practical hybrid workflow is: use JAX gradients to find influential directions and local curvature; run exact SAGE at a designed set of points; validate an emulator; then use MCMC or another sampler on that emulator, with occasional exact checks. Gradient-based optimization and MCMC answer different questions.\n\nFor context, MCMC calibration has a long history in SAMs; Henriques et al. (2009) used it to expose strong parameter correlations. Differentiability adds information per SAGE run, not permission to skip posterior validation.",
+      "diagnostics": [],
+      "key": "mcmc",
+      "links": [
+        {
+          "target": "https://arxiv.org/abs/0810.2548",
+          "title": "Henriques et al. 2009 MCMC SAM calibration"
+        }
+      ],
+      "notes": [],
+      "summary": "No. It changes how efficiently we find modes, diagnose degeneracies, construct proposals, and build emulators; MCMC still answers the global posterior question when the likelihood is nonlinear or multimodal.",
+      "title": "Does differentiability replace MCMC?"
+    },
+    {
+      "artifacts": [],
+      "body": "Croton et al. (2016) show the z≈0 stellar mass function together with the baryonic Tully–Fisher relation, the mass–metallicity relation, and the black-hole–bulge relation. These observables have complementary physical leverage:\n\n- baryonic Tully–Fisher and gas statistics constrain star formation and feedback without using abundance alone;\n- mass–metallicity adds leverage on metal production and outflows;\n- black-hole–bulge data are required before expecting radio/quasar parameters to be identifiable;\n- cosmic SFR history tests whether a z=0 fit achieved the right assembly path rather than only the right endpoint.\n\nThe response-matrix API already supplies the mathematical object needed to quantify that complementarity. The missing work is a defensible joint covariance and the corresponding differentiable population summaries—not a larger optimizer.",
+      "diagnostics": [],
+      "key": "next_observations",
+      "links": [],
+      "notes": [],
+      "summary": "The stellar mass function alone should not be asked to identify every SAGE process. The next application should add the real observables SAGE16 was calibrated against.",
+      "title": "Which observations should constrain the next parameters?"
+    },
+    {
+      "artifacts": [],
+      "body": "For observational fitting, changing the tree evolution scheme would mix two questions: parameter calibration and numerical reformulation. This first application therefore uses the exact upstream-sequential differentiable map whose Mini-Millennium outputs are already equivalent to MIMIC.\n\nThe inference and report APIs are agnostic to that choice. Once the continuous/hybrid full-tree driver passes the same population-equivalence and event-localization gates, it can be substituted as a second model and compared under the identical likelihood. Until then, calling it the fitted SAGE population would overstate what has been validated.",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "continuous_population_path",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "Using the continuous RHS here would make the implementation request sound complete at the cost of changing the scientific model being fitted."
+          ],
+          "status": "not_evaluated",
+          "summary": "The adaptive continuous/hybrid RHS is not yet a complete validated population driver through all merger-tree events; this report therefore uses the exact differentiable reference tree map.",
+          "title": "Continuous full-tree inference",
+          "tolerance": ""
+        }
+      ],
+      "key": "continuous_scope",
+      "links": [],
+      "notes": [],
+      "summary": "The current adaptive continuous/hybrid formulation is validated on smooth fixed-forcing intervals, but not yet as a complete population driver through every merger, threshold, and projection.",
+      "title": "Why is this not yet the adaptive continuous full-tree fit?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Likelihood, fit, validation, runtime, and failure-gate metadata.",
+          "key": "calibration_summary",
+          "media_type": "application/json",
+          "path": "assets/mini-millennium-sage16-differentiable-calibration.json",
+          "role": "data",
+          "sha256": "ba7cd4b854d7bc60d8ae82a74510adc254821b9245137d16294578452c9a527e",
+          "size_bytes": 4402,
+          "title": "Differentiable calibration summary"
+        },
+        {
+          "description": "Observation, response, exact SAGE design, held-out residuals, fit geometry, and MCMC samples.",
+          "key": "calibration_arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/mini-millennium-sage16-differentiable-calibration.npz",
+          "role": "data",
+          "sha256": "e6f2e91473c5f699cf825997295567e376e1e0ff5f9725e2477d123db643e9b0",
+          "size_bytes": 180205,
+          "title": "Differentiable calibration arrays"
+        }
+      ],
+      "body": "",
+      "diagnostics": [
+        {
+          "artifacts": [],
+          "key": "reference_equivalence",
+          "method": "",
+          "metrics": [
+            {
+              "description": "",
+              "key": "trees",
+              "label": "Merger trees",
+              "unit": "",
+              "value": 2864
+            },
+            {
+              "description": "",
+              "key": "records",
+              "label": "z=0 galaxies",
+              "unit": "",
+              "value": 3595
+            }
+          ],
+          "notes": [
+            "See the linked Mini-Millennium report for field-level and hard-bin equivalence evidence."
+          ],
+          "status": "passed",
+          "summary": "The underlying complete-partition path is the previously validated upstream-sequential SAGE16 map; this application changes parameters, not the physics implementation.",
+          "title": "Reference SAGE16 status",
+          "tolerance": ""
+        },
+        {
+          "artifacts": [],
+          "key": "gradient_validation",
+          "method": "JAX chain-rule tangent versus symmetric multiplicative SAGE reruns",
+          "metrics": [],
+          "notes": [],
+          "status": "passed",
+          "summary": "The baseline seven-parameter SAGE response used here was previously checked against symmetric full-tree reruns to <=0.078 absolute elasticity error in resolved bins.",
+          "title": "Parameter-response validation",
+          "tolerance": "absolute elasticity error <= 0.1 in resolved bins"
+        },
+        {
+          "artifacts": [],
+          "key": "exact_fit_improvement",
+          "method": "",
+          "metrics": [
+            {
+              "description": "",
+              "key": "chi2_fiducial",
+              "label": "Fiducial chi-square",
+              "unit": "",
+              "value": 30.979075715070348
+            },
+            {
+              "description": "",
+              "key": "chi2_exact",
+              "label": "Exact selected-point chi-square",
+              "unit": "",
+              "value": 16.393781077000593
+            }
+          ],
+          "notes": [
+            "This is a fit to one observational relation under a deliberately simplified diagonal working likelihood, not a new SAGE calibration."
+          ],
+          "status": "passed",
+          "summary": "The exact evaluated SAGE point lowers the stated working chi-square by 47.1% relative to fiducial.",
+          "title": "Exact SAGE fit improvement",
+          "tolerance": ""
+        },
+        {
+          "artifacts": [],
+          "key": "emulator_validation",
+          "method": "",
+          "metrics": [
+            {
+              "description": "",
+              "key": "maximum_error",
+              "label": "Worst held-out bin error",
+              "unit": "dex",
+              "value": 0.11535937913692844
+            },
+            {
+              "description": "",
+              "key": "gate",
+              "label": "Acceptance gate",
+              "unit": "dex",
+              "value": 0.05
+            }
+          ],
+          "notes": [],
+          "status": "failed",
+          "summary": "The gradient-constrained quadratic emulator failed the predeclared hard-SMF validation gate, so it is not accepted for scientific parameter intervals.",
+          "title": "Surrogate validation",
+          "tolerance": "maximum absolute hard-SMF error <= 0.05 dex at all held-out points"
+        },
+        {
+          "artifacts": [],
+          "key": "parameter_intervals",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "No unstated Gaussian prior was added to manufacture two-sided constraints.",
+            "The saved MCMC chain samples the rejected emulator and is retained only to diagnose the proposed workflow."
+          ],
+          "status": "failed",
+          "summary": "Unavailable: the optimum reaches the reincorporation design boundary and the emulator fails validation. Local curvature numbers are retained only as a forecast/diagnostic.",
+          "title": "Final parameter error bars",
+          "tolerance": ""
+        },
+        {
+          "artifacts": [],
+          "key": "continuous_population_path",
+          "method": "",
+          "metrics": [],
+          "notes": [
+            "Using the continuous RHS here would make the implementation request sound complete at the cost of changing the scientific model being fitted."
+          ],
+          "status": "not_evaluated",
+          "summary": "The adaptive continuous/hybrid RHS is not yet a complete validated population driver through all merger-tree events; this report therefore uses the exact differentiable reference tree map.",
+          "title": "Continuous full-tree inference",
+          "tolerance": ""
+        }
+      ],
+      "key": "reproducibility",
+      "links": [],
+      "notes": [
+        "The design and validation points were fixed before the final exact checks.",
+        "The observational table is now a single repository data product shared with the upstream-style plotting routine.",
+        "The report generator does not rerun SAGE; it consumes the archived scientific products."
+      ],
+      "summary": "Every fit decision, failure gate, exact SAGE point, sampler draw, and observational conversion is retained in durable JSON/NPZ products.",
+      "title": "Technical validation and reproducibility"
+    }
+  ]
+}

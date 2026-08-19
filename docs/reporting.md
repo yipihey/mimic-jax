@@ -171,6 +171,20 @@ JAX_ENABLE_X64=1 mimic_venv/bin/python \
 
 The result is `reports/sage16-linear-response/index.md`. Its public narrative is organized around SAGE questions—galaxy memory, gas-supply filtering, reservoir participation, and AGN regulation—while the local frozen-coefficient assumptions, transfer function, poles, and hybrid-map limitations remain explicit underneath.
 
+The differentiable-calibration report likewise separates an expensive, restartable science product from presentation. It uses the exact differentiable tree map, the real Baldry et al. SMF table, a fixed two-parameter emulator design, reserved exact SAGE validation points, and a familiar MCMC reference:
+
+```bash
+JAX_ENABLE_X64=1 JAX_COMPILATION_CACHE_DIR=archive/jax-cache \
+    mimic_venv/bin/python scripts/analyze_sage16_differentiable_calibration.py \
+    --output-json archive/mini-millennium-sage16-differentiable-calibration.json \
+    --output-arrays archive/mini-millennium-sage16-differentiable-calibration.npz
+
+JAX_ENABLE_X64=1 mimic_venv/bin/python \
+    examples/build_sage16_differentiable_calibration_report.py
+```
+
+The result is `reports/sage16-differentiable-calibration/index.md`. Its failed surrogate gate and unavailable final parameter intervals are intentional report outputs, not build failures. The exact evaluated SAGE improvement, local curvature forecast, emulator training/validation arrays, and MCMC diagnostic remain available for inspection.
+
 For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
 
 Comparison metrics should normally be constructed with `ComparisonMetric.from_values(...)`. It records baseline, candidate, and absolute difference, and defines a fractional difference only for a meaningful nonzero baseline. `derivative_prediction` is a separate optional fractional prediction, so a local elasticity is never confused with the measured finite run-to-run change.

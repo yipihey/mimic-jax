@@ -4,6 +4,7 @@ tqdm>=4.0.0
 h5py>=3.0.0
 PyYAML>=5.0.0
 pandas>=2.0.0
+scipy>=1.10.0
 black>=24.0.0,<25
 isort>=5.12.0
 clang-format>=20,<21

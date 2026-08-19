@@ -1,0 +1,157 @@
+{
+  "arrays": "mini-millennium-sage16-differentiable-calibration.npz",
+  "backend": "cpu",
+  "emulator": {
+    "exact_training_runs": 8,
+    "held_out_maximum_absolute_error_dex": 0.11535937913692844,
+    "held_out_median_absolute_error_dex": 0.03194735972357032,
+    "held_out_runs": 5,
+    "kind": "fiducial-value/JAX-gradient-constrained quadratic log response",
+    "linear_held_out_maximum_absolute_error_dex": 0.2278562790915241,
+    "passed": false,
+    "scientific_use": "rejected for parameter intervals",
+    "training_maximum_absolute_error_dex": 0.06933873698342223
+  },
+  "fit": {
+    "degrees_of_freedom": 25,
+    "distance_to_design_boundary_sigma": [
+      0.7332590616647061,
+      0.0
+    ],
+    "emulator_chi_square": 13.022693361803869,
+    "exact_sage_chi_square": 16.393781077000593,
+    "fiducial_chi_square": 30.979075715070348,
+    "function_evaluations": 12,
+    "hessian_condition_number": 1.197768256818395,
+    "interval_status": "unavailable",
+    "iterations": 7,
+    "laplace_one_sigma_log": [
+      0.046460730052563355,
+      0.04287339132568359
+    ],
+    "log_parameter_ratios": [
+      -0.14593224867740018,
+      -0.24
+    ],
+    "mcmc_16_50_84_log": [
+      [
+        -0.1582941534707341,
+        -0.23089318318001284
+      ],
+      [
+        -0.11444730103767496,
+        -0.20665601040283793
+      ],
+      [
+        -0.05029041919393197,
+        -0.16700850878211473
+      ]
+    ],
+    "optimizer": "L-BFGS-B with exact JAX objective gradient on the emulator",
+    "parameter_ratios": [
+      0.8642162529953595,
+      0.7866278610665535
+    ],
+    "parameter_values": [
+      2.5926487589860785,
+      0.11799417915998302
+    ],
+    "success": true,
+    "uncertainty_interpretation": "diagnostic only; final parameter intervals are unavailable because the quadratic emulator failed its held-out validation gate"
+  },
+  "fit_definition": {
+    "fitted_bins": 27,
+    "held_out_points": [
+      [
+        -0.135,
+        -0.18
+      ],
+      [
+        -0.135,
+        -0.06
+      ],
+      [
+        -0.045,
+        -0.18
+      ],
+      [
+        -0.045,
+        -0.06
+      ]
+    ],
+    "log10_stellar_mass_range": [
+      8.5,
+      11.15
+    ],
+    "minimum_model_count": 10,
+    "parameter_names": [
+      "FeedbackReheatingEpsilon",
+      "ReIncorporationFactor"
+    ],
+    "prior": "uniform within the stated logarithmic emulator design box",
+    "surrogate_gate_maximum_error_dex": 0.05,
+    "training_levels": [
+      [
+        -0.18,
+        -0.09,
+        0.0
+      ],
+      [
+        -0.24,
+        -0.12,
+        0.0
+      ]
+    ]
+  },
+  "initial_local_fit": {
+    "chi_square_fiducial": 30.979075715070348,
+    "chi_square_predicted": 24.319887220473333,
+    "condition_number": 1.8003731583474967,
+    "log_parameter_step": [
+      -0.05484190481181507,
+      -0.12173320968413
+    ],
+    "parameter_ratios": [
+      0.9466347945299539,
+      0.8853845490193881
+    ]
+  },
+  "initial_surrogate_validation": {
+    "maximum_absolute_error_dex": 0.11398984256126395,
+    "median_absolute_error_dex": 0.027778291305827145,
+    "passed": false
+  },
+  "jax_version": "0.4.38",
+  "mcmc_reference": {
+    "acceptance_fraction": 0.2369777777777778,
+    "burn_in": 5000,
+    "laplace_covariance_relative_error": 0.24938890972031297,
+    "method": "random-walk Metropolis on the same bounded emulator likelihood",
+    "steps": 50000
+  },
+  "nonlinear_evaluated": true,
+  "observation": {
+    "doi": "10.1111/j.1365-2966.2008.13348.x",
+    "known_omissions": [
+      "observational bin-to-bin covariance",
+      "Mini-Millennium sample/cosmic variance beyond Poisson counting noise",
+      "stellar-mass systematic covariance",
+      "model discrepancy"
+    ],
+    "source": "Baldry, Glazebrook & Driver (2008)",
+    "working_likelihood": "diagonal Gaussian in ln(phi); quoted Baldry envelope plus fixed fiducial Mini-Millennium Poisson variance"
+  },
+  "peak_resident_bytes": 7882047488,
+  "records": 3595,
+  "runtime": {
+    "baseline_linearized_seconds": 433.333007833,
+    "baseline_primal_seconds": 147.038510417,
+    "emulator_optimizer_seconds": null,
+    "exact_sage_runs": 14,
+    "exact_sage_seconds": 1139.6704692900094
+  },
+  "schema_version": "mimic-jax-differentiable-calibration/v2",
+  "total_seconds": 1157.435320042001,
+  "tree_count": 2864,
+  "tree_file": "/Users/tabel/Projects/mimic-jax/simulations/mini-millennium/snapshots/trees_063.1"
+}

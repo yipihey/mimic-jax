@@ -10,6 +10,7 @@ project:
     - docs/sage16_hybrid_system.md
     - docs/numerical_integration.md
     - docs/sensitivity.md
+    - docs/differentiable_calibration.md
     - docs/performance.md
     - docs/mimic_jax_scientific_program.md
     - plot/mimic-plot/README.md
@@ -36,6 +37,8 @@ website:
         text: Numerics
       - href: reports/sage16-linear-response/index.md
         text: Galaxy response
+      - href: reports/sage16-differentiable-calibration/index.md
+        text: Fit SAGE
       - href: docs/sage16_hybrid_system.md
         text: Hybrid SAGE16
   page-footer:
