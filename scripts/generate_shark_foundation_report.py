@@ -948,6 +948,43 @@ def main():
             f"Expected upstream revision {SHARK_UPSTREAM_REVISION}, "
             f"found {catalogue.upstream_revision}"
         )
+    rate_oracle_path = arguments.rate_oracle
+    if not rate_oracle_path.is_absolute():
+        rate_oracle_path = repository / rate_oracle_path
+    inputs = [arguments.upstream_output, rate_oracle_path]
+    configurations = []
+    if arguments.upstream_config is not None:
+        configurations.append(arguments.upstream_config)
+    rerun_command = [
+        "python",
+        "scripts/generate_shark_foundation_report.py",
+        "--upstream-output",
+        str(arguments.upstream_output),
+    ]
+    if arguments.upstream_config is not None:
+        rerun_command.extend(("--upstream-config", str(arguments.upstream_config)))
+    rerun_command.extend(("--report-directory", str(arguments.report_directory)))
+    # Capture source identity before regenerating tracked report assets. Otherwise
+    # the act of writing the report would incorrectly mark an initially clean run dirty.
+    provenance = capture_provenance(
+        repository=repository,
+        command=tuple(rerun_command),
+        configuration_paths=configurations,
+        input_paths=inputs,
+        random_seeds={"upstream_shark": catalogue.seed},
+    )
+    provenance = replace(
+        provenance,
+        upstream_run={
+            "project": "ICRAR/shark",
+            "revision": catalogue.upstream_revision,
+            "version": catalogue.upstream_version,
+            "redshift": catalogue.redshift,
+            "galaxies": int(catalogue.galaxy_id.size),
+            "tree_input_sha256": "c072a937941fefb9aac441fc319ff030ceb666af4a07f1b88c0f02c5d76a3f43",
+            "redshift_input_sha256": "816a885a6e73d6d9022fffeb8667acfe2b0719a6cb0da2d696abe61500b135b9",
+        },
+    )
     smf_path = assets / "upstream-shark-stellar-mass-function.svg"
     smf = _plot_smf(catalogue, smf_path)
     common_observables_path = assets / "upstream-shark-common-observables.svg"
@@ -963,9 +1000,6 @@ def main():
     _plot_convergence(step_counts, methods, errors, conservation, convergence_path)
     flow_path = assets / "shark-flow-network.svg"
     _plot_flow_network(flow_path)
-    rate_oracle_path = arguments.rate_oracle
-    if not rate_oracle_path.is_absolute():
-        rate_oracle_path = repository / rate_oracle_path
     (
         oracle,
         star_rate_delta,
@@ -1093,39 +1127,6 @@ def main():
         ),
     )
     runtime = time.perf_counter() - started
-
-    inputs = [arguments.upstream_output, rate_oracle_path]
-    configurations = []
-    if arguments.upstream_config is not None:
-        configurations.append(arguments.upstream_config)
-    rerun_command = [
-        "python",
-        "scripts/generate_shark_foundation_report.py",
-        "--upstream-output",
-        str(arguments.upstream_output),
-    ]
-    if arguments.upstream_config is not None:
-        rerun_command.extend(("--upstream-config", str(arguments.upstream_config)))
-    rerun_command.extend(("--report-directory", str(arguments.report_directory)))
-    provenance = capture_provenance(
-        repository=repository,
-        command=tuple(rerun_command),
-        configuration_paths=configurations,
-        input_paths=inputs,
-        random_seeds={"upstream_shark": catalogue.seed},
-    )
-    provenance = replace(
-        provenance,
-        upstream_run={
-            "project": "ICRAR/shark",
-            "revision": catalogue.upstream_revision,
-            "version": catalogue.upstream_version,
-            "redshift": catalogue.redshift,
-            "galaxies": int(catalogue.galaxy_id.size),
-            "tree_input_sha256": "c072a937941fefb9aac441fc319ff030ceb666af4a07f1b88c0f02c5d76a3f43",
-            "redshift_input_sha256": "816a885a6e73d6d9022fffeb8667acfe2b0719a6cb0da2d696abe61500b135b9",
-        },
-    )
 
     smf_artifact = Artifact(
         key="upstream_shark_smf",

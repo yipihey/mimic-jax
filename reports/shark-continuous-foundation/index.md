@@ -2,7 +2,7 @@
 title: "SHARK Lagos23 on the same testable footing as SAGE16"
 report-id: "shark-continuous-foundation"
 report-kind: "run"
-date: "2026-08-20T12:15:11Z"
+date: "2026-08-20T12:49:08Z"
 toc: true
 ---
 
@@ -24,10 +24,10 @@ A complete native Lagos23 population remains the topology/event reference, while
 | Output redshift | 0 |
 | Continuous flow variables | 19 |
 | Reservoir + BH/AGN state variables | 24 |
-| Native galaxy fields checked | 86 |
+| Native galaxy fields available | 86 |
 | Maximum controlled interval residual | 2.50749e-05 |
 | Maximum controlled burst residual | 9.82719e-05 |
-| Report analysis wall time | 98.1596 s |
+| Report analysis wall time | 97.9979 s |
 
 Related: [SAGE16 science program](../mini-millennium-sage16-science-program/index.md) · [SAGE16 response times](../sage16-linear-response/index.md)
 
@@ -49,7 +49,7 @@ Related: [SAGE16 science program](../mini-millennium-sage16-science-program/inde
 | Continuous hot-mode black-hole transfer | ✅ Passed | Hot-mode growth transfers hot gas and metals into the augmented BH state. The removed gas angular momentum is an explicit sink because SHARK stores dimensionless BH spin rather than BH angular momentum in the baryon ledger. |
 | Controlled flow convergence | ✅ Passed | The nonlinear Croton06-cooling, BR06-star-formation, and Lagos13-feedback flow recovers first-, second-, and fourth-order convergence for Euler, Heun, and RK4. |
 | Differentiable fractional parameter responses | ✅ Passed | JAX directly returns dimensionless reservoir and cooling responses for SN-regulated and massive AGN-heated controlled galaxies. |
-| Independent JAX full-tree population parity | ⬚ Not evaluated | The exact native population backend is integrated and the JAX process/event coverage is complete for pinned Lagos23, but per-ID independent JAX replay of all 20,174 public-CI trees has not passed. No such parity claim is made. |
+| Independent JAX full-tree population parity | ⬚ Not evaluated | The exact native population backend is integrated and the JAX process/event kernels cover the controlled pinned Lagos23 branches, but per-ID independent JAX replay of all 20,174 public-CI trees has not passed. No such parity claim is made. |
 
 ## At a glance
 
@@ -63,7 +63,7 @@ Related: [SAGE16 science program](../mini-millennium-sage16-science-program/inde
 
 ![Gas phases, black-hole spin, and angular-momentum sizes](assets/upstream-shark-added-observables.svg)
 
-*Native atomic/molecular gas mass functions, BH spin, and disk-size outputs retained rather than collapsed into the SAGE16 state.*
+*Native atomic/molecular gas mass functions, BH spin, and disk-size outputs retained rather than collapsed into the SAGE16 state. Relation bins require at least 20 galaxies so rare objects are not presented as a stable trend.*
 
 ![Direct upstream oracle checks for six Lagos23 prescription groups](assets/lagos23-prescription-oracle.svg)
 
@@ -111,7 +111,7 @@ These curves are the real pinned upstream SHARK population, not yet a JAX popula
 
 *Cold-gas fraction, cold-gas metallicity, BH–bulge relation, and quenched fraction evaluated through explicit model-neutral binning and selection rules.*
 
-[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — SMF and convergence arrays used by this report.
+[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — Catalogue summaries, controlled convergence histories, direct-oracle residuals, and fractional-response matrices used by this report.
 
 ## What part of SHARK is already a dynamical system?
 
@@ -133,7 +133,7 @@ This test evolves the actual oracled Croton06 cooling, BR06 radial star-formatio
 
 *Euler, Heun RK2, and RK4 recover their expected orders for a controlled nonlinear Croton06+BR06+Lagos13 SHARK disk flow while its baryon ledger stays at roundoff.*
 
-[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — SMF and convergence arrays used by this report.
+[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — Catalogue summaries, controlled convergence histories, direct-oracle residuals, and fractional-response matrices used by this report.
 
 ## What does SHARK add to the SAGE comparison?
 
@@ -150,7 +150,7 @@ The managed reference catalogue and shared observable layer now retain SHARK's p
 
 ![Gas phases, black-hole spin, and angular-momentum sizes](assets/upstream-shark-added-observables.svg)
 
-*Native atomic/molecular gas mass functions, BH spin, and disk-size outputs retained rather than collapsed into the SAGE16 state.*
+*Native atomic/molecular gas mass functions, BH spin, and disk-size outputs retained rather than collapsed into the SAGE16 state. Relation bins require at least 20 galaxies so rare objects are not presented as a stable trend.*
 
 ## Which Lagos23 parameters control a galaxy interval?
 
@@ -162,11 +162,11 @@ Rows are final stellar, cold-gas, hot-gas, BH, SFR, cooling, and ejected-gas out
 
 *Each entry is the percentage change in a final reservoir or integrated cooling transfer per 1% parameter increase, evaluated by JAX AD.*
 
-[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — SMF and convergence arrays used by this report.
+[Machine-readable foundation arrays](assets/shark-foundation-results.npz) — Catalogue summaries, controlled convergence histories, direct-oracle residuals, and fractional-response matrices used by this report.
 
 ## What must pass before SHARK and SAGE are compared?
 
-The process/event surface and controlled ordered intervals are implemented. The remaining strict equivalence gate is independent per-ID JAX replay of the full 20,174-tree public-CI population.
+The controlled process/event surface and ordered intervals are implemented. The remaining strict equivalence gate is independent per-ID JAX replay of the full 20,174-tree public-CI population.
 
 The exact native SHARK population backend is reproducible and integrated; the JAX layer separately passes prescription, conservation, differentiation, ordered disk-interval, and starburst-event tests. Calling those two facts a full independent population match would be premature. The next validation program must replay stable galaxy IDs and report threshold/topology differences. A SAGE–SHARK physics comparison then requires common halo forcing; comparing native Mini-Millennium with native mini-SURFS would otherwise mix model and simulation differences.
 
@@ -182,14 +182,14 @@ The exact native SHARK population backend is reproducible and integrated; the JA
 
 | Item | Value |
 | --- | --- |
-| Generated | 2026-08-20T12:15:11Z |
-| Git commit | `10dfa1530f0cf9157b30a46ae2c514567db5c22d` (dirty working tree) |
+| Generated | 2026-08-20T12:49:08Z |
+| Git commit | `5a9df25a30352dbf83485aa0ef1bd7660134fa97` (dirty working tree) |
 | Git branch | main |
 
 ### Rerun command
 
 ```shell
-python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5 --report-directory reports/shark-continuous-foundation
+python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5 --upstream-config /tmp/mimic-shark-release-reference/effective-shark.cfg --report-directory reports/shark-continuous-foundation
 ```
 
 ### Configurations and inputs
@@ -229,7 +229,7 @@ python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-
 | --- | --- |
 | upstream_shark | 123456 |
 
-### Upstream MIMIC run record
+### Upstream reference run record
 
 ```json
 {

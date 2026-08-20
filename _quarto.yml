@@ -13,6 +13,7 @@ project:
     - docs/differentiable_calibration.md
     - docs/performance.md
     - docs/mimic_jax_scientific_program.md
+    - docs/shark_lagos23.md
     - plot/mimic-plot/README.md
   resources:
     - reports/**/*.json
@@ -43,6 +44,8 @@ website:
         text: Minimal SAGE
       - href: reports/shark-continuous-foundation/index.md
         text: SHARK Lagos23
+      - href: docs/shark_lagos23.md
+        text: SHARK guide
       - href: docs/sage16_hybrid_system.md
         text: Hybrid SAGE16
   page-footer:

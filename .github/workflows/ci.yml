@@ -60,6 +60,12 @@ jobs:
           tests/mimic_jax/test_reporting.py \
           tests/mimic_jax/test_linear_response.py
 
+    - name: Run SHARK Lagos23 JAX validation tests
+      env:
+        JAX_ENABLE_X64: "1"
+      run: |
+        python -m pytest -q tests/mimic_jax/test_shark_*.py
+
     - name: Validate module metadata
       run: |
         make validate-modules
