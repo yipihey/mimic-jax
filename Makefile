@@ -616,7 +616,7 @@ check-docs:
 
 check-format:
 	@echo "Checking C formatting..."
-	@find . \( -path ./build -o -path ./mimic_venv -o -path ./sage-code -o -name "generated" \) -prune \
+	@find . \( -path ./build -o -path ./.venv -o -path ./mimic_venv -o -path ./sage-code -o -name "generated" \) -prune \
 	    -o \( -name "*.c" -o -name "*.h" \) -print \
 	    | xargs $(CLANG_FORMAT) --dry-run --Werror
 	@echo "Checking Python formatting..."

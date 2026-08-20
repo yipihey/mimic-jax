@@ -1,0 +1,693 @@
+{
+  "agn": [
+    {
+      "accretion_ratio": 4.5030930198833e-05,
+      "black_hole_mass": 1000000,
+      "bolometric_luminosity": 0.015663936469260824,
+      "bulge_baryonic_mass": 2000000000,
+      "bulge_radius": 0.004,
+      "calculated_hot_halo_accretion_rate": 8.176914244758434e-20,
+      "circular_velocity": 100,
+      "eddington_luminosity": 12580.072324538292,
+      "gas_mass": 1000000000,
+      "gas_metallicity": 0.002,
+      "hot_accretion_rate": 1000,
+      "hot_gas_fraction": 0.04,
+      "isco_radius": 5.669452667236328,
+      "mechanical_luminosity": 0.01334052129724298,
+      "pseudo_cooling_luminosity": 10000,
+      "qso_critical_luminosity": 43362.30004141242,
+      "qso_ejection_loading": 0,
+      "qso_outflow_velocity": 0.06645900622841718,
+      "qso_reheating_loading": 0,
+      "radiative_efficiency": 0.06063279137015343,
+      "salpeter_timescale": 51154.34806166798,
+      "spin": 0.1,
+      "star_formation_rate": 100000000,
+      "starburst_accretion_rate": 0,
+      "stored_black_hole_mass": 1000000,
+      "stored_spin": 0.10000000149011612,
+      "virial_velocity": 100
+    },
+    {
+      "accretion_ratio": 0.0005403711623859961,
+      "black_hole_mass": 10000000,
+      "bolometric_luminosity": 2.4480469168214696,
+      "bulge_baryonic_mass": 5000000000,
+      "bulge_radius": 0.006,
+      "calculated_hot_halo_accretion_rate": 6.6985281493061116e-18,
+      "circular_velocity": 150,
+      "eddington_luminosity": 125800.72324538292,
+      "gas_mass": 2000000000,
+      "gas_metallicity": 0.005,
+      "hot_accretion_rate": 100000,
+      "hot_gas_fraction": 0.08,
+      "isco_radius": 4.979098796844482,
+      "mechanical_luminosity": 14.407763716663753,
+      "pseudo_cooling_luminosity": 100000,
+      "qso_critical_luminosity": 96360.66675869428,
+      "qso_ejection_loading": 0,
+      "qso_outflow_velocity": 0.8784979614682711,
+      "qso_reheating_loading": 0,
+      "radiative_efficiency": 0.06935132294893265,
+      "salpeter_timescale": 3273.133585220655,
+      "spin": 0.3,
+      "star_formation_rate": 300000000,
+      "starburst_accretion_rate": 20000,
+      "stored_black_hole_mass": 10000000,
+      "stored_spin": 0.30000001192092896,
+      "virial_velocity": 160
+    },
+    {
+      "accretion_ratio": 0.0045030930198833,
+      "black_hole_mass": 100000000,
+      "bolometric_luminosity": 1766.5869689226245,
+      "bulge_baryonic_mass": 20000000000,
+      "bulge_radius": 0.01,
+      "calculated_hot_halo_accretion_rate": 2.612033486345635e-16,
+      "circular_velocity": 220,
+      "eddington_luminosity": 1258007.2324538291,
+      "gas_mass": 5000000000,
+      "gas_metallicity": 0.01,
+      "hot_accretion_rate": 10000000,
+      "hot_gas_fraction": 0.12,
+      "isco_radius": 3.8300490379333496,
+      "mechanical_luminosity": 4802.587905554584,
+      "pseudo_cooling_luminosity": 1000000,
+      "qso_critical_luminosity": 346898.40033129934,
+      "qso_ejection_loading": 0,
+      "qso_outflow_velocity": 22.318802940787467,
+      "qso_reheating_loading": 0,
+      "radiative_efficiency": 0.09118878841400146,
+      "salpeter_timescale": 45.35743058566161,
+      "spin": 0.6,
+      "star_formation_rate": 1000000000,
+      "starburst_accretion_rate": 0,
+      "stored_black_hole_mass": 100000000,
+      "stored_spin": 0.6000000238418579,
+      "virial_velocity": 220
+    },
+    {
+      "accretion_ratio": 0.027018558119299804,
+      "black_hole_mass": 1000000000,
+      "bolometric_luminosity": 783750.1975066976,
+      "bulge_baryonic_mass": 100000000000,
+      "bulge_radius": 0.02,
+      "calculated_hot_halo_accretion_rate": 1.3146944934150668e-14,
+      "circular_velocity": 300,
+      "eddington_luminosity": 12580072.324538292,
+      "gas_mass": 10000000000,
+      "gas_metallicity": 0.02,
+      "hot_accretion_rate": 500000000,
+      "hot_gas_fraction": 0.15,
+      "isco_radius": 2.322037696838379,
+      "mechanical_luminosity": 10282.87763796355,
+      "pseudo_cooling_luminosity": 10000000,
+      "qso_critical_luminosity": 867246.0008282484,
+      "qso_ejection_loading": 0,
+      "qso_outflow_velocity": 470.10212902349434,
+      "qso_reheating_loading": 0,
+      "radiative_efficiency": 0.15566840767860413,
+      "salpeter_timescale": 1.022364601263881,
+      "spin": 0.9,
+      "star_formation_rate": 2000000000,
+      "starburst_accretion_rate": 100000000,
+      "stored_black_hole_mass": 1000000000,
+      "stored_spin": 0.8999999761581421,
+      "virial_velocity": 350
+    },
+    {
+      "accretion_ratio": 0.0135092790596499,
+      "black_hole_mass": 5000000000,
+      "bolometric_luminosity": 4038416.83835782,
+      "bulge_baryonic_mass": 500000000000,
+      "bulge_radius": 0.04,
+      "calculated_hot_halo_accretion_rate": 0,
+      "circular_velocity": 400,
+      "eddington_luminosity": 62900361.62269146,
+      "gas_mass": 20000000000,
+      "gas_metallicity": 0.03,
+      "hot_accretion_rate": 1000000000,
+      "hot_gas_fraction": 0.2,
+      "isco_radius": 1.2374387979507446,
+      "mechanical_luminosity": 32323.75356015253,
+      "pseudo_cooling_luminosity": 1e+31,
+      "qso_critical_luminosity": 2168115.0020706207,
+      "qso_ejection_loading": 305.59922150656547,
+      "qso_outflow_velocity": 993.0572222713537,
+      "qso_reheating_loading": 5.039966814544184,
+      "radiative_efficiency": 0.32084402441978455,
+      "salpeter_timescale": 0.9920700242650708,
+      "spin": 0.998,
+      "star_formation_rate": 4000000000,
+      "starburst_accretion_rate": 500000000,
+      "stored_black_hole_mass": 5000000000,
+      "stored_spin": 0.9980000257492065,
+      "virial_velocity": 500
+    }
+  ],
+  "cooling": [
+    {
+      "cooling_luminosity": 0.05030123569668953,
+      "cooling_radius": 0.014735280432731085,
+      "cooling_rate": 421008012.3637453,
+      "density_mass": 1000000000,
+      "halo_dynamical_time": 0.5,
+      "hot_mass": 1000000000,
+      "log10_cooling_function": -23.5,
+      "log10_cooling_function_input": -23.5,
+      "mean_number_density": 0.00038823392698961976,
+      "shell_cooling_time": 0.5,
+      "shell_number_density": 0.0007301153981959295,
+      "virial_radius": 0.035,
+      "virial_temperature": 175910,
+      "virial_velocity": 70
+    },
+    {
+      "cooling_luminosity": 2.2379506400289535,
+      "cooling_radius": 0.04002642460759034,
+      "cooling_rate": 4169419229.957327,
+      "density_mass": 20000000000,
+      "halo_dynamical_time": 0.8,
+      "hot_mass": 20000000000,
+      "log10_cooling_function": -23,
+      "log10_cooling_function_input": -22.8,
+      "mean_number_density": 0.00019265659282036984,
+      "shell_cooling_time": 0.7999999999999997,
+      "shell_number_density": 0.0005772069032649823,
+      "virial_radius": 0.12,
+      "virial_temperature": 703640,
+      "virial_velocity": 140
+    },
+    {
+      "cooling_luminosity": 2.1516108464881247,
+      "cooling_radius": 0.014632182961151256,
+      "cooling_rate": 2660396902.0275006,
+      "density_mass": 100000000000,
+      "halo_dynamical_time": 1.1,
+      "hot_mass": 100000000000,
+      "log10_cooling_function": -24,
+      "log10_cooling_function_input": -24,
+      "mean_number_density": 0.00010653138956595168,
+      "shell_cooling_time": 1.1,
+      "shell_number_density": 0.010366164793330291,
+      "virial_radius": 0.25,
+      "virial_temperature": 1737560,
+      "virial_velocity": 220
+    },
+    {
+      "cooling_luminosity": 38.94203781492892,
+      "cooling_radius": 0.041209888455024136,
+      "cooling_rate": 14717817305.365765,
+      "density_mass": 600000000000,
+      "halo_dynamical_time": 1.4,
+      "hot_mass": 500000000000,
+      "log10_cooling_function": -23.2,
+      "log10_cooling_function_input": -23.2,
+      "mean_number_density": 7.989854217446377e-05,
+      "shell_cooling_time": 1.1666666666666667,
+      "shell_number_density": 0.003920619821255267,
+      "virial_radius": 0.5,
+      "virial_temperature": 4397750,
+      "virial_velocity": 350
+    },
+    {
+      "cooling_luminosity": 2.227250975031912,
+      "cooling_radius": 0.008187036379998562,
+      "cooling_rate": 2842720965.2772784,
+      "density_mass": 1400000000000,
+      "halo_dynamical_time": 1.8,
+      "hot_mass": 1000000000000,
+      "log10_cooling_function": -24.5,
+      "log10_cooling_function_input": -24.5,
+      "mean_number_density": 4.551512005381237e-05,
+      "shell_cooling_time": 1.2857142857142856,
+      "shell_number_density": 0.14486416630871618,
+      "virial_radius": 0.8,
+      "virial_temperature": 8975000,
+      "virial_velocity": 500
+    }
+  ],
+  "cooling_function": [
+    {
+      "log10_cooling_function": -24.3711,
+      "log10_temperature": 3.5,
+      "metallicity": -0.1
+    },
+    {
+      "log10_cooling_function": -24.3711,
+      "log10_temperature": 4,
+      "metallicity": 0
+    },
+    {
+      "log10_cooling_function": -22.343783333333334,
+      "log10_temperature": 4.17,
+      "metallicity": 0.005
+    },
+    {
+      "log10_cooling_function": -22.365598073810297,
+      "log10_temperature": 5.31,
+      "metallicity": 0.02
+    },
+    {
+      "log10_cooling_function": -22.875120571975955,
+      "log10_temperature": 6.27,
+      "metallicity": 0.07
+    },
+    {
+      "log10_cooling_function": -22.737565387000345,
+      "log10_temperature": 7.43,
+      "metallicity": 0.45
+    },
+    {
+      "log10_cooling_function": -22.210825913041713,
+      "log10_temperature": 8.5,
+      "metallicity": 2
+    },
+    {
+      "log10_cooling_function": -22.1551,
+      "log10_temperature": 9.5,
+      "metallicity": 4
+    }
+  ],
+  "cosmology": {
+    "age_at_feedback_redshift_power_gyr": 12.214392514753094
+  },
+  "provenance": {
+    "config_name": "sample_lagos23.cfg",
+    "config_sha256": "2274d6760279e1d5b0802e6787b538457258c152cc9b29a5f313333d37d95a5f",
+    "harness": "tests/mimic_jax/upstream/shark_rate_oracle.cpp",
+    "upstream_repository": "https://github.com/ICRAR/shark",
+    "upstream_revision": "5af50d8fa7a040883409b10171c645e1db4e5fb2"
+  },
+  "reference_interval": {
+    "black_hole_accretion_rate": 2.552352633996685e-18,
+    "black_hole_mass": 2000000,
+    "black_hole_spin": -0.2995651662349701,
+    "cold_gas": 5354935808,
+    "cold_gas_metals": 56043664,
+    "cold_halo_gas": 60.55397033691406,
+    "cooling_rate": 12352233472,
+    "cooling_specific_angular_momentum": 1.2380648851394653,
+    "duration_gyr": 0.2,
+    "ejected_gas": 4428405760,
+    "ejected_gas_metals": 44300956,
+    "halo_dynamical_time": 1.0729212628701847,
+    "halo_mass": 799999983616,
+    "heating_radius": 2.563793744080071e-26,
+    "heating_ratio": 4.193722129775247e-25,
+    "hot_halo_gas": 83165126656,
+    "hot_halo_gas_metals": 831651264,
+    "hydrostatic": true,
+    "lost_gas": 0,
+    "redshift": 1,
+    "rhs_evaluations": 1,
+    "star_formation_rate": 476143520,
+    "stellar_mass": 2051537792,
+    "stellar_metals": 20529018,
+    "virial_radius": 0.1333404466418601,
+    "virial_velocity": 180
+  },
+  "reference_starburst": {
+    "black_hole_accretion_time": 4.469492371295832,
+    "black_hole_mass": 7051975,
+    "black_hole_metal_transfer": 50519.750519750516,
+    "black_hole_metals": 50519.75,
+    "black_hole_spin": 0.30457648634910583,
+    "black_hole_transfer": 5051975.051975052,
+    "bulge_gas_mass": 2345312256,
+    "bulge_gas_metals": 35707656,
+    "bulge_stellar_mass": 2289849600,
+    "bulge_stellar_metals": 23631278,
+    "duration_gyr": 0.2,
+    "ejected_gas": 10359250944,
+    "ejected_gas_metals": 104500744,
+    "galaxy_id": 84,
+    "hot_halo_gas": 80000532480,
+    "hot_halo_gas_metals": 800006720,
+    "lost_gas": 0,
+    "lost_gas_metals": 0,
+    "redshift": 1,
+    "rhs_evaluations": 1,
+    "star_formation_rate": 2677842176,
+    "subhalo_velocity": 180,
+    "virial_velocity": 180
+  },
+  "reincorporation": [
+    {
+      "ejected_gas": 1000000000,
+      "halo_mass": 10000000000,
+      "interval_gyr": 0.2,
+      "realized_mass": 0,
+      "requested_mass": 0,
+      "satellite": false
+    },
+    {
+      "ejected_gas": 1000000000,
+      "halo_mass": 500000000000,
+      "interval_gyr": 0.2,
+      "realized_mass": 187712728.54827937,
+      "requested_mass": 187712728.54827937,
+      "satellite": false
+    },
+    {
+      "ejected_gas": 1000000000,
+      "halo_mass": 1000000000000,
+      "interval_gyr": 0.2,
+      "realized_mass": 949735960.7206258,
+      "requested_mass": 949735960.7206258,
+      "satellite": false
+    },
+    {
+      "ejected_gas": 1000000000,
+      "halo_mass": 10000000000000,
+      "interval_gyr": 0.2,
+      "realized_mass": 1000000000,
+      "requested_mass": 207301702626.38385,
+      "satellite": false
+    },
+    {
+      "ejected_gas": 1000000000,
+      "halo_mass": 1000000000000,
+      "interval_gyr": 0.2,
+      "realized_mass": 0,
+      "requested_mass": 0,
+      "satellite": true
+    }
+  ],
+  "reionisation": [
+    {
+      "redshift": 0,
+      "reionised": true,
+      "virial_velocity": 10
+    },
+    {
+      "redshift": 0,
+      "reionised": false,
+      "virial_velocity": 35
+    },
+    {
+      "redshift": 5,
+      "reionised": false,
+      "virial_velocity": 20
+    },
+    {
+      "redshift": 5,
+      "reionised": false,
+      "virial_velocity": 40
+    },
+    {
+      "redshift": 9,
+      "reionised": true,
+      "virial_velocity": 5
+    },
+    {
+      "redshift": 9,
+      "reionised": false,
+      "virial_velocity": 20
+    },
+    {
+      "redshift": 10,
+      "reionised": false,
+      "virial_velocity": 5
+    },
+    {
+      "redshift": 12,
+      "reionised": false,
+      "virial_velocity": 5
+    }
+  ],
+  "rng": [
+    {
+      "seed": 123486,
+      "values": [
+        -0.365970134353507,
+        0.020321841955317277,
+        -0.9376725311948537
+      ]
+    },
+    {
+      "seed": 123487,
+      "values": [
+        -0.19590523598731713,
+        -0.19645560436629017,
+        -0.5582929873955658
+      ]
+    },
+    {
+      "seed": 123488,
+      "values": [
+        -0.025840337621127252,
+        -0.41323304975657504,
+        -0.17891344359627792
+      ]
+    },
+    {
+      "seed": 123489,
+      "values": [
+        0.1442245607450625,
+        -0.6300104960781825,
+        0.20046610020300992
+      ]
+    }
+  ],
+  "spin_accretion": [
+    {
+      "accreted_mass": 10000,
+      "accretion_time": 0.05,
+      "black_hole_mass": 1000000,
+      "final_spin": 0.030357375741004944,
+      "galaxy_id": 10,
+      "initial_spin": 0
+    },
+    {
+      "accreted_mass": 200000,
+      "accretion_time": 0.1,
+      "black_hole_mass": 10000000,
+      "final_spin": 0.2373887002468109,
+      "galaxy_id": 11,
+      "initial_spin": 0.2
+    },
+    {
+      "accreted_mass": 10000000,
+      "accretion_time": 0.2,
+      "black_hole_mass": 100000000,
+      "final_spin": 0.6009306311607361,
+      "galaxy_id": 12,
+      "initial_spin": 0.6
+    },
+    {
+      "accreted_mass": 50000000,
+      "accretion_time": 0.5,
+      "black_hole_mass": 1000000000,
+      "final_spin": 0.47204580903053284,
+      "galaxy_id": 13,
+      "initial_spin": -0.4
+    },
+    {
+      "accreted_mass": 100000000,
+      "accretion_time": 1,
+      "black_hole_mass": 5000000000,
+      "final_spin": 0.9065152406692505,
+      "galaxy_id": 14,
+      "initial_spin": 0.9
+    }
+  ],
+  "spin_merger": [
+    {
+      "final_spin": 0.7392129302024841,
+      "galaxy_id": 20,
+      "primary_mass": 100000000,
+      "primary_spin": 0,
+      "secondary_mass": 100000000,
+      "secondary_spin": 0
+    },
+    {
+      "final_spin": 0.5960095524787903,
+      "galaxy_id": 21,
+      "primary_mass": 100000000,
+      "primary_spin": 0.6,
+      "secondary_mass": 20000000,
+      "secondary_spin": 0.2
+    },
+    {
+      "final_spin": 0.617281973361969,
+      "galaxy_id": 22,
+      "primary_mass": 500000000,
+      "primary_spin": -0.4,
+      "secondary_mass": 100000000,
+      "secondary_spin": 0.8
+    },
+    {
+      "final_spin": 0.9980000257492065,
+      "galaxy_id": 23,
+      "primary_mass": 20000000,
+      "primary_spin": 0.3,
+      "secondary_mass": 100000000,
+      "secondary_spin": -0.7
+    }
+  ],
+  "star_formation": [
+    {
+      "angular_momentum_rate": 2512183756.0594597,
+      "burst": false,
+      "cold_gas": 10000000000,
+      "galaxy_velocity": 200,
+      "gas_metallicity": 0.01,
+      "gas_radius": 0.01,
+      "gas_specific_angular_momentum": 3,
+      "rate": 1844587617.9554954,
+      "redshift": 0,
+      "stars": 5000000000,
+      "stellar_radius": 0.006
+    },
+    {
+      "angular_momentum_rate": 242690000.59280533,
+      "burst": false,
+      "cold_gas": 3000000000,
+      "galaxy_velocity": 120,
+      "gas_metallicity": 0.004,
+      "gas_radius": 0.006,
+      "gas_specific_angular_momentum": 1.5,
+      "rate": 502620804.0716328,
+      "redshift": 1,
+      "stars": 2000000000,
+      "stellar_radius": 0.004
+    },
+    {
+      "angular_momentum_rate": 103631492762.50592,
+      "burst": false,
+      "cold_gas": 80000000000,
+      "galaxy_velocity": 300,
+      "gas_metallicity": 0.02,
+      "gas_radius": 0.025,
+      "gas_specific_angular_momentum": 8,
+      "rate": 19322559943.675083,
+      "redshift": 0.5,
+      "stars": 100000000000,
+      "stellar_radius": 0.015
+    },
+    {
+      "angular_momentum_rate": 0,
+      "burst": true,
+      "cold_gas": 20000000000,
+      "galaxy_velocity": 250,
+      "gas_metallicity": 0.015,
+      "gas_radius": 0.003,
+      "gas_specific_angular_momentum": 0,
+      "rate": 352321575410.1733,
+      "redshift": 2,
+      "stars": 30000000000,
+      "stellar_radius": 0.002
+    }
+  ],
+  "stellar_feedback": [
+    {
+      "angular_momentum_ejection_loading": 43.49430684471823,
+      "angular_momentum_reheating_loading": 43.49530684471823,
+      "ejection_loading": 43.49430684471823,
+      "galaxy_velocity": 80,
+      "redshift": 0,
+      "reheating_loading": 43.49530684471823,
+      "subhalo_velocity": 60
+    },
+    {
+      "angular_momentum_ejection_loading": 6.251299045138497,
+      "angular_momentum_reheating_loading": 6.252299045138497,
+      "ejection_loading": 6.251299045138497,
+      "galaxy_velocity": 120,
+      "redshift": 1,
+      "reheating_loading": 6.252299045138497,
+      "subhalo_velocity": 100
+    },
+    {
+      "angular_momentum_ejection_loading": 1.3405112266961186,
+      "angular_momentum_reheating_loading": 1.3415112266961184,
+      "ejection_loading": 1.3405112266961186,
+      "galaxy_velocity": 180,
+      "redshift": 2,
+      "reheating_loading": 1.3415112266961184,
+      "subhalo_velocity": 150
+    },
+    {
+      "angular_momentum_ejection_loading": 0.19266743533494218,
+      "angular_momentum_reheating_loading": 0.19366743533494218,
+      "ejection_loading": 0.19266743533494218,
+      "galaxy_velocity": 260,
+      "redshift": 0.5,
+      "reheating_loading": 0.19366743533494218,
+      "subhalo_velocity": 250
+    },
+    {
+      "angular_momentum_ejection_loading": 0.104050197191,
+      "angular_momentum_reheating_loading": 0.105050197191,
+      "ejection_loading": 0.104050197191,
+      "galaxy_velocity": 350,
+      "redshift": 0,
+      "reheating_loading": 0.105050197191,
+      "subhalo_velocity": 400
+    }
+  ],
+  "structure": [
+    {
+      "concentration": 12.057383832861836,
+      "cosmic_age": 13.809670810983564,
+      "dynamical_time": 2.145410122380161,
+      "hubble_parameter": 67.5100028514862,
+      "mass": 10000000000,
+      "nfw_enclosed_fraction": 0.0037916515779390283,
+      "normalized_radius": 0.01,
+      "redshift": 0,
+      "virial_radius": 0.04552899738641827,
+      "virial_velocity": 30.736627433824058
+    },
+    {
+      "concentration": 7.5028850446550495,
+      "cosmic_age": 8.603385723691847,
+      "dynamical_time": 1.625853167729583,
+      "hubble_parameter": 89.08347097650193,
+      "mass": 100000000000,
+      "nfw_enclosed_fraction": 0.03637091598432113,
+      "normalized_radius": 0.05,
+      "redshift": 0.5,
+      "virial_radius": 0.08153337452453022,
+      "virial_velocity": 72.63276003072251
+    },
+    {
+      "concentration": 5.076002057658386,
+      "cosmic_age": 5.860136644342523,
+      "dynamical_time": 1.2021981758246576,
+      "hubble_parameter": 120.47651243534798,
+      "mass": 1000000000000,
+      "nfw_enclosed_fraction": 0.07619232993006224,
+      "normalized_radius": 0.1,
+      "redshift": 1,
+      "virial_radius": 0.14363664289534386,
+      "virial_velocity": 173.04841793952536
+    },
+    {
+      "concentration": 3.1586171969781196,
+      "cosmic_age": 3.2826070327806094,
+      "dynamical_time": 0.7106267024844568,
+      "hubble_parameter": 203.81536884713393,
+      "mass": 10000000000000,
+      "nfw_enclosed_fraction": 0.5036034023136503,
+      "normalized_radius": 0.5,
+      "redshift": 2,
+      "virial_radius": 0.2179593737417696,
+      "virial_velocity": 444.23470152869095
+    },
+    {
+      "concentration": 1.6009133011606853,
+      "cosmic_age": 1.5414063815111068,
+      "dynamical_time": 0.3404966854907122,
+      "hubble_parameter": 425.3687323586086,
+      "mass": 500000000000000,
+      "nfw_enclosed_fraction": 1,
+      "normalized_radius": 1,
+      "redshift": 4,
+      "virial_radius": 0.49167689122928865,
+      "virial_velocity": 2091.4397595222395
+    }
+  ]
+}

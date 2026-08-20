@@ -17,6 +17,9 @@ test = ["pytest>=8,<9"]
 [tool.setuptools.packages.find]
 include = ["mimic_jax*"]
 
+[tool.setuptools.package-data]
+"mimic_jax.shark" = ["data/*.json"]
+
 [tool.black]
 line-length = 100
 # Preserve the repository's pre-existing Python 3.8-compatible formatting;
