@@ -6,7 +6,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-stellar-mass-function.svg",
       "role": "figure",
-      "sha256": "261b8c24517166b653687435f71ad9702836419489c09c8f1891e86965c12095",
+      "sha256": "a66a7d65480ef948d7045ba718e733008cc95fa5daaa05795a8450755dbe9e16",
       "size_bytes": 51640,
       "title": "A real SHARK reference stellar mass function"
     },
@@ -16,7 +16,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-common-observables.svg",
       "role": "figure",
-      "sha256": "92ff032f8a5667a469fb064cd87097a0104262e388b87531f24477d94a34a1e3",
+      "sha256": "3d5e2714fd650aabc56e79ae5a93252a63741016b028c877ac5057dbeee189cf",
       "size_bytes": 88977,
       "title": "Common SAGE–SHARK catalogue observables"
     },
@@ -26,7 +26,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-added-observables.svg",
       "role": "figure",
-      "sha256": "899b03e01d46cf3d2ac0077170818f6b36fdd408b812a1d35fd936750f54da4a",
+      "sha256": "8c692b4313a70d144a15b3753cfaa97d078bd4d85030d14e692aabbaf4ccb1d6",
       "size_bytes": 80896,
       "title": "Gas phases, black-hole spin, and angular-momentum sizes"
     },
@@ -36,7 +36,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/lagos23-prescription-oracle.svg",
       "role": "figure",
-      "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+      "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
       "size_bytes": 53498,
       "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
     },
@@ -46,7 +46,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/shark-flow-network.svg",
       "role": "figure",
-      "sha256": "9a34dd17aed85030181dd17c92055288a9f692ecef587827bdbab394bcddc30d",
+      "sha256": "7086ae9d7365ce64237e0819a00cd1d027f02c59cc290a375663890a272a3dfe",
       "size_bytes": 35559,
       "title": "The implemented SHARK flow network"
     },
@@ -56,7 +56,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/shark-flow-convergence.svg",
       "role": "figure",
-      "sha256": "febf09ae7b85ec292ce888898adf214ecf21f28a51808a472301afb1cfc96e64",
+      "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
       "size_bytes": 68243,
       "title": "Convergence of the coupled SHARK flow foundation"
     },
@@ -66,7 +66,7 @@
       "media_type": "image/svg+xml",
       "path": "assets/lagos23-fractional-response-matrix.svg",
       "role": "figure",
-      "sha256": "1722dacff110a91167a8197ce240c7da6ad04333562e3a6952ac0a53f75b0fbd",
+      "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
       "size_bytes": 62430,
       "title": "Fractional response matrix of the continuous Lagos23 core"
     }
@@ -117,7 +117,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -154,7 +154,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -184,7 +184,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -233,7 +233,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -263,7 +263,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -369,7 +369,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-convergence.svg",
           "role": "figure",
-          "sha256": "febf09ae7b85ec292ce888898adf214ecf21f28a51808a472301afb1cfc96e64",
+          "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
           "size_bytes": 68243,
           "title": "Convergence of the coupled SHARK flow foundation"
         }
@@ -413,7 +413,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-fractional-response-matrix.svg",
           "role": "figure",
-          "sha256": "1722dacff110a91167a8197ce240c7da6ad04333562e3a6952ac0a53f75b0fbd",
+          "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
           "size_bytes": 62430,
           "title": "Fractional response matrix of the continuous Lagos23 core"
         }
@@ -522,7 +522,7 @@
       "key": "runtime",
       "label": "Report analysis wall time",
       "unit": "s",
-      "value": 97.997944625
+      "value": 97.89244708300001
     }
   ],
   "parameters": [
@@ -576,10 +576,10 @@
         "size_bytes": 20917
       }
     ],
-    "generated_at": "2026-08-20T12:49:08Z",
+    "generated_at": "2026-08-20T12:54:23Z",
     "git_branch": "main",
-    "git_commit": "5a9df25a30352dbf83485aa0ef1bd7660134fa97",
-    "git_dirty": true,
+    "git_commit": "1edddcf9c590c6a8c53ae550ba106f94f95b6130",
+    "git_dirty": false,
     "hardware": {
       "jax_backend": "cpu",
       "jax_devices": [
@@ -622,7 +622,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-stellar-mass-function.svg",
           "role": "figure",
-          "sha256": "261b8c24517166b653687435f71ad9702836419489c09c8f1891e86965c12095",
+          "sha256": "a66a7d65480ef948d7045ba718e733008cc95fa5daaa05795a8450755dbe9e16",
           "size_bytes": 51640,
           "title": "A real SHARK reference stellar mass function"
         }
@@ -643,7 +643,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "8a5a430c1396a9a413e8d60502bb0ca016f20b07776d85cf34773cbe519319c9",
+          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
           "size_bytes": 53498,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
@@ -664,7 +664,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-common-observables.svg",
           "role": "figure",
-          "sha256": "92ff032f8a5667a469fb064cd87097a0104262e388b87531f24477d94a34a1e3",
+          "sha256": "3d5e2714fd650aabc56e79ae5a93252a63741016b028c877ac5057dbeee189cf",
           "size_bytes": 88977,
           "title": "Common SAGE–SHARK catalogue observables"
         },
@@ -695,7 +695,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-network.svg",
           "role": "figure",
-          "sha256": "9a34dd17aed85030181dd17c92055288a9f692ecef587827bdbab394bcddc30d",
+          "sha256": "7086ae9d7365ce64237e0819a00cd1d027f02c59cc290a375663890a272a3dfe",
           "size_bytes": 35559,
           "title": "The implemented SHARK flow network"
         }
@@ -716,7 +716,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-convergence.svg",
           "role": "figure",
-          "sha256": "febf09ae7b85ec292ce888898adf214ecf21f28a51808a472301afb1cfc96e64",
+          "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
           "size_bytes": 68243,
           "title": "Convergence of the coupled SHARK flow foundation"
         },
@@ -747,7 +747,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-added-observables.svg",
           "role": "figure",
-          "sha256": "899b03e01d46cf3d2ac0077170818f6b36fdd408b812a1d35fd936750f54da4a",
+          "sha256": "8c692b4313a70d144a15b3753cfaa97d078bd4d85030d14e692aabbaf4ccb1d6",
           "size_bytes": 80896,
           "title": "Gas phases, black-hole spin, and angular-momentum sizes"
         }
@@ -768,7 +768,7 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-fractional-response-matrix.svg",
           "role": "figure",
-          "sha256": "1722dacff110a91167a8197ce240c7da6ad04333562e3a6952ac0a53f75b0fbd",
+          "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
           "size_bytes": 62430,
           "title": "Fractional response matrix of the continuous Lagos23 core"
         },

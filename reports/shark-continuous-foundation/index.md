@@ -2,7 +2,7 @@
 title: "SHARK Lagos23 on the same testable footing as SAGE16"
 report-id: "shark-continuous-foundation"
 report-kind: "run"
-date: "2026-08-20T12:49:08Z"
+date: "2026-08-20T12:54:23Z"
 toc: true
 ---
 
@@ -27,7 +27,7 @@ A complete native Lagos23 population remains the topology/event reference, while
 | Native galaxy fields available | 86 |
 | Maximum controlled interval residual | 2.50749e-05 |
 | Maximum controlled burst residual | 9.82719e-05 |
-| Report analysis wall time | 97.9979 s |
+| Report analysis wall time | 97.8924 s |
 
 Related: [SAGE16 science program](../mini-millennium-sage16-science-program/index.md) · [SAGE16 response times](../sage16-linear-response/index.md)
 
@@ -182,8 +182,8 @@ The exact native SHARK population backend is reproducible and integrated; the JA
 
 | Item | Value |
 | --- | --- |
-| Generated | 2026-08-20T12:49:08Z |
-| Git commit | `5a9df25a30352dbf83485aa0ef1bd7660134fa97` (dirty working tree) |
+| Generated | 2026-08-20T12:54:23Z |
+| Git commit | `1edddcf9c590c6a8c53ae550ba106f94f95b6130` (clean working tree) |
 | Git branch | main |
 
 ### Rerun command
