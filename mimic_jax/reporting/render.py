@@ -287,7 +287,7 @@ def _render_provenance(provenance: Provenance) -> List[str]:
     if provenance.upstream_run:
         lines.extend(
             [
-                "### Upstream MIMIC run record",
+                "### Upstream reference run record",
                 "",
                 "```json",
                 json.dumps(provenance.upstream_run, indent=2, sort_keys=True, ensure_ascii=False),
