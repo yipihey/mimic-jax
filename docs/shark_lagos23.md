@@ -7,9 +7,9 @@
 The package exposes two deliberately distinct paths:
 
 1. **Managed native reference.** `run_reference_shark` invokes a pinned upstream SHARK executable, verifies the public CI inputs, writes an effective configuration and provenance manifest, and loads the resulting catalogue through `SharkCatalogue`. This is the exact population reference.
-2. **JAX continuous/hybrid model.** Pure JAX functions implement the Lagos23 continuous transfers, augmented BH/AGN memory state, finite constraints, projections, and event maps. These functions support `jit`, vectorization, and automatic differentiation. They are validated against the native library at prescription and controlled-interval level.
+2. **JAX continuous/hybrid model.** Pure JAX functions implement the Lagos23 continuous transfers, augmented BH/AGN memory state, finite constraints, projections, and event maps. These functions support `jit`, vectorization, and automatic differentiation. They are validated against the native library at prescription, controlled-interval, and exhaustive realized-population RHS level.
 
-An independent JAX replay of all 20,174 public-CI merger trees has not yet passed. The report therefore does not call the two population calculations equivalent or draw a JAX population curve over the native stellar mass function.
+The full-tree gate is no longer unknown. An opt-in trace of the complete 20,174-tree native run records every state at which SHARK requests its disk or starburst derivative. One `jax.jit(jax.vmap)` kernel independently recalculates all 5,709,080 realized states. Three of 62,799,880 named-rate values exceed the predeclared `rtol=1.1e-4` strict gate; all three are BR06 star-formation rates, the maximum relative difference is `1.2295e-4`, and none exceeds the explicit `rtol=1.5e-4` quadrature warning band. All 108,472,520 routing comparisons pass the strict gate. The native driver still supplies the variable-cardinality topology and realized states, so this is an exhaustive **population physics shadow replay**, not yet a topology-owning per-ID JAX catalogue. The report displays both conclusions rather than collapsing them into one green claim.
 
 ## Mathematical structure
 
@@ -64,11 +64,32 @@ continuous = evolve_shark_continuous_interval(
     forcing,
     parameters,
     method="rk4",
-    n_steps=8,
+    num_substeps=8,
 )
 ```
 
 `evolve_shark_hybrid_interval` surrounds either interval calculation with an explicit upstream-ordered schedule for mergers, starbursts, instability, and environmental events.
+
+### Reproduce the exhaustive population replay
+
+The 3 GB raw trace is a temporary validation product and is not committed. Apply the reviewed, opt-in instrumentation to a separate checkout of the pinned upstream revision, rebuild, and set one environment variable when running the normal Lagos23 configuration:
+
+```bash
+git -C /path/to/shark apply /path/to/mimic-jax/scripts/shark_full_population_rhs_trace.patch
+cmake -S /path/to/shark -B /path/to/shark/build -DCMAKE_BUILD_TYPE=Release
+cmake --build /path/to/shark/build -j
+MIMIC_JAX_SHARK_RHS_TRACE=/scratch/full-population-rhs.bin \
+  /path/to/shark/build/shark /path/to/effective-shark.cfg
+
+python scripts/evaluate_shark_full_tree_parity.py \
+  /scratch/full-population-rhs.bin \
+  /path/to/tree_199.0.hdf5 \
+  /scratch/full-population-parity.json \
+  --instrumented-output-root /path/to/traced/mini-SURFS/lagos23-trace \
+  --reference-output-root /path/to/clean/mini-SURFS/lagos23-reference
+```
+
+The evaluator memory-maps the trace and streams fixed-size batches, so the 3 GB file is never copied into device memory. It also verifies that tracing did not perturb native science output: all 5,332,172 values in 1,462 galaxy datasets across 17 output snapshots are bitwise identical to the clean native run. The published JSON stores that noninterference result alongside the trace checksum, input-tree checksum, coverage, strict and warning tolerances, per-rate maxima and exception counts, and separate compilation/steady-state timings without putting the raw trace in git. The evaluator enables JAX 64-bit mode explicitly; the library API fails fast if parity is requested in 32-bit mode.
 
 ## What is tested
 
@@ -78,16 +99,17 @@ continuous = evolve_shark_continuous_interval(
 - Euler, Heun, RK4, and adaptive integration, including observed convergence order;
 - `jax.jit`, `jax.vmap`, `jax.grad`, `jax.jacfwd`, and `jax.jacrev` on the applicable smooth branches;
 - strict public-CI tree schema and native catalogue observables;
+- exhaustive replay of every realized disk/starburst RHS evaluation in the public-CI population;
 - explicit merger, instability, stripping, and event-order maps.
 
 Exact tolerances and measured residuals live in the [SHARK report](../reports/shark-continuous-foundation/index.md) and its adjacent machine-readable `report.json`.
 
 ## Comparison with SAGE16
 
-The shared observable layer supplies common definitions for stellar mass function, cosmic SFR density, gas fraction, gas and stellar metallicity, BH–bulge, quenched fraction, and stellar-to-halo mass. SHARK-only products such as atomic/molecular mass functions, component sizes/angular momentum, BH spin, resolved environmental reservoirs, and burst channels remain available rather than being reduced to SAGE's state.
+The [model-comparison contract](model_comparison.md) supplies common definitions for stellar mass function, cosmic SFR density, gas fraction, gas and stellar metallicity, BH–bulge, quenched fraction, and stellar-to-halo mass. SHARK-only products such as atomic/molecular mass functions, component sizes/angular momentum, BH spin, resolved environmental reservoirs, and burst channels remain available rather than being reduced to SAGE's state. The [interoperability audit](../reports/sage16-shark-interoperability-audit/index.md) records which definitions are direct, qualified, or unavailable.
 
 Native SHARK mini-SURFS and native SAGE Mini-Millennium results are useful within-model validation datasets, but not a clean model-versus-model experiment. A causal SAGE–SHARK comparison requires common halo forcing, cosmology, volume, selections, and units.
 
 ## Scope
 
-The current JAX claim covers the prescriptions and controlled event branches selected by the pinned `sample_lagos23.cfg`; the exact native backend covers the complete population algorithm. It does not mean the topology-owning JAX population driver or every alternative SHARK configuration—such as every optional star-formation, cooling, reionisation, or feedback family—has passed. Those are separate gates and require their own direct oracles before equivalence claims.
+The current JAX claim covers the prescriptions, controlled event branches, and every realized continuous disk/starburst state selected by the pinned `sample_lagos23.cfg`; the exact native backend covers the complete population algorithm. It does not mean the topology-owning JAX population driver or every alternative SHARK configuration—such as every optional star-formation, cooling, reionisation, or feedback family—has passed. Those remain separate gates and require their own direct oracles before equivalence claims.

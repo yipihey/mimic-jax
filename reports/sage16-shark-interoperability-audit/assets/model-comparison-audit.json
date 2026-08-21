@@ -1,0 +1,983 @@
+{
+  "catalogues": {
+    "SAGE16": {
+      "dataset": "Mini-Millennium",
+      "effective_volume_mpc_over_h_cubed": 244140.625,
+      "fields": {
+        "baryonic_mass": {
+          "description": "Declared cold baryonic mass: total stars plus cold gas.",
+          "projection": "derived",
+          "qualification": "",
+          "source_fields": [
+            "StellarMass",
+            "ColdGas"
+          ],
+          "unit": "Msun"
+        },
+        "black_hole_mass": {
+          "description": "Central black-hole mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "BlackHoleMass"
+          ],
+          "unit": "Msun"
+        },
+        "bulge_stellar_mass": {
+          "description": "Bulge stellar mass, a subset of total stellar mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "BulgeMass"
+          ],
+          "unit": "Msun"
+        },
+        "cold_gas_mass": {
+          "description": "Total SAGE cold star-forming gas reservoir.",
+          "projection": "direct",
+          "qualification": "SAGE does not natively split this reservoir into HI and H2.",
+          "source_fields": [
+            "ColdGas"
+          ],
+          "unit": "Msun"
+        },
+        "cold_gas_metal_mass": {
+          "description": "Total metal mass in the cold-gas reservoir.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "MetalsColdGas"
+          ],
+          "unit": "Msun"
+        },
+        "ejected_gas_mass": {
+          "description": "Gas in SAGE's feedback-ejected reservoir.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "EjectedGas"
+          ],
+          "unit": "Msun"
+        },
+        "galaxy_id": {
+          "description": "Persistent SAGE galaxy identifier.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "UniqueGalaxyID"
+          ],
+          "unit": "dimensionless"
+        },
+        "galaxy_type": {
+          "description": "SAGE type: 0 central, 1 resolved satellite, 2 orphan.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "Type"
+          ],
+          "unit": "dimensionless"
+        },
+        "host_halo_mass": {
+          "description": "FoF central halo virial mass stamped onto each member.",
+          "projection": "direct",
+          "qualification": "SAGE uses its 200-critical virial-mass convention.",
+          "source_fields": [
+            "CentralMvir"
+          ],
+          "unit": "Msun"
+        },
+        "hot_gas_mass": {
+          "description": "Hot halo gas assigned to the galaxy record.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "HotGas"
+          ],
+          "unit": "Msun"
+        },
+        "intracluster_stellar_mass": {
+          "description": "Intracluster stellar mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "ICS"
+          ],
+          "unit": "Msun"
+        },
+        "maximum_circular_velocity": {
+          "description": "Maximum circular velocity of the owning subhalo or inherited infall value.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "Vmax"
+          ],
+          "unit": "km/s"
+        },
+        "position": {
+          "description": "Comoving galaxy position inherited from the owning halo.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "Pos"
+          ],
+          "unit": "Mpc/h"
+        },
+        "sage_cooling_power": {
+          "description": "SAGE cumulative cooling-energy proxy converted to logarithmic power.",
+          "projection": "model_specific",
+          "qualification": "This is not an instantaneous cooling mass rate.",
+          "source_fields": [
+            "Cooling"
+          ],
+          "unit": "log10(erg/s)"
+        },
+        "sage_heating_power": {
+          "description": "SAGE cumulative AGN-heating proxy converted to logarithmic power.",
+          "projection": "model_specific",
+          "qualification": "This is not the same output as SHARK mechanical jet power.",
+          "source_fields": [
+            "Heating"
+          ],
+          "unit": "log10(erg/s)"
+        },
+        "star_formation_rate": {
+          "description": "Snapshot-averaged total star-formation rate.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "StarFormationRate"
+          ],
+          "unit": "Msun/yr"
+        },
+        "stellar_disk_radius": {
+          "description": "SAGE exponential disk scale radius.",
+          "projection": "direct",
+          "qualification": "This is a scale radius, not SHARK's disk half-mass radius.",
+          "source_fields": [
+            "DiskScaleRadius"
+          ],
+          "unit": "kpc"
+        },
+        "stellar_mass": {
+          "description": "Total stellar mass, including the bulge component.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "StellarMass"
+          ],
+          "unit": "Msun"
+        },
+        "stellar_metal_mass": {
+          "description": "Total stellar metal mass, already including bulge metals.",
+          "projection": "direct",
+          "qualification": "MetalsBulgeMass is a subset and must not be added to MetalsStellarMass.",
+          "source_fields": [
+            "MetalsStellarMass"
+          ],
+          "unit": "Msun"
+        },
+        "subhalo_mass": {
+          "description": "Galaxy-owning halo/subhalo virial mass; orphans have zero.",
+          "projection": "direct",
+          "qualification": "SAGE uses M200c for centrals and particle mass for subhalos.",
+          "source_fields": [
+            "Mvir"
+          ],
+          "unit": "Msun"
+        },
+        "supernova_outflow_rate": {
+          "description": "SAGE supernova-driven outflow rate.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "SupernovaOutflowRate"
+          ],
+          "unit": "Msun/yr"
+        },
+        "velocity": {
+          "description": "Galaxy peculiar velocity inherited from the owning halo.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "Vel"
+          ],
+          "unit": "km/s"
+        }
+      },
+      "galaxy_count": 36530,
+      "hubble_h": 0.73,
+      "observable_capabilities": {
+        "agn_mechanical_power_relation": {
+          "key": "agn_mechanical_power_relation",
+          "missing_fields": [
+            "agn_mechanical_power"
+          ],
+          "reason": "agn_mechanical_power: fiducial SAGE16 outputs a heating proxy, not jet power",
+          "status": "unavailable"
+        },
+        "atomic_gas_mass_function": {
+          "key": "atomic_gas_mass_function",
+          "missing_fields": [
+            "atomic_gas_mass"
+          ],
+          "reason": "atomic_gas_mass: fiducial SAGE16 outputs only total cold gas",
+          "status": "unavailable"
+        },
+        "baryonic_mass_function": {
+          "key": "baryonic_mass_function",
+          "missing_fields": [],
+          "reason": "This declared cold-baryon definition excludes hot, ejected, and diffuse reservoirs.",
+          "status": "qualified"
+        },
+        "baryonic_tully_fisher": {
+          "key": "baryonic_tully_fisher",
+          "missing_fields": [],
+          "reason": "Vmax ownership for satellites/orphans and the observational velocity proxy must be declared.",
+          "status": "qualified"
+        },
+        "black_hole_bulge_relation": {
+          "key": "black_hole_bulge_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "black_hole_mass_function": {
+          "key": "black_hole_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "black_hole_spin_relation": {
+          "key": "black_hole_spin_relation",
+          "missing_fields": [
+            "black_hole_spin"
+          ],
+          "reason": "black_hole_spin: fiducial SAGE16 does not evolve black-hole spin",
+          "status": "unavailable"
+        },
+        "burst_fraction_relation": {
+          "key": "burst_fraction_relation",
+          "missing_fields": [
+            "burst_star_formation_rate"
+          ],
+          "reason": "burst_star_formation_rate: fiducial SAGE16 outputs only total snapshot-averaged SFR",
+          "status": "unavailable"
+        },
+        "cold_gas_fraction": {
+          "key": "cold_gas_fraction",
+          "missing_fields": [],
+          "reason": "Cold-phase definitions are similar but not mathematically identical across SAMs. SAGE does not natively split this reservoir into HI and H2.",
+          "status": "qualified"
+        },
+        "cold_gas_mass_function": {
+          "key": "cold_gas_mass_function",
+          "missing_fields": [],
+          "reason": "Cold-phase definitions are similar but not mathematically identical across SAMs. SAGE does not natively split this reservoir into HI and H2.",
+          "status": "qualified"
+        },
+        "cooling_rate_relation": {
+          "key": "cooling_rate_relation",
+          "missing_fields": [
+            "cooling_rate"
+          ],
+          "reason": "cooling_rate: SAGE's public Cooling field is an energy proxy, not a mass rate",
+          "status": "unavailable"
+        },
+        "cosmic_sfr_density": {
+          "key": "cosmic_sfr_density",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "diffuse_stellar_relation": {
+          "key": "diffuse_stellar_relation",
+          "missing_fields": [],
+          "reason": "SAGE ICS and SHARK stellar-halo boundaries arise from different stripping prescriptions. SAGE uses its 200-critical virial-mass convention.",
+          "status": "qualified"
+        },
+        "ejected_gas_relation": {
+          "key": "ejected_gas_relation",
+          "missing_fields": [],
+          "reason": "The location and ownership of the ejected reservoir differ between models. SAGE uses its 200-critical virial-mass convention.",
+          "status": "qualified"
+        },
+        "gas_metallicity": {
+          "key": "gas_metallicity",
+          "missing_fields": [],
+          "reason": "This is not an oxygen-line calibration; comparison to 12+log(O/H) needs a convention. SAGE does not natively split this reservoir into HI and H2.",
+          "status": "qualified"
+        },
+        "hot_gas_relation": {
+          "key": "hot_gas_relation",
+          "missing_fields": [],
+          "reason": "Reservoir ownership across satellites and FoF groups must be aligned. SAGE uses its 200-critical virial-mass convention.",
+          "status": "qualified"
+        },
+        "molecular_gas_mass_function": {
+          "key": "molecular_gas_mass_function",
+          "missing_fields": [
+            "molecular_gas_mass"
+          ],
+          "reason": "molecular_gas_mass: fiducial SAGE16 outputs only total cold gas",
+          "status": "unavailable"
+        },
+        "quenched_fraction": {
+          "key": "quenched_fraction",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "sfr_stellar_mass_relation": {
+          "key": "sfr_stellar_mass_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "spatial_clustering": {
+          "key": "spatial_clustering",
+          "missing_fields": [],
+          "reason": "Requires the same simulation volume, cosmology, periodic boundary, and selection.",
+          "status": "qualified"
+        },
+        "stellar_angular_momentum_relation": {
+          "key": "stellar_angular_momentum_relation",
+          "missing_fields": [
+            "stellar_angular_momentum"
+          ],
+          "reason": "stellar_angular_momentum: fiducial SAGE16 does not output component angular momentum",
+          "status": "unavailable"
+        },
+        "stellar_halo_relation": {
+          "key": "stellar_halo_relation",
+          "missing_fields": [],
+          "reason": "Host-mass definitions and central selection must be aligned. SAGE uses its 200-critical virial-mass convention.",
+          "status": "qualified"
+        },
+        "stellar_mass_function": {
+          "key": "stellar_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "stellar_metallicity": {
+          "key": "stellar_metallicity",
+          "missing_fields": [],
+          "reason": "MetalsBulgeMass is a subset and must not be added to MetalsStellarMass.",
+          "status": "qualified"
+        },
+        "stellar_size_relation": {
+          "key": "stellar_size_relation",
+          "missing_fields": [],
+          "reason": "SAGE and SHARK radius definitions differ and must remain visible. This is a scale radius, not SHARK's disk half-mass radius.",
+          "status": "qualified"
+        }
+      },
+      "redshift": 0.0,
+      "snapshot": 63,
+      "unavailable_fields": {
+        "agn_bolometric_luminosity": "fiducial SAGE16 outputs cooling/heating proxies instead",
+        "agn_mechanical_power": "fiducial SAGE16 outputs a heating proxy, not jet power",
+        "atomic_gas_mass": "fiducial SAGE16 outputs only total cold gas",
+        "black_hole_spin": "fiducial SAGE16 does not evolve black-hole spin",
+        "burst_star_formation_rate": "fiducial SAGE16 outputs only total snapshot-averaged SFR",
+        "cooling_rate": "SAGE's public Cooling field is an energy proxy, not a mass rate",
+        "molecular_gas_mass": "fiducial SAGE16 outputs only total cold gas",
+        "stellar_angular_momentum": "fiducial SAGE16 does not output component angular momentum"
+      }
+    },
+    "SHARK Lagos23": {
+      "dataset": "mini-SURFS public CI tree",
+      "effective_volume_mpc_over_h_cubed": 144703.125,
+      "fields": {
+        "agn_bolometric_luminosity": {
+          "description": "AGN bolometric luminosity in the native SHARK output convention.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "bolometric_luminosity_agn"
+          ],
+          "unit": "1e40 erg/s"
+        },
+        "agn_mechanical_power": {
+          "description": "AGN mechanical power in the native SHARK output convention.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "mechanical_power_agn"
+          ],
+          "unit": "1e40 erg/s"
+        },
+        "atomic_gas_mass": {
+          "description": "Total disk plus bulge atomic hydrogen mass.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "matom_disk",
+            "matom_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "baryonic_mass": {
+          "description": "Declared cold baryonic mass: total stars plus cold gas.",
+          "projection": "derived",
+          "qualification": "",
+          "source_fields": [
+            "mstars_disk",
+            "mstars_bulge",
+            "mgas_disk",
+            "mgas_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "black_hole_mass": {
+          "description": "Central black-hole mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "m_bh"
+          ],
+          "unit": "Msun"
+        },
+        "black_hole_spin": {
+          "description": "Dimensionless black-hole spin.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "bh_spin"
+          ],
+          "unit": "dimensionless"
+        },
+        "bulge_stellar_mass": {
+          "description": "Bulge stellar mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "mstars_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "burst_star_formation_rate": {
+          "description": "Star-formation rate in merger- and disk-instability-triggered bursts.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "sfr_burst"
+          ],
+          "unit": "Msun/yr"
+        },
+        "cold_gas_mass": {
+          "description": "Total disk plus bulge cold gas.",
+          "projection": "component_sum",
+          "qualification": "SHARK partitions cold gas into atomic and molecular components internally.",
+          "source_fields": [
+            "mgas_disk",
+            "mgas_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "cold_gas_metal_mass": {
+          "description": "Total metal mass in disk plus bulge cold gas.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "mgas_metals_disk",
+            "mgas_metals_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "cooling_rate": {
+          "description": "Instantaneous cooling rate of the hot-halo component.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "cooling_rate"
+          ],
+          "unit": "Msun/yr"
+        },
+        "ejected_gas_mass": {
+          "description": "SHARK reheated/ejected reservoir; its boundary differs from SAGE's EjectedGas.",
+          "projection": "direct",
+          "qualification": "Reservoir boundaries must be aligned before interpreting a SAGE comparison.",
+          "source_fields": [
+            "mreheated"
+          ],
+          "unit": "Msun"
+        },
+        "galaxy_id": {
+          "description": "Persistent native SHARK galaxy identifier.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "id_galaxy"
+          ],
+          "unit": "dimensionless"
+        },
+        "galaxy_type": {
+          "description": "SHARK type: 0 central, 1 resolved satellite, 2 orphan.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "type"
+          ],
+          "unit": "dimensionless"
+        },
+        "host_halo_mass": {
+          "description": "Host-halo virial mass.",
+          "projection": "direct",
+          "qualification": "SHARK's native virial-mass convention follows the input catalogue.",
+          "source_fields": [
+            "mvir_hosthalo"
+          ],
+          "unit": "Msun"
+        },
+        "hot_gas_mass": {
+          "description": "Hot halo-gas mass.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "mhot"
+          ],
+          "unit": "Msun"
+        },
+        "intracluster_stellar_mass": {
+          "description": "Diffuse stellar-halo component.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "mstellar_halo"
+          ],
+          "unit": "Msun"
+        },
+        "lost_gas_mass": {
+          "description": "Gas explicitly lost beyond the tracked halo reservoirs.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "mlost"
+          ],
+          "unit": "Msun"
+        },
+        "maximum_circular_velocity": {
+          "description": "Maximum circular velocity of the owning subhalo or inherited value.",
+          "projection": "direct",
+          "qualification": "",
+          "source_fields": [
+            "vmax_subhalo"
+          ],
+          "unit": "km/s"
+        },
+        "molecular_gas_mass": {
+          "description": "Total disk plus bulge molecular hydrogen mass.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "mmol_disk",
+            "mmol_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "position": {
+          "description": "Comoving galaxy position; SHARK samples type-2 orphans in the host NFW halo.",
+          "projection": "derived",
+          "qualification": "Orphan positions include SHARK's stochastic NFW sampling convention.",
+          "source_fields": [
+            "position_x",
+            "position_y",
+            "position_z"
+          ],
+          "unit": "Mpc/h"
+        },
+        "star_formation_rate": {
+          "description": "Total disk plus burst star-formation rate.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "sfr_disk",
+            "sfr_burst"
+          ],
+          "unit": "Msun/yr"
+        },
+        "stellar_angular_momentum": {
+          "description": "Specific angular momentum of disk stars in SHARK's native convention.",
+          "projection": "model_specific",
+          "qualification": "",
+          "source_fields": [
+            "specific_angular_momentum_disk_star"
+          ],
+          "unit": "km/s Mpc/h"
+        },
+        "stellar_disk_radius": {
+          "description": "SHARK stellar disk half-mass radius.",
+          "projection": "direct",
+          "qualification": "This is a half-mass radius, not SAGE's exponential scale radius.",
+          "source_fields": [
+            "rstar_disk"
+          ],
+          "unit": "kpc"
+        },
+        "stellar_mass": {
+          "description": "Total disk plus bulge stellar mass.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "mstars_disk",
+            "mstars_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "stellar_metal_mass": {
+          "description": "Total metal mass in disk plus bulge stars.",
+          "projection": "component_sum",
+          "qualification": "",
+          "source_fields": [
+            "mstars_metals_disk",
+            "mstars_metals_bulge"
+          ],
+          "unit": "Msun"
+        },
+        "velocity": {
+          "description": "Galaxy peculiar velocity.",
+          "projection": "derived",
+          "qualification": "",
+          "source_fields": [
+            "velocity_x",
+            "velocity_y",
+            "velocity_z"
+          ],
+          "unit": "km/s"
+        }
+      },
+      "galaxy_count": 7553,
+      "hubble_h": 0.6751000285148621,
+      "observable_capabilities": {
+        "agn_mechanical_power_relation": {
+          "key": "agn_mechanical_power_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "atomic_gas_mass_function": {
+          "key": "atomic_gas_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "baryonic_mass_function": {
+          "key": "baryonic_mass_function",
+          "missing_fields": [],
+          "reason": "This declared cold-baryon definition excludes hot, ejected, and diffuse reservoirs.",
+          "status": "qualified"
+        },
+        "baryonic_tully_fisher": {
+          "key": "baryonic_tully_fisher",
+          "missing_fields": [],
+          "reason": "Vmax ownership for satellites/orphans and the observational velocity proxy must be declared.",
+          "status": "qualified"
+        },
+        "black_hole_bulge_relation": {
+          "key": "black_hole_bulge_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "black_hole_mass_function": {
+          "key": "black_hole_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "black_hole_spin_relation": {
+          "key": "black_hole_spin_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "burst_fraction_relation": {
+          "key": "burst_fraction_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "cold_gas_fraction": {
+          "key": "cold_gas_fraction",
+          "missing_fields": [],
+          "reason": "Cold-phase definitions are similar but not mathematically identical across SAMs. SHARK partitions cold gas into atomic and molecular components internally.",
+          "status": "qualified"
+        },
+        "cold_gas_mass_function": {
+          "key": "cold_gas_mass_function",
+          "missing_fields": [],
+          "reason": "Cold-phase definitions are similar but not mathematically identical across SAMs. SHARK partitions cold gas into atomic and molecular components internally.",
+          "status": "qualified"
+        },
+        "cooling_rate_relation": {
+          "key": "cooling_rate_relation",
+          "missing_fields": [],
+          "reason": "SAGE's public Cooling output is an energy proxy, not this mass rate. SHARK's native virial-mass convention follows the input catalogue.",
+          "status": "qualified"
+        },
+        "cosmic_sfr_density": {
+          "key": "cosmic_sfr_density",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "diffuse_stellar_relation": {
+          "key": "diffuse_stellar_relation",
+          "missing_fields": [],
+          "reason": "SAGE ICS and SHARK stellar-halo boundaries arise from different stripping prescriptions. SHARK's native virial-mass convention follows the input catalogue.",
+          "status": "qualified"
+        },
+        "ejected_gas_relation": {
+          "key": "ejected_gas_relation",
+          "missing_fields": [],
+          "reason": "The location and ownership of the ejected reservoir differ between models. SHARK's native virial-mass convention follows the input catalogue. Reservoir boundaries must be aligned before interpreting a SAGE comparison.",
+          "status": "qualified"
+        },
+        "gas_metallicity": {
+          "key": "gas_metallicity",
+          "missing_fields": [],
+          "reason": "This is not an oxygen-line calibration; comparison to 12+log(O/H) needs a convention. SHARK partitions cold gas into atomic and molecular components internally.",
+          "status": "qualified"
+        },
+        "hot_gas_relation": {
+          "key": "hot_gas_relation",
+          "missing_fields": [],
+          "reason": "Reservoir ownership across satellites and FoF groups must be aligned. SHARK's native virial-mass convention follows the input catalogue.",
+          "status": "qualified"
+        },
+        "molecular_gas_mass_function": {
+          "key": "molecular_gas_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "quenched_fraction": {
+          "key": "quenched_fraction",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "sfr_stellar_mass_relation": {
+          "key": "sfr_stellar_mass_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "spatial_clustering": {
+          "key": "spatial_clustering",
+          "missing_fields": [],
+          "reason": "Requires the same simulation volume, cosmology, periodic boundary, and selection. Orphan positions include SHARK's stochastic NFW sampling convention.",
+          "status": "qualified"
+        },
+        "stellar_angular_momentum_relation": {
+          "key": "stellar_angular_momentum_relation",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "stellar_halo_relation": {
+          "key": "stellar_halo_relation",
+          "missing_fields": [],
+          "reason": "Host-mass definitions and central selection must be aligned. SHARK's native virial-mass convention follows the input catalogue.",
+          "status": "qualified"
+        },
+        "stellar_mass_function": {
+          "key": "stellar_mass_function",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "stellar_metallicity": {
+          "key": "stellar_metallicity",
+          "missing_fields": [],
+          "reason": "All required canonical fields exist.",
+          "status": "direct"
+        },
+        "stellar_size_relation": {
+          "key": "stellar_size_relation",
+          "missing_fields": [],
+          "reason": "SAGE and SHARK radius definitions differ and must remain visible. This is a half-mass radius, not SAGE's exponential scale radius.",
+          "status": "qualified"
+        }
+      },
+      "redshift": 0.0,
+      "snapshot": 199,
+      "unavailable_fields": {}
+    }
+  },
+  "claims": {
+    "native_catalogue_common_projection": true,
+    "native_outputs_isolate_model_physics": false,
+    "sage_on_shark_tree": false,
+    "same_forcing_population_comparison": false,
+    "shark_on_lhalo_tree": false
+  },
+  "direct_shared_observables": [
+    "stellar_mass_function",
+    "black_hole_mass_function",
+    "cosmic_sfr_density",
+    "quenched_fraction",
+    "sfr_stellar_mass_relation",
+    "black_hole_bulge_relation"
+  ],
+  "observation_registry": {
+    "baryonic_tully_fisher": {
+      "next_step": "define observed and model velocity proxies before extracting data",
+      "source": "legacy SAGE plotting module",
+      "status": "not_audited"
+    },
+    "black_hole_bulge": {
+      "next_step": "record scatter, IMF/bulge definition, sample selection, and covariance",
+      "source": "Haring & Rix (2004) relation in legacy SAGE plotting code",
+      "status": "legacy_analytic_relation"
+    },
+    "cosmic_sfr_density": {
+      "next_step": "extract individual citations, units, selection, and covariance",
+      "source": "multi-survey compilation in legacy SAGE plotting code",
+      "status": "legacy_embedded"
+    },
+    "gas_mass_functions": {
+      "next_step": "extract tables and keep HI/H2 versus total-cold definitions separate",
+      "source": "Zwaan et al. (2005); Obreschkow & Rawlings (2009)",
+      "status": "legacy_embedded"
+    },
+    "gas_mass_metallicity": {
+      "next_step": "record calibration, IMF transform, aperture, and total-Z conversion",
+      "source": "Tremonti et al. relation in legacy SAGE plotting code",
+      "status": "legacy_analytic_relation"
+    },
+    "quenched_fraction": {
+      "next_step": "choose aperture, sSFR threshold, redshift, and sample selection",
+      "source": "no durable shared observational product",
+      "status": "unregistered"
+    },
+    "stellar_mass_density_evolution": {
+      "next_step": "extract redshift bins, IMF/h convention, uncertainties, and covariance",
+      "source": "Marchesini et al. (2009) compilation in legacy SAGE plotting code",
+      "status": "legacy_embedded"
+    },
+    "stellar_mass_function": {
+      "doi": "10.1111/j.1365-2966.2008.13348.x",
+      "imf": "Chabrier",
+      "next_step": "ready for both canonical catalogues",
+      "source": "Baldry, Glazebrook & Driver (2008)",
+      "status": "registered",
+      "target_hubble_h": 0.7
+    }
+  },
+  "qualified_shared_observables": [
+    "cold_gas_mass_function",
+    "baryonic_mass_function",
+    "cold_gas_fraction",
+    "gas_metallicity",
+    "stellar_metallicity",
+    "stellar_halo_relation",
+    "hot_gas_relation",
+    "ejected_gas_relation",
+    "diffuse_stellar_relation",
+    "baryonic_tully_fisher",
+    "spatial_clustering",
+    "stellar_size_relation"
+  ],
+  "schema": "mimic-jax-model-comparison-audit/v1",
+  "shared_observables": [
+    "stellar_mass_function",
+    "cold_gas_mass_function",
+    "baryonic_mass_function",
+    "black_hole_mass_function",
+    "cosmic_sfr_density",
+    "quenched_fraction",
+    "sfr_stellar_mass_relation",
+    "cold_gas_fraction",
+    "gas_metallicity",
+    "stellar_metallicity",
+    "black_hole_bulge_relation",
+    "stellar_halo_relation",
+    "hot_gas_relation",
+    "ejected_gas_relation",
+    "diffuse_stellar_relation",
+    "baryonic_tully_fisher",
+    "spatial_clustering",
+    "stellar_size_relation"
+  ],
+  "tree_compatibility": {
+    "lhalo_binary__SAGE16": {
+      "derived_fields": [
+        "redshift",
+        "halo_mass",
+        "virial_radius",
+        "virial_velocity"
+      ],
+      "field_ready": true,
+      "fully_runnable": true,
+      "missing_fields": [],
+      "model": "SAGE16",
+      "native_run": true,
+      "population_driver_ready": true,
+      "semantic_blockers": [],
+      "source_format": "lhalo_binary"
+    },
+    "lhalo_binary__SHARK_Lagos23": {
+      "derived_fields": [
+        "redshift",
+        "halo_mass",
+        "virial_velocity",
+        "spin_parameter",
+        "is_fof_centre"
+      ],
+      "field_ready": false,
+      "fully_runnable": false,
+      "missing_fields": [
+        "main_progenitor_row",
+        "concentration",
+        "is_interpolated"
+      ],
+      "model": "SHARK Lagos23",
+      "native_run": false,
+      "population_driver_ready": false,
+      "semantic_blockers": [
+        "SHARK halo/subhalo/enclosing ownership and DHalo flags must be defined.",
+        "Concentration, half-mass radius, and spin reliability conventions must match SHARK."
+      ],
+      "source_format": "lhalo_binary"
+    },
+    "shark_velociraptor_hdf5__SAGE16": {
+      "derived_fields": [
+        "descendant_row",
+        "host_row",
+        "particle_count"
+      ],
+      "field_ready": false,
+      "fully_runnable": false,
+      "missing_fields": [
+        "first_progenitor_row",
+        "virial_radius",
+        "velocity_dispersion"
+      ],
+      "model": "SAGE16",
+      "native_run": false,
+      "population_driver_ready": false,
+      "semantic_blockers": [
+        "SAGE's M200c/particle-count fallback and subhalo ordering must be defined.",
+        "The angular-momentum vector must use the convention expected by SAGE's disk-radius law."
+      ],
+      "source_format": "shark_velociraptor_hdf5"
+    },
+    "shark_velociraptor_hdf5__SHARK_Lagos23": {
+      "derived_fields": [
+        "descendant_row",
+        "main_progenitor_row",
+        "host_row"
+      ],
+      "field_ready": true,
+      "fully_runnable": false,
+      "missing_fields": [],
+      "model": "SHARK Lagos23",
+      "native_run": true,
+      "population_driver_ready": false,
+      "semantic_blockers": [],
+      "source_format": "shark_velociraptor_hdf5"
+    }
+  }
+}

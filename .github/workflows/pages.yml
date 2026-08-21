@@ -16,6 +16,7 @@ on:
       - docs/performance.md
       - docs/mimic_jax_scientific_program.md
       - docs/shark_lagos23.md
+      - docs/model_comparison.md
       - plot/mimic-plot/README.md
       - scripts/check_reports.py
       - .github/workflows/pages.yml

@@ -10,6 +10,7 @@ Mimic-jax reports connect familiar semi-analytic-model results to the evidence n
 
 ## Published reference reports
 
+- [Can SAGE16 and SHARK be compared without hidden conventions?](reports/sage16-shark-interoperability-audit/index.md) — a model-neutral catalogue and observable contract, native-output comparison diagnostics, an explicit observation registry, and a measured tree-portability matrix that separates field coverage from topology-driver readiness.
 - [SHARK Lagos23 on the same testable footing as SAGE16](reports/shark-continuous-foundation/index.md) — a pinned native population, exact 19-state disk/starburst assembly, augmented BH/AGN memory, explicit hybrid events, controlled interval and burst oracles, common SAGE-facing and SHARK-only observables, convergence, fractional responses, and an explicit record of the population-equivalence work that remains.
 - [Fit SAGE with gradients: what one stellar mass function can—and cannot—constrain](reports/sage16-differentiable-calibration/index.md) — a real Baldry et al. stellar-mass-function fit showing the useful direction and local curvature from JAX responses, exact SAGE validation, a familiar MCMC comparison, and a deliberately rejected first emulator/error-bar claim.
 - [How much of SAGE can we remove?](reports/sage16-minimal-model/index.md) — a held-out teacher--student experiment showing that four evolving states recover the broad z=0 stellar-mass prediction within a predeclared 30% contract, while cold gas, SFR, fine-bin structure, and quenching expose exactly where the reduction fails.

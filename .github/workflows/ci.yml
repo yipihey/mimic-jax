@@ -58,7 +58,8 @@ jobs:
       run: |
         python -m pytest -q \
           tests/mimic_jax/test_reporting.py \
-          tests/mimic_jax/test_linear_response.py
+          tests/mimic_jax/test_linear_response.py \
+          tests/mimic_jax/test_model_comparison_contract.py
 
     - name: Run SHARK Lagos23 JAX validation tests
       env:

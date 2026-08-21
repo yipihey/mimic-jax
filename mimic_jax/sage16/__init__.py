@@ -1,6 +1,6 @@
 """Fiducial SAGE16 state, parameters, transfers, and physics kernels."""
 
-from mimic_jax.sage16.catalogue import record_to_catalogue
+from mimic_jax.sage16.catalogue import load_sage_comparison_catalogue, record_to_catalogue
 from mimic_jax.sage16.conservation import (
     active_group_baryonic_mass,
     active_group_metal_mass,
@@ -359,6 +359,7 @@ __all__ = [
     "integrate_sage16_ode_adaptive",
     "integrate_sage16_hybrid_flow_adaptive",
     "load_cooling_tables",
+    "load_sage_comparison_catalogue",
     "load_scale_factors",
     "load_baldry2008_stellar_mass_function",
     "merge_reduced_states",

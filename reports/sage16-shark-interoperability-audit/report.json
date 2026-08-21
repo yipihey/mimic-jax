@@ -1,0 +1,380 @@
+{
+  "baseline": {
+    "git_commit": null,
+    "key": "sage16",
+    "label": "SAGE16 / Mini-Millennium",
+    "report_path": "../mini-millennium-sage16-science-program/index.md",
+    "run_id": "mini-millennium-sage16-science-program"
+  },
+  "candidate": {
+    "git_commit": null,
+    "key": "shark",
+    "label": "SHARK Lagos23 / mini-SURFS",
+    "report_path": "../shark-continuous-foundation/index.md",
+    "run_id": "shark-continuous-foundation"
+  },
+  "comparison_id": "sage16-shark-interoperability-audit",
+  "health": [
+    {
+      "artifacts": [],
+      "key": "canonical_catalogues",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "shared_observables",
+          "label": "Shared observable definitions",
+          "unit": "",
+          "value": 18
+        },
+        {
+          "description": "",
+          "key": "direct_observables",
+          "label": "Unqualified shared definitions",
+          "unit": "",
+          "value": 6
+        },
+        {
+          "description": "",
+          "key": "qualified_observables",
+          "label": "Qualified shared definitions",
+          "unit": "",
+          "value": 12
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "36,530 SAGE16 and 7,553 SHARK rows were projected into explicit physical units with field provenance.",
+      "title": "Canonical catalogue projection",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "foreign_tree_execution",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "0 of 2 foreign-tree model paths are runnable today. Both formats now project into one audited forcing contract, but required halo conventions and population drivers remain open.",
+      "title": "Cross-tree population execution",
+      "tolerance": "Both foreign-tree paths must have complete forcing semantics and a topology-owning JAX driver."
+    },
+    {
+      "artifacts": [],
+      "key": "shark_population_driver",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "The native SHARK population physics shadow replay is fully evaluated, but native SHARK still owns variable-cardinality topology and event scheduling.",
+      "title": "Independent SHARK JAX topology driver",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "observation_registry",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "The Baldry et al. (2008) stellar mass function has a durable shared loader; other legacy SAGE observation compilations are not yet model-neutral datasets.",
+      "title": "Shared observation comparison",
+      "tolerance": ""
+    }
+  ],
+  "kind": "comparison",
+  "links": [
+    {
+      "target": "../../docs/shark_lagos23.md",
+      "title": "SHARK implementation guide"
+    },
+    {
+      "target": "../../docs/dev/MIMIC-JAX-SHARK-INTEGRATION-PLAN.md",
+      "title": "SAGE--SHARK integration plan"
+    }
+  ],
+  "metrics": [
+    {
+      "baseline": 36530.0,
+      "candidate": 7553.0,
+      "delta": -28977.0,
+      "derivative_prediction": null,
+      "fractional_delta": -0.7932384341637011,
+      "interpretation": "The counts are not a model-only comparison because the simulations, volumes, resolution, cosmology, and tree construction differ.",
+      "key": "galaxy_count",
+      "label": "z=0 catalogue rows",
+      "unit": ""
+    },
+    {
+      "baseline": 0.013537316583096981,
+      "candidate": 0.015750683071354868,
+      "delta": 0.002213366488257887,
+      "derivative_prediction": null,
+      "fractional_delta": 0.16350112481092077,
+      "interpretation": "This verifies one common reduction and selection; it must not be interpreted as an isolated SAGE--SHARK physics difference until same-forcing runs exist.",
+      "key": "cosmic_sfr_density",
+      "label": "SFR density above 1e8 Msun",
+      "unit": "Msun yr^-1 Mpc^-3"
+    }
+  ],
+  "provenance": {
+    "command": [
+      "scripts/audit_sage_shark_interoperability.py",
+      "--sage-catalogues",
+      "output/sage16-mini-millennium/model_000.hdf5",
+      "output/sage16-mini-millennium/model_001.hdf5",
+      "output/sage16-mini-millennium/model_002.hdf5",
+      "output/sage16-mini-millennium/model_003.hdf5",
+      "output/sage16-mini-millennium/model_004.hdf5",
+      "output/sage16-mini-millennium/model_005.hdf5",
+      "output/sage16-mini-millennium/model_006.hdf5",
+      "output/sage16-mini-millennium/model_007.hdf5",
+      "--lhalo-tree",
+      "simulations/mini-millennium/snapshots/trees_063.0",
+      "--scale-factors",
+      "simulations/mini-millennium/mini-millennium.a_list",
+      "--shark-catalogue",
+      "/tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5",
+      "--shark-tree",
+      "/tmp/mimic-shark-input/tree_199.0.hdf5",
+      "--output",
+      "reports/sage16-shark-interoperability-audit"
+    ],
+    "files": [
+      {
+        "path": "docs/dev/MIMIC-JAX-SHARK-INTEGRATION-PLAN.md",
+        "role": "configuration",
+        "sha256": "bd3dd2e555558613f9a0fe61a1b91d3a3d73f4116f81911c0201fd65caf3c614",
+        "size_bytes": 30293
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_000.hdf5",
+        "role": "input",
+        "sha256": "5a379968075170672ba7a45b191f4527cde70a3ef4a5dac98e3bf3a4e8821e95",
+        "size_bytes": 7176983
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_001.hdf5",
+        "role": "input",
+        "sha256": "059d2243b37409da2e2399cd700b43509a98ba5efa3932e2d3972c839c17eda7",
+        "size_bytes": 6366807
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_002.hdf5",
+        "role": "input",
+        "sha256": "08c22c6ce8014da859fd3d8cee78a9337a942681b541da565893dae5c9b18060",
+        "size_bytes": 9322359
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_003.hdf5",
+        "role": "input",
+        "sha256": "2e1731d6a175cb8efbffdb01031a4fe2d733addccfccc6e1e83e194c414f72f7",
+        "size_bytes": 11976855
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_004.hdf5",
+        "role": "input",
+        "sha256": "cbd810a2b926fc89a0d9cf32a7a72a2bb9842cd9ded98810b8f08e65972fbb67",
+        "size_bytes": 6651415
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_005.hdf5",
+        "role": "input",
+        "sha256": "d2c1fbaee8e6d381ef5b0527ba34dd9ba4cc54e24548bb2fa806dea826ae84c9",
+        "size_bytes": 7189815
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_006.hdf5",
+        "role": "input",
+        "sha256": "5d1cc3180a87c1ad445bf28a16732dcd7002a2642f1175b64c09e411a9677041",
+        "size_bytes": 5846967
+      },
+      {
+        "path": "output/sage16-mini-millennium/model_007.hdf5",
+        "role": "input",
+        "sha256": "18e810dc839da64e84bbb2439b22255f64819ba472f7af315d93b00c8a8443f7",
+        "size_bytes": 5856791
+      },
+      {
+        "path": "/private/tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5",
+        "role": "input",
+        "sha256": "78cc1148f0ff39dfe05d10b81124724104fd1d56150b7fd47dffc7a3be837aca",
+        "size_bytes": 3161736
+      },
+      {
+        "path": "simulations/mini-millennium/snapshots/trees_063.0",
+        "role": "input",
+        "sha256": "f24229a92639f701bed129110673f0fc88820435e1dd1e56f2d7af912d92aca1",
+        "size_bytes": 18197616
+      },
+      {
+        "path": "/private/tmp/mimic-shark-input/tree_199.0.hdf5",
+        "role": "input",
+        "sha256": "c072a937941fefb9aac441fc319ff030ceb666af4a07f1b88c0f02c5d76a3f43",
+        "size_bytes": 26479838
+      },
+      {
+        "path": "simulations/mini-millennium/mini-millennium.a_list",
+        "role": "input",
+        "sha256": "2866412ae276939c625afef8a92a1da442fcc4bd8490dda191f38a0f5028164f",
+        "size_bytes": 577
+      },
+      {
+        "path": "data/observations/baldry2008_stellar_mass_function.csv",
+        "role": "input",
+        "sha256": "8775324d2e2eb732a77eaf9ac6102d3ca1422a23bbc81e3f2c2ad4ea894d253b",
+        "size_bytes": 1612
+      }
+    ],
+    "generated_at": "2026-08-20T15:33:47Z",
+    "git_branch": "main",
+    "git_commit": "d74457736333d348ceae8996966d53cd67070f5e",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {
+      "SHARK native reference": 123456
+    },
+    "software": {
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [],
+      "body": "- **18 of 25** reviewed observable definitions are available for both catalogues; 12 carry a visible physical qualification.\n- **6** are direct under the current definition.\n- **0 of 2** foreign-tree execution paths are runnable: common data structures are no substitute for missing halo semantics or topology drivers.\n- **1 observational product** is currently registered in the shared layer; expanding this is now a data/provenance task rather than a model-specific plotting task.",
+      "diagnostics": [],
+      "key": "findings",
+      "links": [],
+      "notes": [],
+      "summary": "The useful overlap is already substantial, but common forcing is not yet solved.",
+      "title": "What the audit establishes"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Identical selections, bins, physical units, and zero handling; native forcing differs.",
+          "key": "native_common_observables",
+          "media_type": "image/svg+xml",
+          "path": "assets/native-common-observables.svg",
+          "role": "figure",
+          "sha256": "0d383eb734e7f368101faf7c97dfa4c4fbb4007cca2de0564b2b03bde981ce32",
+          "size_bytes": 149652,
+          "title": "Shared observables on native catalogues"
+        },
+        {
+          "description": "Compact numerical arrays behind the figure.",
+          "key": "native_common_arrays",
+          "media_type": "application/octet-stream",
+          "path": "assets/native-common-observables.npz",
+          "role": "data",
+          "sha256": "7064e33175fe6806467eb08b8f09913fc6d405d0abfdd4ecddea11168061398d",
+          "size_bytes": 3279,
+          "title": "Shared observable arrays"
+        }
+      ],
+      "body": "The curves are deliberately **not** presented as a controlled model comparison: Mini-Millennium and mini-SURFS differ in tree finder, cosmology, volume, and resolution. Their purpose here is to prove that the observable boundary no longer changes code between models.",
+      "diagnostics": [],
+      "key": "native_observables",
+      "links": [],
+      "notes": [],
+      "summary": "Yes for the principal mass, SFR, gas, metallicity, BH, and halo relations. The figure uses exactly the same reductions on both native catalogues.",
+      "title": "Can both catalogues answer the same questions?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Direct, qualified, and unavailable outputs under one reviewed contract.",
+          "key": "observable_capability_matrix",
+          "media_type": "image/svg+xml",
+          "path": "assets/observable-capability-matrix.svg",
+          "role": "figure",
+          "sha256": "de6e2ba891b586f6af86f91e3b52fe150cdc820caefb02a89eba6b5f5833c530",
+          "size_bytes": 131078,
+          "title": "Observable capability matrix"
+        }
+      ],
+      "body": "| Observable | SAGE16 | SHARK Lagos23 | Shared interpretation |\n| --- | --- | --- | --- |\n| Stellar mass function | direct | direct | One canonical definition and unit convention. |\n| Cold-gas mass function | qualified | qualified | Cold-phase definitions are similar but not mathematically identical across SAMs. |\n| Cold baryonic mass function | qualified | qualified | This declared cold-baryon definition excludes hot, ejected, and diffuse reservoirs. |\n| Black-hole mass function | direct | direct | One canonical definition and unit convention. |\n| Cosmic star-formation-rate density | direct | direct | One canonical definition and unit convention. |\n| Quenched fraction | direct | direct | One canonical definition and unit convention. |\n| SFR--stellar-mass relation | direct | direct | One canonical definition and unit convention. |\n| Cold-gas fraction | qualified | qualified | Cold-phase definitions are similar but not mathematically identical across SAMs. |\n| Cold-gas metallicity | qualified | qualified | This is not an oxygen-line calibration; comparison to 12+log(O/H) needs a convention. |\n| Stellar metallicity | qualified | direct | One canonical definition and unit convention. |\n| Black-hole--bulge relation | direct | direct | One canonical definition and unit convention. |\n| Stellar-to-host-halo relation | qualified | qualified | Host-mass definitions and central selection must be aligned. |\n| Hot-gas--halo relation | qualified | qualified | Reservoir ownership across satellites and FoF groups must be aligned. |\n| Ejected-gas--halo relation | qualified | qualified | The location and ownership of the ejected reservoir differ between models. |\n| Diffuse-stellar--halo relation | qualified | qualified | SAGE ICS and SHARK stellar-halo boundaries arise from different stripping prescriptions. |\n| Baryonic Tully--Fisher relation | qualified | qualified | Vmax ownership for satellites/orphans and the observational velocity proxy must be declared. |\n| Spatial clustering / selections | qualified | qualified | Requires the same simulation volume, cosmology, periodic boundary, and selection. |\n| Atomic-gas mass function | unavailable | direct | One canonical definition and unit convention. |\n| Molecular-gas mass function | unavailable | direct | One canonical definition and unit convention. |\n| Stellar size--mass relation | qualified | qualified | SAGE and SHARK radius definitions differ and must remain visible. |\n| Black-hole spin relation | unavailable | direct | One canonical definition and unit convention. |\n| AGN mechanical-power relation | unavailable | direct | One canonical definition and unit convention. |\n| Cooling-rate relation | unavailable | qualified | SAGE's public Cooling output is an energy proxy, not this mass rate. |\n| Stellar angular-momentum relation | unavailable | direct | One canonical definition and unit convention. |\n| Burst contribution to star formation | unavailable | direct | One canonical definition and unit convention. |",
+      "diagnostics": [],
+      "key": "observable_contract",
+      "links": [],
+      "notes": [],
+      "summary": "Unavailable quantities remain unavailable; mimic-jax does not invent an HI/H2 split for SAGE or relabel different disk-radius definitions as identical.",
+      "title": "What overlaps—and what remains model-specific?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Field completeness and topology-driver readiness are evaluated separately.",
+          "key": "tree_portability_matrix",
+          "media_type": "image/svg+xml",
+          "path": "assets/tree-portability-matrix.svg",
+          "role": "figure",
+          "sha256": "3d6ec5c92cab782efad938df0ea48048a786b215aab582b80d9e6e07e5327a4a",
+          "size_bytes": 46893,
+          "title": "Tree portability matrix"
+        }
+      ],
+      "body": "| Source tree | Target model | Field contract | JAX population driver | Missing fields |\n| --- | --- | --- | --- | --- |\n| lhalo_binary | SAGE16 | ready | ready | none |\n| lhalo_binary | SHARK Lagos23 | incomplete | open | `main_progenitor_row`, `concentration`, `is_interpolated` |\n| shark_velociraptor_hdf5 | SAGE16 | incomplete | open | `first_progenitor_row`, `virial_radius`, `velocity_dispersion` |\n| shark_velociraptor_hdf5 | SHARK Lagos23 | ready | open | none |",
+      "diagnostics": [],
+      "key": "tree_portability",
+      "links": [],
+      "notes": [
+        "For SAGE on SHARK trees, the L-Halo first-progenitor ordering, velocity dispersion, virial radius, and Spin-vector convention remain unresolved.",
+        "For SHARK on L-Halo trees, concentration, interpolation/DHalo flags, main-progenitor semantics, and halo-spin/size conventions remain unresolved.",
+        "SHARK's exhaustive JAX RHS replay validates physics evaluations; it does not yet replace native SHARK's population topology/event scheduler."
+      ],
+      "summary": "Not yet. Both native formats now project into a canonical tree-local forcing record, but cross-running still lacks scientifically validated conventions and drivers.",
+      "title": "Can either model run the other model's trees?"
+    },
+    {
+      "artifacts": [],
+      "body": "The plotted Baldry curve uses one declared target convention (`h=0.7`, Chabrier IMF) for both models. A model-specific cosmology must not silently move the observation between panels.\n\n| Observable | Current status | Source / next gate |\n| --- | --- | --- |\n| stellar mass function | registered | Baldry, Glazebrook & Driver (2008); ready for both canonical catalogues |\n| cosmic sfr density | legacy_embedded | multi-survey compilation in legacy SAGE plotting code; extract individual citations, units, selection, and covariance |\n| gas mass functions | legacy_embedded | Zwaan et al. (2005); Obreschkow & Rawlings (2009); extract tables and keep HI/H2 versus total-cold definitions separate |\n| gas mass metallicity | legacy_analytic_relation | Tremonti et al. relation in legacy SAGE plotting code; record calibration, IMF transform, aperture, and total-Z conversion |\n| black hole bulge | legacy_analytic_relation | Haring & Rix (2004) relation in legacy SAGE plotting code; record scatter, IMF/bulge definition, sample selection, and covariance |\n| stellar mass density evolution | legacy_embedded | Marchesini et al. (2009) compilation in legacy SAGE plotting code; extract redshift bins, IMF/h convention, uncertainties, and covariance |\n| baryonic tully fisher | not_audited | legacy SAGE plotting module; define observed and model velocity proxies before extracting data |\n| quenched fraction | unregistered | no durable shared observational product; choose aperture, sSFR threshold, redshift, and sample selection |",
+      "diagnostics": [],
+      "key": "observations",
+      "links": [],
+      "notes": [],
+      "summary": "The Baldry et al. stellar mass function is the first shared observational product. Other legacy arrays must be extracted with citations, IMF, aperture, h, and calibration conventions before becoming common data.",
+      "title": "Can observations be compared once rather than model by model?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Canonical fields, observable support, tree readiness, and explicit claims.",
+          "key": "model_comparison_audit",
+          "media_type": "application/json",
+          "path": "assets/model-comparison-audit.json",
+          "role": "data",
+          "sha256": "bee1d5eb6566c65ad1ee78ebd44c0e9e649c2717cf999fde924cbe3e64e05eb3",
+          "size_bytes": 35254,
+          "title": "Model comparison audit"
+        }
+      ],
+      "body": "",
+      "diagnostics": [],
+      "key": "machine_contract",
+      "links": [],
+      "notes": [],
+      "summary": "The complete field provenance, observable capabilities, tree blockers, and claim boundaries are machine-readable. A third model can implement the same adapters instead of adding another pairwise comparison path.",
+      "title": "Reusable products for the next model"
+    }
+  ],
+  "summary": "A science-facing interoperability audit: both native catalogues now feed the same observable definitions, while merger-tree portability is measured honestly rather than inferred from similar field names.",
+  "title": "Can SAGE16 and SHARK be compared without hidden conventions?"
+}

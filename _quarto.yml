@@ -14,6 +14,7 @@ project:
     - docs/performance.md
     - docs/mimic_jax_scientific_program.md
     - docs/shark_lagos23.md
+    - docs/model_comparison.md
     - plot/mimic-plot/README.md
   resources:
     - reports/**/*.json
@@ -44,6 +45,8 @@ website:
         text: Minimal SAGE
       - href: reports/shark-continuous-foundation/index.md
         text: SHARK Lagos23
+      - href: reports/sage16-shark-interoperability-audit/index.md
+        text: Compare models
       - href: docs/shark_lagos23.md
         text: SHARK guide
       - href: docs/sage16_hybrid_system.md

@@ -1,0 +1,153 @@
+diff --git a/include/physical_model.h b/include/physical_model.h
+index 3565790..45e7d9f 100644
+--- a/include/physical_model.h
++++ b/include/physical_model.h
+@@ -70,6 +70,9 @@ public:
+ 	struct solver_params {
+ 		PhysicalModel<NC> &model;
+ 		bool burst;
++		long long galaxy_id;
++		long long subhalo_id;
++		int snapshot;
+ 		double rgas;
+ 		double rstar;
+ 		double mcoolrate;
+@@ -86,8 +89,8 @@ public:
+ 			double ode_solver_precision,
+ 			ODESolver::ode_evaluator evaluator,
+ 			GasCooling gas_cooling) :
+-		params {*this, false, 0., 0., 0., 0., 0., 0., 0., 0., 0., {}},
+-		starburst_params {*this, true, 0., 0., 0., 0., 0., 0., 0., 0., 0., {}},
++		params {*this, false, -1, -1, -1, 0., 0., 0., 0., 0., 0., 0., 0., 0., {}},
++		starburst_params {*this, true, -1, -1, -1, 0., 0., 0., 0., 0., 0., 0., 0., 0., {}},
+ 		ode_solver(evaluator, NC, ode_solver_precision, &params),
+ 		starburst_ode_solver(evaluator, NC, ode_solver_precision, &starburst_params),
+ 		ode_values(NC), starburst_ode_values(NC),
+@@ -117,6 +120,9 @@ public:
+ 
+ 		// Define cooling rate only in the case galaxy is central.
+ 		params.mcoolrate = gas_cooling.cooling_rate(subhalo, galaxy, z, delta_t);
++		params.galaxy_id = galaxy.id;
++		params.subhalo_id = subhalo.id;
++		params.snapshot = subhalo.snapshot;
+ 		if(subhalo.cold_halo_gas.mass > 0){
+ 			params.zcool = subhalo.cold_halo_gas.mass_metals /  subhalo.cold_halo_gas.mass;
+ 		}
+@@ -170,6 +176,9 @@ public:
+ 		 */
+ 
+ 		starburst_params.rgas = galaxy.bulge_gas.rscale; //gas scale radius.
++		starburst_params.galaxy_id = galaxy.id;
++		starburst_params.subhalo_id = subhalo.id;
++		starburst_params.snapshot = subhalo.snapshot;
+ 		starburst_params.rstar = galaxy.bulge_stars.rscale; //stellar scale radius.
+ 		starburst_params.vsubh = subhalo.Vvir;
+ 
+diff --git a/src/physical_model.cpp b/src/physical_model.cpp
+index bdd75cb..7536967 100644
+--- a/src/physical_model.cpp
++++ b/src/physical_model.cpp
+@@ -24,7 +24,10 @@
+  */
+ 
+ #include <cmath>
++#include <cstdlib>
++#include <fstream>
+ #include <memory>
++#include <mutex>
+ #include <vector>
+ 
+ #include "logging.h"
+@@ -33,6 +36,81 @@
+ 
+ namespace shark {
+ 
++namespace {
++
++constexpr std::size_t mimic_jax_trace_width = 70;
++
++void write_mimic_jax_trace(
++		double t,
++		const double y[],
++		const double f[],
++		const BasicPhysicalModel::solver_params &params,
++		double sfr,
++		double jrate,
++		double beta1,
++		double beta2,
++		double betaj1,
++		double betaj2,
++		double beta_qso1,
++		double beta_qso2,
++		double zcold,
++		double zhot,
++		double yield_eff)
++{
++	const char *path = std::getenv("MIMIC_JAX_SHARK_RHS_TRACE");
++	if (!path || !*path) {
++		return;
++	}
++	static std::ofstream stream(path, std::ios::binary | std::ios::trunc);
++	static std::mutex mutex;
++	double record[mimic_jax_trace_width] = {};
++	std::size_t index = 0;
++	record[index++] = 20260820.0;
++	record[index++] = static_cast<double>(params.galaxy_id);
++	record[index++] = static_cast<double>(params.subhalo_id);
++	record[index++] = static_cast<double>(params.snapshot);
++	record[index++] = params.burst ? 1.0 : 0.0;
++	record[index++] = t;
++	for (std::size_t i = 0; i != 19; ++i) record[index++] = y[i];
++	for (std::size_t i = 0; i != 19; ++i) record[index++] = f[i];
++	record[index++] = params.rgas;
++	record[index++] = params.rstar;
++	record[index++] = params.mcoolrate;
++	record[index++] = params.zcool;
++	record[index++] = params.jcold_halo;
++	record[index++] = params.delta_t;
++	record[index++] = params.redshift;
++	record[index++] = params.vsubh;
++	record[index++] = params.vgal;
++	record[index++] = params.smbh.mass;
++	record[index++] = params.smbh.mass_metals;
++	record[index++] = params.smbh.macc_hh;
++	record[index++] = params.smbh.macc_sb;
++	record[index++] = params.smbh.massembly;
++	record[index++] = params.smbh.spin;
++	record[index++] = sfr;
++	record[index++] = jrate;
++	record[index++] = beta1;
++	record[index++] = beta2;
++	record[index++] = betaj1;
++	record[index++] = betaj2;
++	record[index++] = beta_qso1;
++	record[index++] = beta_qso2;
++	record[index++] = zcold;
++	record[index++] = zhot;
++	record[index++] = yield_eff;
++	if (index != mimic_jax_trace_width) {
++		std::abort();
++	}
++	std::lock_guard<std::mutex> lock(mutex);
++	stream.write(reinterpret_cast<const char *>(record), sizeof(record));
++	if (!stream) {
++		std::abort();
++	}
++}
++
++} // namespace
++
+ static
+ int basic_physicalmodel_evaluator(double t, const double y[], double f[], void *data) {
+ 
+@@ -148,6 +226,10 @@ int basic_physicalmodel_evaluator(double t, const double y[], double f[], void *
+ 	f[17] = (betaj_1 - betaj_2) * jrate;
+ 	f[18] = betaj_2 * jrate;
+ 
++	write_mimic_jax_trace(
++		t, y, f, *params, SFR, jrate, beta1, beta2, betaj_1, betaj_2,
++		beta_qso1, beta_qso2, zcold, zhot, yield_eff);
++
+ 	return 0;
+ }
+ 

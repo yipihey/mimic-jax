@@ -6,8 +6,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-stellar-mass-function.svg",
       "role": "figure",
-      "sha256": "a66a7d65480ef948d7045ba718e733008cc95fa5daaa05795a8450755dbe9e16",
-      "size_bytes": 51640,
+      "sha256": "2d6b3c9478fb78562337695d6587f6b352c2a781d5e5b93141e09edb339defc5",
+      "size_bytes": 53398,
       "title": "A real SHARK reference stellar mass function"
     },
     {
@@ -16,8 +16,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-common-observables.svg",
       "role": "figure",
-      "sha256": "3d5e2714fd650aabc56e79ae5a93252a63741016b028c877ac5057dbeee189cf",
-      "size_bytes": 88977,
+      "sha256": "e3bd1f0e0b43b4ccda5d1b3e19666ca219fc4a8cf7a1b08176b460be3ea07e45",
+      "size_bytes": 93348,
       "title": "Common SAGE–SHARK catalogue observables"
     },
     {
@@ -26,8 +26,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/upstream-shark-added-observables.svg",
       "role": "figure",
-      "sha256": "8c692b4313a70d144a15b3753cfaa97d078bd4d85030d14e692aabbaf4ccb1d6",
-      "size_bytes": 80896,
+      "sha256": "06ab46b57fdad71a613252885c488d4f3d4df887f9da6e6502e13d823385a4e8",
+      "size_bytes": 84843,
       "title": "Gas phases, black-hole spin, and angular-momentum sizes"
     },
     {
@@ -36,8 +36,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/lagos23-prescription-oracle.svg",
       "role": "figure",
-      "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-      "size_bytes": 53498,
+      "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+      "size_bytes": 59422,
       "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
     },
     {
@@ -46,8 +46,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/shark-flow-network.svg",
       "role": "figure",
-      "sha256": "7086ae9d7365ce64237e0819a00cd1d027f02c59cc290a375663890a272a3dfe",
-      "size_bytes": 35559,
+      "sha256": "10b215b132bdbf314ae7b657cba5d8be15da8f2d52f8611d71b2fba03309c61a",
+      "size_bytes": 38905,
       "title": "The implemented SHARK flow network"
     },
     {
@@ -56,8 +56,8 @@
       "media_type": "image/svg+xml",
       "path": "assets/shark-flow-convergence.svg",
       "role": "figure",
-      "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
-      "size_bytes": 68243,
+      "sha256": "15a47b82103e3b3b5658be5db1fcc69f12df6d49d88fa1054146de4c9b3d5999",
+      "size_bytes": 70801,
       "title": "Convergence of the coupled SHARK flow foundation"
     },
     {
@@ -66,9 +66,19 @@
       "media_type": "image/svg+xml",
       "path": "assets/lagos23-fractional-response-matrix.svg",
       "role": "figure",
-      "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
-      "size_bytes": 62430,
+      "sha256": "d8931be90cb73a5344bde32ddc62880299a2ea2dc9585122ff11778e356c561c",
+      "size_bytes": 71872,
       "title": "Fractional response matrix of the continuous Lagos23 core"
+    },
+    {
+      "description": "Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.",
+      "key": "full_tree_jax_population_parity",
+      "media_type": "application/json",
+      "path": "assets/shark-full-tree-jax-parity.json",
+      "role": "validation_data",
+      "sha256": "c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441",
+      "size_bytes": 3958,
+      "title": "Full-tree JAX population replay evidence"
     }
   ],
   "health": [
@@ -112,13 +122,99 @@
     {
       "artifacts": [
         {
+          "description": "Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.",
+          "key": "full_tree_jax_population_parity",
+          "media_type": "application/json",
+          "path": "assets/shark-full-tree-jax-parity.json",
+          "role": "validation_data",
+          "sha256": "c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441",
+          "size_bytes": 3958,
+          "title": "Full-tree JAX population replay evidence"
+        }
+      ],
+      "key": "full_tree_jax_population_replay",
+      "method": "exhaustive native-state shadow replay through a jax.jit(jax.vmap) Lagos23 BR06+Lagos13+QSO+19-state RHS kernel",
+      "metrics": [
+        {
+          "description": "",
+          "key": "trees",
+          "label": "Merger trees covered",
+          "unit": "",
+          "value": 20174
+        },
+        {
+          "description": "",
+          "key": "rhs_evaluations",
+          "label": "Native states replayed in JAX",
+          "unit": "",
+          "value": 5709080
+        },
+        {
+          "description": "",
+          "key": "maximum_rate_relative_difference",
+          "label": "Maximum rate relative difference",
+          "unit": "",
+          "value": 0.00012294763547419742
+        },
+        {
+          "description": "",
+          "key": "strict_rate_exceptions",
+          "label": "Named rates outside strict gate",
+          "unit": "",
+          "value": 3
+        },
+        {
+          "description": "",
+          "key": "rate_failures",
+          "label": "Named rates outside warning band",
+          "unit": "",
+          "value": 0
+        },
+        {
+          "description": "",
+          "key": "routing_failures",
+          "label": "19-state routing strict failures",
+          "unit": "",
+          "value": 0
+        },
+        {
+          "description": "",
+          "key": "native_catalogue_mismatches",
+          "label": "Native values changed by tracing",
+          "unit": "",
+          "value": 0
+        },
+        {
+          "description": "",
+          "key": "jax_compilation_seconds",
+          "label": "JAX compilation and warm-up",
+          "unit": "s",
+          "value": 0.17871833400567994
+        },
+        {
+          "description": "",
+          "key": "jax_replay_seconds",
+          "label": "Batched steady-state replay wall time",
+          "unit": "s",
+          "value": 4.4165449169813655
+        }
+      ],
+      "notes": [],
+      "status": "warning",
+      "summary": "The compiled JAX kernel evaluated every one of the 5,709,080 disk and starburst RHS calls realized by all 20,174 trees. Three of 62,799,880 named-rate values exceed the predeclared 1.1e-4 strict gate; none exceeds the explicit 1.5e-4 quadrature warning band, and all 19-state routing comparisons pass the strict gate. The traced and clean native catalogues are bitwise identical across all 5,332,172 compared values.",
+      "title": "Full-tree JAX population physics replay",
+      "tolerance": "strict rtol=1.1e-4, warning rtol=1.5e-4, atol=1e-8; values in the warning band remain visible and do not become silent passes"
+    },
+    {
+      "artifacts": [
+        {
           "description": "Radial star-formation/angular-momentum, stellar-feedback, reincorporation, Sobacchi13 reionisation, Croton06 cooling, and deterministic Lagos23 AGN cases generated by the pinned upstream SHARK library.",
           "key": "lagos23_prescription_oracle",
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -130,14 +226,14 @@
           "key": "maximum_rate_difference",
           "label": "Maximum absolute fractional SFR difference",
           "unit": "",
-          "value": 3.6620580777801948e-06
+          "value": 3.6620580831092653e-06
         },
         {
           "description": "",
           "key": "maximum_angular_momentum_difference",
           "label": "Maximum absolute fractional SF angular-momentum difference",
           "unit": "",
-          "value": 3.731761211156481e-08
+          "value": 3.731760611636048e-08
         }
       ],
       "notes": [],
@@ -154,8 +250,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -184,8 +280,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -233,8 +329,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -263,8 +359,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -295,7 +391,7 @@
           "key": "maximum_interval_difference",
           "label": "Maximum absolute fractional interval difference",
           "unit": "",
-          "value": 2.5074866428109743e-05
+          "value": 2.5074866423224762e-05
         }
       ],
       "notes": [],
@@ -314,7 +410,7 @@
           "key": "maximum_starburst_difference",
           "label": "Maximum absolute fractional burst difference",
           "unit": "",
-          "value": 9.827193089417818e-05
+          "value": 9.827193089861908e-05
         }
       ],
       "notes": [],
@@ -369,8 +465,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-convergence.svg",
           "role": "figure",
-          "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
-          "size_bytes": 68243,
+          "sha256": "15a47b82103e3b3b5658be5db1fcc69f12df6d49d88fa1054146de4c9b3d5999",
+          "size_bytes": 70801,
           "title": "Convergence of the coupled SHARK flow foundation"
         }
       ],
@@ -382,21 +478,21 @@
           "key": "order_forward_euler",
           "label": "Observed forward_euler order",
           "unit": "",
-          "value": 1.0085295314851517
+          "value": 1.0085295314858356
         },
         {
           "description": "",
           "key": "order_heun_rk2",
           "label": "Observed heun_rk2 order",
           "unit": "",
-          "value": 2.008595398386794
+          "value": 2.008595399456515
         },
         {
           "description": "",
           "key": "order_rk4",
           "label": "Observed rk4 order",
           "unit": "",
-          "value": 4.006676177084404
+          "value": 4.0068754674964095
         }
       ],
       "notes": [],
@@ -413,8 +509,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-fractional-response-matrix.svg",
           "role": "figure",
-          "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
-          "size_bytes": 62430,
+          "sha256": "d8931be90cb73a5344bde32ddc62880299a2ea2dc9585122ff11778e356c561c",
+          "size_bytes": 71872,
           "title": "Fractional response matrix of the continuous Lagos23 core"
         }
       ],
@@ -426,7 +522,7 @@
           "key": "finite_difference_error",
           "label": "Maximum relative AD/finite-difference discrepancy",
           "unit": "",
-          "value": 9.489592710169778e-08
+          "value": 9.489593279416706e-08
         }
       ],
       "notes": [],
@@ -436,15 +532,48 @@
       "tolerance": "selected symmetric finite difference agrees within 5e-5 relative"
     },
     {
-      "artifacts": [],
+      "artifacts": [
+        {
+          "description": "Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.",
+          "key": "full_tree_jax_population_parity",
+          "media_type": "application/json",
+          "path": "assets/shark-full-tree-jax-parity.json",
+          "role": "validation_data",
+          "sha256": "c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441",
+          "size_bytes": 3958,
+          "title": "Full-tree JAX population replay evidence"
+        }
+      ],
       "key": "independent_jax_population_parity",
-      "method": "",
-      "metrics": [],
+      "method": "evaluated evidence decomposition: exhaustive flow replay plus controlled event oracles",
+      "metrics": [
+        {
+          "description": "",
+          "key": "continuous_states_evaluated",
+          "label": "Continuous states evaluated",
+          "unit": "",
+          "value": 5709080
+        },
+        {
+          "description": "",
+          "key": "tree_nodes_parsed",
+          "label": "Input tree nodes parsed",
+          "unit": "",
+          "value": 339920
+        },
+        {
+          "description": "",
+          "key": "upstream_skipped_missing_descendants",
+          "label": "Explicit missing descendant links",
+          "unit": "",
+          "value": 31
+        }
+      ],
       "notes": [],
-      "status": "not_evaluated",
-      "summary": "The exact native population backend is integrated and the JAX process/event kernels cover the controlled pinned Lagos23 branches, but per-ID independent JAX replay of all 20,174 public-CI trees has not passed. No such parity claim is made.",
+      "status": "warning",
+      "summary": "This gate is now evaluated rather than unknown: exhaustive JAX shadow replay covers the continuous population physics with three explicit BR06 quadrature warnings, but the native driver still supplies variable-cardinality topology and branch states. A topology-owning JAX catalogue match is therefore not yet claimed.",
       "title": "Independent JAX full-tree population parity",
-      "tolerance": ""
+      "tolerance": "warning remains until a topology-owning per-ID JAX catalogue is compared"
     }
   ],
   "identity": {
@@ -505,24 +634,38 @@
     },
     {
       "description": "",
+      "key": "full_tree_rhs_evaluations",
+      "label": "Full-tree JAX RHS evaluations",
+      "unit": "",
+      "value": 5709080
+    },
+    {
+      "description": "",
+      "key": "full_tree_rate_error",
+      "label": "Maximum full-tree rate relative difference",
+      "unit": "",
+      "value": 0.00012294763547419742
+    },
+    {
+      "description": "",
       "key": "interval_oracle_error",
       "label": "Maximum controlled interval residual",
       "unit": "",
-      "value": 2.5074866428109743e-05
+      "value": 2.5074866423224762e-05
     },
     {
       "description": "",
       "key": "burst_oracle_error",
       "label": "Maximum controlled burst residual",
       "unit": "",
-      "value": 9.827193089417818e-05
+      "value": 9.827193089861908e-05
     },
     {
       "description": "",
       "key": "runtime",
       "label": "Report analysis wall time",
       "unit": "s",
-      "value": 97.89244708300001
+      "value": 31.544562209019205
     }
   ],
   "parameters": [
@@ -554,7 +697,9 @@
       "--upstream-config",
       "/tmp/mimic-shark-release-reference/effective-shark.cfg",
       "--report-directory",
-      "reports/shark-continuous-foundation"
+      "reports/shark-continuous-foundation",
+      "--population-parity",
+      "reports/shark-continuous-foundation/assets/shark-full-tree-jax-parity.json"
     ],
     "files": [
       {
@@ -574,12 +719,18 @@
         "role": "input",
         "sha256": "7bd9e3e5304209a6056200a67da1317b3f88a5a1f2962e61fe16995e1538f1f3",
         "size_bytes": 20917
+      },
+      {
+        "path": "reports/shark-continuous-foundation/assets/shark-full-tree-jax-parity.json",
+        "role": "input",
+        "sha256": "c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441",
+        "size_bytes": 3958
       }
     ],
-    "generated_at": "2026-08-20T12:54:23Z",
+    "generated_at": "2026-08-20T14:11:49Z",
     "git_branch": "main",
-    "git_commit": "1edddcf9c590c6a8c53ae550ba106f94f95b6130",
-    "git_dirty": false,
+    "git_commit": "d74457736333d348ceae8996966d53cd67070f5e",
+    "git_dirty": true,
     "hardware": {
       "jax_backend": "cpu",
       "jax_devices": [
@@ -594,13 +745,13 @@
       "upstream_shark": 123456
     },
     "software": {
-      "PyYAML": "6.0.3",
-      "h5py": "3.14.0",
-      "jax": "0.4.30",
-      "jaxlib": "0.4.30",
-      "matplotlib": "3.9.4",
-      "numpy": "2.0.2",
-      "python": "3.9.6"
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
     },
     "upstream_run": {
       "galaxies": 7553,
@@ -622,8 +773,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-stellar-mass-function.svg",
           "role": "figure",
-          "sha256": "a66a7d65480ef948d7045ba718e733008cc95fa5daaa05795a8450755dbe9e16",
-          "size_bytes": 51640,
+          "sha256": "2d6b3c9478fb78562337695d6587f6b352c2a781d5e5b93141e09edb339defc5",
+          "size_bytes": 53398,
           "title": "A real SHARK reference stellar mass function"
         }
       ],
@@ -643,8 +794,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-prescription-oracle.svg",
           "role": "figure",
-          "sha256": "7a6df8bedfc7f35d21bc4bbd399b18ee91244350253f36bd1377f6b1e7fac5e8",
-          "size_bytes": 53498,
+          "sha256": "d609954876cc7f81a83445820dfb304175a950e9ccf4db61376931a9f62d59f1",
+          "size_bytes": 59422,
           "title": "Direct upstream oracle checks for six Lagos23 prescription groups"
         }
       ],
@@ -664,8 +815,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-common-observables.svg",
           "role": "figure",
-          "sha256": "3d5e2714fd650aabc56e79ae5a93252a63741016b028c877ac5057dbeee189cf",
-          "size_bytes": 88977,
+          "sha256": "e3bd1f0e0b43b4ccda5d1b3e19666ca219fc4a8cf7a1b08176b460be3ea07e45",
+          "size_bytes": 93348,
           "title": "Common SAGE–SHARK catalogue observables"
         },
         {
@@ -674,8 +825,8 @@
           "media_type": "application/x-npz",
           "path": "assets/shark-foundation-results.npz",
           "role": "scientific_array",
-          "sha256": "5aa31d373a2bd3e239377032fd4234400266b7f4b2b6cdd9c555f3b710d165ac",
-          "size_bytes": 12175,
+          "sha256": "79ebe1038c19eddb978e6ff26290400eaa3a975611693c2e52aca5757c2bbf05",
+          "size_bytes": 12167,
           "title": "Machine-readable foundation arrays"
         }
       ],
@@ -695,8 +846,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-network.svg",
           "role": "figure",
-          "sha256": "7086ae9d7365ce64237e0819a00cd1d027f02c59cc290a375663890a272a3dfe",
-          "size_bytes": 35559,
+          "sha256": "10b215b132bdbf314ae7b657cba5d8be15da8f2d52f8611d71b2fba03309c61a",
+          "size_bytes": 38905,
           "title": "The implemented SHARK flow network"
         }
       ],
@@ -716,8 +867,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/shark-flow-convergence.svg",
           "role": "figure",
-          "sha256": "25174e0f5ed9254013de0a49d76913bb8b092550b30446da48fe8a1e56dac305",
-          "size_bytes": 68243,
+          "sha256": "15a47b82103e3b3b5658be5db1fcc69f12df6d49d88fa1054146de4c9b3d5999",
+          "size_bytes": 70801,
           "title": "Convergence of the coupled SHARK flow foundation"
         },
         {
@@ -726,8 +877,8 @@
           "media_type": "application/x-npz",
           "path": "assets/shark-foundation-results.npz",
           "role": "scientific_array",
-          "sha256": "5aa31d373a2bd3e239377032fd4234400266b7f4b2b6cdd9c555f3b710d165ac",
-          "size_bytes": 12175,
+          "sha256": "79ebe1038c19eddb978e6ff26290400eaa3a975611693c2e52aca5757c2bbf05",
+          "size_bytes": 12167,
           "title": "Machine-readable foundation arrays"
         }
       ],
@@ -747,8 +898,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/upstream-shark-added-observables.svg",
           "role": "figure",
-          "sha256": "8c692b4313a70d144a15b3753cfaa97d078bd4d85030d14e692aabbaf4ccb1d6",
-          "size_bytes": 80896,
+          "sha256": "06ab46b57fdad71a613252885c488d4f3d4df887f9da6e6502e13d823385a4e8",
+          "size_bytes": 84843,
           "title": "Gas phases, black-hole spin, and angular-momentum sizes"
         }
       ],
@@ -768,8 +919,8 @@
           "media_type": "image/svg+xml",
           "path": "assets/lagos23-fractional-response-matrix.svg",
           "role": "figure",
-          "sha256": "2b1dfb841ad0d7f1eb9760034676518fedb6f74038913aaab1ddc9349d7c850a",
-          "size_bytes": 62430,
+          "sha256": "d8931be90cb73a5344bde32ddc62880299a2ea2dc9585122ff11778e356c561c",
+          "size_bytes": 71872,
           "title": "Fractional response matrix of the continuous Lagos23 core"
         },
         {
@@ -778,8 +929,8 @@
           "media_type": "application/x-npz",
           "path": "assets/shark-foundation-results.npz",
           "role": "scientific_array",
-          "sha256": "5aa31d373a2bd3e239377032fd4234400266b7f4b2b6cdd9c555f3b710d165ac",
-          "size_bytes": 12175,
+          "sha256": "79ebe1038c19eddb978e6ff26290400eaa3a975611693c2e52aca5757c2bbf05",
+          "size_bytes": 12167,
           "title": "Machine-readable foundation arrays"
         }
       ],
@@ -792,14 +943,35 @@
       "title": "Which Lagos23 parameters control a galaxy interval?"
     },
     {
+      "artifacts": [
+        {
+          "description": "Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.",
+          "key": "full_tree_jax_population_parity",
+          "media_type": "application/json",
+          "path": "assets/shark-full-tree-jax-parity.json",
+          "role": "validation_data",
+          "sha256": "c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441",
+          "size_bytes": 3958,
+          "title": "Full-tree JAX population replay evidence"
+        }
+      ],
+      "body": "The run covers 5,709,080 realized RHS states from 15,116 galaxies across snapshots 60–198: 3,474,024 disk evaluations and 2,235,056 starburst evaluations. BR06 star formation supplies the largest rate difference, 1.2295e-4 relative, because mimic-jax uses deterministic 128-node quadrature where upstream uses adaptive GSL quadrature. Three of 62,799,880 named-rate values (4.8e-8 of the comparison population), all BR06 star-formation rates, exceed the predeclared 1.1e-4 strict gate. None exceeds the separately recorded 1.5e-4 warning band. All 108,472,520 routed derivative values pass the strict gate. The opt-in trace itself is non-perturbing: all 5,332,172 values in 1,462 galaxy datasets across 17 native output snapshots are bitwise identical to the clean reference run. A final derivative can be ill-conditioned when large physical transfers nearly cancel, so the report gates the rate layer and the stoichiometric routing separately rather than hiding cancellation behind a misleading relative error.\n\nThis is stronger than a handful of controlled fixtures, but it is a shadow replay: upstream still supplies the realized merger/type-2 topology. The yellow health row keeps that remaining distinction visible.",
+      "diagnostics": [],
+      "key": "full_tree_population_replay",
+      "links": [],
+      "notes": [],
+      "summary": "Every disk and starburst derivative actually requested by the complete public-CI population was independently recalculated by one compiled JAX kernel, with a narrow BR06 quadrature warning retained explicitly.",
+      "title": "Does the JAX physics survive the full population?"
+    },
+    {
       "artifacts": [],
-      "body": "The exact native SHARK population backend is reproducible and integrated; the JAX layer separately passes prescription, conservation, differentiation, ordered disk-interval, and starburst-event tests. Calling those two facts a full independent population match would be premature. The next validation program must replay stable galaxy IDs and report threshold/topology differences. A SAGE–SHARK physics comparison then requires common halo forcing; comparing native Mini-Millennium with native mini-SURFS would otherwise mix model and simulation differences.",
+      "body": "The public tree contains 31 positive descendant IDs that upstream deliberately skips under `skip_missing_descendants=true`; mimic-jax now parses and reports those cases rather than rejecting the file. The next strict gate must own stable galaxy IDs, type-2 transfer, and per-ID event history, then compare the resulting catalogue. A SAGE–SHARK physics comparison then requires common halo forcing; comparing native Mini-Millennium with native mini-SURFS would otherwise mix model and simulation differences.",
       "diagnostics": [],
       "key": "next_gates",
       "links": [],
       "notes": [],
-      "summary": "The controlled process/event surface and ordered intervals are implemented. The remaining strict equivalence gate is independent per-ID JAX replay of the full 20,174-tree public-CI population.",
-      "title": "What must pass before SHARK and SAGE are compared?"
+      "summary": "Full-population continuous physics is now measured, with its narrow quadrature warning quantified. The remaining work is narrower and explicit: reproduce SHARK's variable-cardinality galaxy ownership and event schedule without borrowing realized states from upstream.",
+      "title": "What remains before a topology-owning JAX catalogue?"
     }
   ]
 }

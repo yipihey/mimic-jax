@@ -2,7 +2,7 @@
 title: "SHARK Lagos23 on the same testable footing as SAGE16"
 report-id: "shark-continuous-foundation"
 report-kind: "run"
-date: "2026-08-20T12:54:23Z"
+date: "2026-08-20T14:11:49Z"
 toc: true
 ---
 
@@ -25,9 +25,11 @@ A complete native Lagos23 population remains the topology/event reference, while
 | Continuous flow variables | 19 |
 | Reservoir + BH/AGN state variables | 24 |
 | Native galaxy fields available | 86 |
+| Full-tree JAX RHS evaluations | 5709080 |
+| Maximum full-tree rate relative difference | 0.000122948 |
 | Maximum controlled interval residual | 2.50749e-05 |
 | Maximum controlled burst residual | 9.82719e-05 |
-| Report analysis wall time | 97.8924 s |
+| Report analysis wall time | 31.5446 s |
 
 Related: [SAGE16 science program](../mini-millennium-sage16-science-program/index.md) · [SAGE16 response times](../sage16-linear-response/index.md)
 
@@ -37,6 +39,7 @@ Related: [SAGE16 science program](../mini-millennium-sage16-science-program/inde
 | --- | --- | --- |
 | Pinned upstream SHARK oracle | ✅ Passed | The clean pinned upstream executable completed the public CI tree and the catalogue records the expected revision, version, seed, and 7,553 galaxies. |
 | 19-state flow equations | ✅ Passed | The JAX flow assembly reproduces every equation in upstream basic_physicalmodel_evaluator for controlled named rates. |
+| Full-tree JAX population physics replay | ⚠️ Warning | The compiled JAX kernel evaluated every one of the 5,709,080 disk and starburst RHS calls realized by all 20,174 trees. Three of 62,799,880 named-rate values exceed the predeclared 1.1e-4 strict gate; none exceeds the explicit 1.5e-4 quadrature warning band, and all 19-state routing comparisons pass the strict gate. The traced and clean native catalogues are bitwise identical across all 5,332,172 compared values. |
 | BR06 radial star-formation prescription | ✅ Passed | Four disk/burst cases agree with the pinned upstream prescription to better than 5 parts per million, including angular-momentum transport. |
 | Lagos13 stellar-feedback loadings | ✅ Passed | Five velocity/redshift cases reproduce the upstream reheating, ejection, and angular-momentum loadings exactly in float64 output. |
 | Lagos23 reincorporation finite map | ✅ Passed | Five central/satellite and halo-mass cases reproduce upstream's finite transfer and source cap exactly. |
@@ -49,7 +52,7 @@ Related: [SAGE16 science program](../mini-millennium-sage16-science-program/inde
 | Continuous hot-mode black-hole transfer | ✅ Passed | Hot-mode growth transfers hot gas and metals into the augmented BH state. The removed gas angular momentum is an explicit sink because SHARK stores dimensionless BH spin rather than BH angular momentum in the baryon ledger. |
 | Controlled flow convergence | ✅ Passed | The nonlinear Croton06-cooling, BR06-star-formation, and Lagos13-feedback flow recovers first-, second-, and fourth-order convergence for Euler, Heun, and RK4. |
 | Differentiable fractional parameter responses | ✅ Passed | JAX directly returns dimensionless reservoir and cooling responses for SN-regulated and massive AGN-heated controlled galaxies. |
-| Independent JAX full-tree population parity | ⬚ Not evaluated | The exact native population backend is integrated and the JAX process/event kernels cover the controlled pinned Lagos23 branches, but per-ID independent JAX replay of all 20,174 public-CI trees has not passed. No such parity claim is made. |
+| Independent JAX full-tree population parity | ⚠️ Warning | This gate is now evaluated rather than unknown: exhaustive JAX shadow replay covers the continuous population physics with three explicit BR06 quadrature warnings, but the native driver still supplies variable-cardinality topology and branch states. A topology-owning JAX catalogue match is therefore not yet claimed. |
 
 ## At a glance
 
@@ -80,6 +83,8 @@ Related: [SAGE16 science program](../mini-millennium-sage16-science-program/inde
 ![Fractional response matrix of the continuous Lagos23 core](assets/lagos23-fractional-response-matrix.svg)
 
 *Each entry is the percentage change in a final reservoir or integrated cooling transfer per 1% parameter increase, evaluated by JAX AD.*
+
+[Full-tree JAX population replay evidence](assets/shark-full-tree-jax-parity.json) — Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.
 
 ## What is the SHARK reference prediction?
 
@@ -164,11 +169,21 @@ Rows are final stellar, cold-gas, hot-gas, BH, SFR, cooling, and ejected-gas out
 
 [Machine-readable foundation arrays](assets/shark-foundation-results.npz) — Catalogue summaries, controlled convergence histories, direct-oracle residuals, and fractional-response matrices used by this report.
 
-## What must pass before SHARK and SAGE are compared?
+## Does the JAX physics survive the full population?
 
-The controlled process/event surface and ordered intervals are implemented. The remaining strict equivalence gate is independent per-ID JAX replay of the full 20,174-tree public-CI population.
+Every disk and starburst derivative actually requested by the complete public-CI population was independently recalculated by one compiled JAX kernel, with a narrow BR06 quadrature warning retained explicitly.
 
-The exact native SHARK population backend is reproducible and integrated; the JAX layer separately passes prescription, conservation, differentiation, ordered disk-interval, and starburst-event tests. Calling those two facts a full independent population match would be premature. The next validation program must replay stable galaxy IDs and report threshold/topology differences. A SAGE–SHARK physics comparison then requires common halo forcing; comparing native Mini-Millennium with native mini-SURFS would otherwise mix model and simulation differences.
+The run covers 5,709,080 realized RHS states from 15,116 galaxies across snapshots 60–198: 3,474,024 disk evaluations and 2,235,056 starburst evaluations. BR06 star formation supplies the largest rate difference, 1.2295e-4 relative, because mimic-jax uses deterministic 128-node quadrature where upstream uses adaptive GSL quadrature. Three of 62,799,880 named-rate values (4.8e-8 of the comparison population), all BR06 star-formation rates, exceed the predeclared 1.1e-4 strict gate. None exceeds the separately recorded 1.5e-4 warning band. All 108,472,520 routed derivative values pass the strict gate. The opt-in trace itself is non-perturbing: all 5,332,172 values in 1,462 galaxy datasets across 17 native output snapshots are bitwise identical to the clean reference run. A final derivative can be ill-conditioned when large physical transfers nearly cancel, so the report gates the rate layer and the stoichiometric routing separately rather than hiding cancellation behind a misleading relative error.
+
+This is stronger than a handful of controlled fixtures, but it is a shadow replay: upstream still supplies the realized merger/type-2 topology. The yellow health row keeps that remaining distinction visible.
+
+[Full-tree JAX population replay evidence](assets/shark-full-tree-jax-parity.json) — Counts, tolerances, checksums, and streaming errors from all 5,709,080 realized native disk/starburst RHS states.
+
+## What remains before a topology-owning JAX catalogue?
+
+Full-population continuous physics is now measured, with its narrow quadrature warning quantified. The remaining work is narrower and explicit: reproduce SHARK's variable-cardinality galaxy ownership and event schedule without borrowing realized states from upstream.
+
+The public tree contains 31 positive descendant IDs that upstream deliberately skips under `skip_missing_descendants=true`; mimic-jax now parses and reports those cases rather than rejecting the file. The next strict gate must own stable galaxy IDs, type-2 transfer, and per-ID event history, then compare the resulting catalogue. A SAGE–SHARK physics comparison then requires common halo forcing; comparing native Mini-Millennium with native mini-SURFS would otherwise mix model and simulation differences.
 
 ## Parameters
 
@@ -182,14 +197,14 @@ The exact native SHARK population backend is reproducible and integrated; the JA
 
 | Item | Value |
 | --- | --- |
-| Generated | 2026-08-20T12:54:23Z |
-| Git commit | `1edddcf9c590c6a8c53ae550ba106f94f95b6130` (clean working tree) |
+| Generated | 2026-08-20T14:11:49Z |
+| Git commit | `d74457736333d348ceae8996966d53cd67070f5e` (dirty working tree) |
 | Git branch | main |
 
 ### Rerun command
 
 ```shell
-python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5 --upstream-config /tmp/mimic-shark-release-reference/effective-shark.cfg --report-directory reports/shark-continuous-foundation
+python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5 --upstream-config /tmp/mimic-shark-release-reference/effective-shark.cfg --report-directory reports/shark-continuous-foundation --population-parity reports/shark-continuous-foundation/assets/shark-full-tree-jax-parity.json
 ```
 
 ### Configurations and inputs
@@ -199,18 +214,19 @@ python scripts/generate_shark_foundation_report.py --upstream-output /tmp/mimic-
 | configuration | `/private/tmp/mimic-shark-release-reference/effective-shark.cfg` | `f94d665d0cc5d24c9e48b3f9050e481ee28e13d5a05b40d6fbb4c1eb493fafeb` | 4131 |
 | input | `/private/tmp/mimic-shark-release-reference/mini-SURFS/lagos23-reference/199/0/galaxies.hdf5` | `78cc1148f0ff39dfe05d10b81124724104fd1d56150b7fd47dffc7a3be837aca` | 3161736 |
 | input | `tests/mimic_jax/fixtures/shark/lagos23_rate_oracle.json` | `7bd9e3e5304209a6056200a67da1317b3f88a5a1f2962e61fe16995e1538f1f3` | 20917 |
+| input | `reports/shark-continuous-foundation/assets/shark-full-tree-jax-parity.json` | `c0630765d51fe39871ca001ad4f08b816f4647ae75145a6aa5a78a1b9b189441` | 3958 |
 
 ### Software
 
 | Name | Value |
 | --- | --- |
-| PyYAML | 6.0.3 |
-| h5py | 3.14.0 |
-| jax | 0.4.30 |
-| jaxlib | 0.4.30 |
-| matplotlib | 3.9.4 |
-| numpy | 2.0.2 |
-| python | 3.9.6 |
+| h5py | 3.16.0 |
+| jax | 0.4.38 |
+| jaxlib | 0.4.38 |
+| matplotlib | 3.11.1 |
+| mimic-jax | 0.1.0 |
+| numpy | 2.5.2 |
+| python | 3.13.0 |
 
 ### Hardware and backend
 

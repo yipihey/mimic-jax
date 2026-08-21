@@ -1,6 +1,6 @@
 """JAX-native physics kernels that preserve MIMIC model semantics."""
 
-from mimic_jax import observables, reporting, sage16, shark
+from mimic_jax import catalogue, observables, observations, reporting, sage16, shark, trees
 from mimic_jax.inference import (
     LocalGaussianFit,
     LocalLogResponseEmulator,
@@ -91,6 +91,7 @@ __all__ = [
     "RK4",
     "TimestepRefinementResult",
     "conservation_residual",
+    "catalogue",
     "dormand_prince_step",
     "finite_epoch_magnitude_weights",
     "fixed_step_rhs_evaluations",
@@ -108,6 +109,7 @@ __all__ = [
     "local_log_posterior",
     "method_convergence_study",
     "observables",
+    "observations",
     "parameter_response_matrix",
     "process_response_tensor",
     "random_walk_metropolis",
@@ -123,6 +125,7 @@ __all__ = [
     "symmetric_log_standard_deviation",
     "timestep_refinement_study",
     "transfer_matrix",
+    "trees",
     "uniform_ln_scale_factor_edges",
     "validate_parameter_response",
     "validate_log_posterior_gradient",

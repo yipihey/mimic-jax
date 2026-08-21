@@ -108,6 +108,11 @@ def _arguments():
         type=Path,
         default=Path("reports/shark-continuous-foundation"),
     )
+    parser.add_argument(
+        "--population-parity",
+        type=Path,
+        default=Path("reports/shark-continuous-foundation/assets/shark-full-tree-jax-parity.json"),
+    )
     return parser.parse_args()
 
 
@@ -951,7 +956,19 @@ def main():
     rate_oracle_path = arguments.rate_oracle
     if not rate_oracle_path.is_absolute():
         rate_oracle_path = repository / rate_oracle_path
-    inputs = [arguments.upstream_output, rate_oracle_path]
+    population_parity_path = arguments.population_parity
+    if not population_parity_path.is_absolute():
+        population_parity_path = repository / population_parity_path
+    population_parity = json.loads(population_parity_path.read_text(encoding="utf-8"))
+    if not population_parity["passed"]:
+        raise ValueError("full-tree JAX population replay falls outside its warning tolerance")
+    trace_noninterference = population_parity.get("native_trace_noninterference")
+    if trace_noninterference is None or not trace_noninterference["passed"]:
+        raise ValueError("instrumented native catalogue does not match the clean reference")
+    population_replay_status = (
+        DiagnosticStatus.PASSED if population_parity["strict_passed"] else DiagnosticStatus.WARNING
+    )
+    inputs = [arguments.upstream_output, rate_oracle_path, population_parity_path]
     configurations = []
     if arguments.upstream_config is not None:
         configurations.append(arguments.upstream_config)
@@ -964,6 +981,7 @@ def main():
     if arguments.upstream_config is not None:
         rerun_command.extend(("--upstream-config", str(arguments.upstream_config)))
     rerun_command.extend(("--report-directory", str(arguments.report_directory)))
+    rerun_command.extend(("--population-parity", str(arguments.population_parity)))
     # Capture source identity before regenerating tracked report assets. Otherwise
     # the act of writing the report would incorrectly mark an initially clean run dirty.
     provenance = capture_provenance(
@@ -1215,6 +1233,17 @@ def main():
             "and fractional-response matrices used by this report."
         ),
     )
+    population_parity_artifact = Artifact(
+        key="full_tree_jax_population_parity",
+        title="Full-tree JAX population replay evidence",
+        path="assets/shark-full-tree-jax-parity.json",
+        media_type="application/json",
+        role="validation_data",
+        description=(
+            "Counts, tolerances, checksums, and streaming errors from all 5,709,080 "
+            "realized native disk/starburst RHS states."
+        ),
+    )
 
     report = RunReport(
         identity=RunIdentity(
@@ -1239,6 +1268,16 @@ def main():
             ScalarMetric("flow_state", "Continuous flow variables", 19),
             ScalarMetric("augmented_state", "Reservoir + BH/AGN state variables", 24),
             ScalarMetric("native_catalogue_fields", "Native galaxy fields available", 86),
+            ScalarMetric(
+                "full_tree_rhs_evaluations",
+                "Full-tree JAX RHS evaluations",
+                population_parity["rhs_evaluations"],
+            ),
+            ScalarMetric(
+                "full_tree_rate_error",
+                "Maximum full-tree rate relative difference",
+                population_parity["rates"]["maximum_relative_error"],
+            ),
             ScalarMetric(
                 "interval_oracle_error",
                 "Maximum controlled interval residual",
@@ -1277,6 +1316,72 @@ def main():
                 ),
                 method="source-level equation fixture plus direct float64 comparison",
                 tolerance="relative difference <= 5e-15 in the controlled fixture",
+            ),
+            Diagnostic(
+                key="full_tree_jax_population_replay",
+                title="Full-tree JAX population physics replay",
+                status=population_replay_status,
+                summary=(
+                    "The compiled JAX kernel evaluated every one of the 5,709,080 disk and "
+                    "starburst RHS calls realized by all 20,174 trees. Three of 62,799,880 "
+                    "named-rate values exceed the predeclared 1.1e-4 strict gate; none exceeds "
+                    "the explicit 1.5e-4 quadrature warning band, and all 19-state routing "
+                    "comparisons pass the strict gate. The traced and clean native catalogues "
+                    "are bitwise identical across all 5,332,172 compared values."
+                ),
+                metrics=(
+                    ScalarMetric(
+                        "trees", "Merger trees covered", population_parity["number_of_trees"]
+                    ),
+                    ScalarMetric(
+                        "rhs_evaluations",
+                        "Native states replayed in JAX",
+                        population_parity["rhs_evaluations"],
+                    ),
+                    ScalarMetric(
+                        "maximum_rate_relative_difference",
+                        "Maximum rate relative difference",
+                        population_parity["rates"]["maximum_relative_error"],
+                    ),
+                    ScalarMetric(
+                        "strict_rate_exceptions",
+                        "Named rates outside strict gate",
+                        population_parity["rates"]["failing_values"],
+                    ),
+                    ScalarMetric(
+                        "rate_failures",
+                        "Named rates outside warning band",
+                        population_parity["rates"]["outside_warning_band_values"],
+                    ),
+                    ScalarMetric(
+                        "routing_failures",
+                        "19-state routing strict failures",
+                        population_parity["rhs"]["failing_values"],
+                    ),
+                    ScalarMetric(
+                        "native_catalogue_mismatches",
+                        "Native values changed by tracing",
+                        trace_noninterference["mismatching_values"],
+                    ),
+                    ScalarMetric(
+                        "jax_compilation_seconds",
+                        "JAX compilation and warm-up",
+                        population_parity["compilation_seconds"],
+                        "s",
+                    ),
+                    ScalarMetric(
+                        "jax_replay_seconds",
+                        "Batched steady-state replay wall time",
+                        population_parity["elapsed_seconds"],
+                        "s",
+                    ),
+                ),
+                artifacts=(population_parity_artifact,),
+                method=population_parity["method"],
+                tolerance=(
+                    "strict rtol=1.1e-4, warning rtol=1.5e-4, atol=1e-8; values in the "
+                    "warning band remain visible and do not become silent passes"
+                ),
             ),
             Diagnostic(
                 key="br06_star_formation_oracle",
@@ -1517,12 +1622,34 @@ def main():
             Diagnostic(
                 key="independent_jax_population_parity",
                 title="Independent JAX full-tree population parity",
-                status=DiagnosticStatus.NOT_EVALUATED,
+                status=DiagnosticStatus.WARNING,
                 summary=(
-                    "The exact native population backend is integrated and the JAX process/event "
-                    "kernels cover the controlled pinned Lagos23 branches, but per-ID independent JAX replay of "
-                    "all 20,174 public-CI trees has not passed. No such parity claim is made."
+                    "This gate is now evaluated rather than unknown: exhaustive JAX shadow replay "
+                    "covers the continuous population physics with three explicit BR06 quadrature "
+                    "warnings, but the native driver still supplies variable-cardinality topology "
+                    "and branch states. A topology-owning JAX catalogue match is therefore not yet "
+                    "claimed."
                 ),
+                metrics=(
+                    ScalarMetric(
+                        "continuous_states_evaluated",
+                        "Continuous states evaluated",
+                        population_parity["rhs_evaluations"],
+                    ),
+                    ScalarMetric(
+                        "tree_nodes_parsed",
+                        "Input tree nodes parsed",
+                        population_parity["number_of_tree_nodes"],
+                    ),
+                    ScalarMetric(
+                        "upstream_skipped_missing_descendants",
+                        "Explicit missing descendant links",
+                        population_parity["missing_descendant_links_skipped_upstream"],
+                    ),
+                ),
+                artifacts=(population_parity_artifact,),
+                method="evaluated evidence decomposition: exhaustive flow replay plus controlled event oracles",
+                tolerance="warning remains until a topology-owning per-ID JAX catalogue is compared",
             ),
         ),
         headline_artifacts=(
@@ -1533,6 +1660,7 @@ def main():
             flow_artifact,
             convergence_artifact,
             response_artifact,
+            population_parity_artifact,
         ),
         sections=(
             ReportSection(
@@ -1662,19 +1790,49 @@ def main():
                 artifacts=(response_artifact, arrays_artifact),
             ),
             ReportSection(
-                key="next_gates",
-                title="What must pass before SHARK and SAGE are compared?",
+                key="full_tree_population_replay",
+                title="Does the JAX physics survive the full population?",
                 summary=(
-                    "The controlled process/event surface and ordered intervals are implemented. The "
-                    "remaining strict equivalence gate is independent per-ID JAX replay of the full "
-                    "20,174-tree public-CI population."
+                    "Every disk and starburst derivative actually requested by the complete "
+                    "public-CI population was independently recalculated by one compiled JAX "
+                    "kernel, with a narrow BR06 quadrature warning retained explicitly."
                 ),
                 body=(
-                    "The exact native SHARK population backend is reproducible and integrated; the "
-                    "JAX layer separately passes prescription, conservation, differentiation, "
-                    "ordered disk-interval, and starburst-event tests. Calling those two facts a full "
-                    "independent population match would be premature. The next validation program "
-                    "must replay stable galaxy IDs and report threshold/topology differences. A SAGE–SHARK "
+                    "The run covers 5,709,080 realized RHS states from 15,116 galaxies across "
+                    "snapshots 60–198: 3,474,024 disk evaluations and 2,235,056 starburst "
+                    "evaluations. BR06 star formation supplies the largest rate difference, "
+                    "1.2295e-4 relative, because mimic-jax uses deterministic 128-node quadrature "
+                    "where upstream uses adaptive GSL quadrature. Three of 62,799,880 named-rate "
+                    "values (4.8e-8 of the comparison population), all BR06 star-formation rates, "
+                    "exceed the predeclared 1.1e-4 strict gate. None exceeds the separately recorded "
+                    "1.5e-4 warning band. All 108,472,520 routed derivative values pass the strict "
+                    "gate. The opt-in trace itself is non-perturbing: all 5,332,172 values in 1,462 "
+                    "galaxy datasets across 17 native output snapshots are bitwise identical to the "
+                    "clean reference run. "
+                    "A final derivative can be ill-conditioned when large physical transfers nearly "
+                    "cancel, so the report gates the rate layer and the stoichiometric routing "
+                    "separately rather than hiding cancellation behind a misleading relative error."
+                    "\n\nThis is stronger than a handful of controlled fixtures, but it is a shadow "
+                    "replay: upstream still supplies the realized merger/type-2 topology. The yellow "
+                    "health row keeps that remaining distinction visible."
+                ),
+                artifacts=(population_parity_artifact,),
+            ),
+            ReportSection(
+                key="next_gates",
+                title="What remains before a topology-owning JAX catalogue?",
+                summary=(
+                    "Full-population continuous physics is now measured, with its narrow quadrature "
+                    "warning quantified. The remaining work is narrower and explicit: reproduce "
+                    "SHARK's variable-cardinality galaxy ownership and event schedule without "
+                    "borrowing realized states from upstream."
+                ),
+                body=(
+                    "The public tree contains 31 positive descendant IDs that upstream deliberately "
+                    "skips under `skip_missing_descendants=true`; mimic-jax now parses and reports "
+                    "those cases rather than rejecting the file. The next strict gate must own stable "
+                    "galaxy IDs, type-2 transfer, and per-ID event history, then compare the resulting "
+                    "catalogue. A SAGE–SHARK "
                     "physics comparison then requires common halo forcing; comparing native Mini-Millennium "
                     "with native mini-SURFS would otherwise mix model and simulation differences."
                 ),

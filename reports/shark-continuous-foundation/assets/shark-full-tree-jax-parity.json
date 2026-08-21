@@ -1,0 +1,110 @@
+{
+  "absolute_tolerance": 1e-08,
+  "compilation_seconds": 0.17871833400567994,
+  "derived_quantities": {
+    "compared_values": 17127240,
+    "failing_values": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_relative_error": 0.0,
+    "maximum_scaled_error": 0.0,
+    "outside_warning_band_values": 0
+  },
+  "disk_rhs_evaluations": 3474024,
+  "elapsed_seconds": 4.4165449169813655,
+  "first_snapshot": 60,
+  "jax_backend": "cpu",
+  "jax_version": "0.4.38",
+  "last_snapshot": 198,
+  "method": "exhaustive native-state shadow replay through a jax.jit(jax.vmap) Lagos23 BR06+Lagos13+QSO+19-state RHS kernel",
+  "missing_descendant_links_skipped_upstream": 31,
+  "native_trace_noninterference": {
+    "datasets_compared": 1462,
+    "mismatching_datasets": 0,
+    "mismatching_values": 0,
+    "passed": true,
+    "snapshots_compared": 17,
+    "values_compared": 5332172
+  },
+  "number_of_tree_nodes": 339920,
+  "number_of_trees": 20174,
+  "passed": true,
+  "qualifications": [
+    "The native topology driver supplies the realized states and branch schedule.",
+    "This evaluates every continuous disk and starburst RHS call, not an independent topology-owning JAX catalogue evolution.",
+    "Cooling preparation, environment, mergers, and disk instabilities retain their separate controlled-oracle evidence."
+  ],
+  "rate_maximum_relative_error": {
+    "angular_momentum_ejection_loading": 0.0,
+    "angular_momentum_reheating_loading": 0.0,
+    "cooling": 0.0,
+    "cooling_metallicity": 0.0,
+    "cooling_specific_angular_momentum": 0.0,
+    "qso_ejection_loading": 3.808873427427324e-06,
+    "qso_reheating_loading": 3.8714288162138287e-07,
+    "star_formation": 0.00012294763547419742,
+    "star_formation_angular_momentum": 3.779273812838505e-05,
+    "stellar_ejection_loading": 0.0,
+    "stellar_reheating_loading": 0.0
+  },
+  "rate_outside_warning_band_values": {
+    "angular_momentum_ejection_loading": 0,
+    "angular_momentum_reheating_loading": 0,
+    "cooling": 0,
+    "cooling_metallicity": 0,
+    "cooling_specific_angular_momentum": 0,
+    "qso_ejection_loading": 0,
+    "qso_reheating_loading": 0,
+    "star_formation": 0,
+    "star_formation_angular_momentum": 0,
+    "stellar_ejection_loading": 0,
+    "stellar_reheating_loading": 0
+  },
+  "rate_strict_failing_values": {
+    "angular_momentum_ejection_loading": 0,
+    "angular_momentum_reheating_loading": 0,
+    "cooling": 0,
+    "cooling_metallicity": 0,
+    "cooling_specific_angular_momentum": 0,
+    "qso_ejection_loading": 0,
+    "qso_reheating_loading": 0,
+    "star_formation": 3,
+    "star_formation_angular_momentum": 0,
+    "stellar_ejection_loading": 0,
+    "stellar_reheating_loading": 0
+  },
+  "rates": {
+    "compared_values": 62799880,
+    "failing_values": 3,
+    "maximum_absolute_error": 8674069040.0,
+    "maximum_relative_error": 0.00012294763547419742,
+    "maximum_scaled_error": 1.1039183502036327,
+    "outside_warning_band_values": 0
+  },
+  "recomputed_rhs": {
+    "compared_values": 108472520,
+    "failing_values": 162468,
+    "maximum_absolute_error": 170697193.09375,
+    "maximum_relative_error": 770.2357418927802,
+    "maximum_scaled_error": 7002113.302651571,
+    "outside_warning_band_values": 121109
+  },
+  "rhs": {
+    "compared_values": 108472520,
+    "failing_values": 0,
+    "maximum_absolute_error": 0.00390625,
+    "maximum_relative_error": 4.011540499268886e-13,
+    "maximum_scaled_error": 2.9332046964556676e-09,
+    "outside_warning_band_values": 0
+  },
+  "rhs_evaluations": 5709080,
+  "starburst_rhs_evaluations": 2235056,
+  "status": "warning",
+  "strict_passed": false,
+  "strict_relative_tolerance": 0.00011,
+  "trace_path": "full-population-rhs.bin",
+  "trace_sha256": "8e20dbd3f9a5a63d9e5158ec1673c53b4447add69db53f7c49d923f6ed85c961",
+  "tree_path": "tree_199.0.hdf5",
+  "tree_sha256": "c072a937941fefb9aac441fc319ff030ceb666af4a07f1b88c0f02c5d76a3f43",
+  "unique_galaxies_evaluated": 15116,
+  "warning_relative_tolerance": 0.00015
+}

@@ -1,9 +1,12 @@
 """Explicit conversion from internal SAGE16 records to upstream catalogue quantities."""
 
 import math
+from pathlib import Path
+from typing import Sequence
 
 import numpy as np
 
+from mimic_jax.catalogue import CatalogueField, ComparisonCatalogue
 from mimic_jax.sage16.tree_evolve import (
     GalaxyRecord,
     SnapshotTiming,
@@ -16,6 +19,30 @@ from mimic_jax.sage16.types import Sage16Units, sage16_units
 SECONDS_PER_YEAR = 3.155e7
 SECONDS_PER_MEGAYEAR = 3.155e13
 SOLAR_MASS_G = 1.989e33
+
+_COMPARISON_REQUIRED_FIELDS = (
+    "UniqueGalaxyID",
+    "Type",
+    "StellarMass",
+    "BulgeMass",
+    "ColdGas",
+    "HotGas",
+    "EjectedGas",
+    "ICS",
+    "StarFormationRate",
+    "BlackHoleMass",
+    "CentralMvir",
+    "Mvir",
+    "MetalsColdGas",
+    "MetalsStellarMass",
+    "DiskScaleRadius",
+    "Vmax",
+    "Pos",
+    "Vel",
+    "Cooling",
+    "Heating",
+    "SupernovaOutflowRate",
+)
 
 
 def _float32_scale(value, factor):
@@ -111,3 +138,236 @@ def record_to_catalogue(
             float(units.UnitTime_in_s) / SECONDS_PER_MEGAYEAR / 1000.0,
         ),
     }
+
+
+def load_sage_comparison_catalogue(
+    paths: Sequence[Path],
+    *,
+    snapshot: int,
+    hubble_h: float,
+    effective_volume_mpc_over_h_cubed: float,
+    redshift: float,
+    dataset: str,
+) -> ComparisonCatalogue:
+    """Project one or more native MIMIC/SAGE HDF5 files into common units.
+
+    Volume, ``h``, and redshift are required because the current native SAGE
+    output records fields and parameter metadata but does not embed the full
+    simulation-volume/cosmology contract.  Requiring them avoids a hidden
+    Mini-Millennium default in comparisons to other simulations.
+    """
+
+    try:
+        import h5py
+    except ImportError as error:  # pragma: no cover - repository requirements include h5py
+        raise RuntimeError("Reading SAGE HDF5 catalogues requires h5py") from error
+
+    paths = tuple(Path(path) for path in paths)
+    if not paths:
+        raise ValueError("At least one SAGE catalogue path is required")
+    group_name = f"Snap{int(snapshot):03d}"
+    chunks = []
+    parameters = None
+    for path in paths:
+        with h5py.File(path, "r") as handle:
+            dataset_path = f"{group_name}/Galaxies"
+            if dataset_path not in handle:
+                raise ValueError(f"{path} does not contain {dataset_path}")
+            galaxies = np.asarray(handle[dataset_path])
+            missing = [
+                name for name in _COMPARISON_REQUIRED_FIELDS if name not in galaxies.dtype.names
+            ]
+            if missing:
+                raise ValueError(f"SAGE catalogue {path} is missing required fields: {missing}")
+            chunks.append(galaxies)
+            if "RunProperties/Parameters" in handle:
+                current = {
+                    bytes(row["param_name"]).decode("utf-8"): bytes(row["value"]).decode("utf-8")
+                    for row in np.asarray(handle["RunProperties/Parameters"])
+                }
+                if parameters is None:
+                    parameters = current
+                elif parameters != current:
+                    raise ValueError("SAGE catalogue partitions use different parameter sets")
+    galaxies = np.concatenate(chunks)
+    mass_factor = 1.0e10 / float(hubble_h)
+
+    def field(values, unit, description, source_fields, projection="direct", qualification=""):
+        return CatalogueField(
+            np.asarray(values),
+            unit,
+            description,
+            tuple(source_fields),
+            projection,
+            qualification,
+        )
+
+    fields = {
+        "galaxy_id": field(
+            galaxies["UniqueGalaxyID"],
+            "dimensionless",
+            "Persistent SAGE galaxy identifier.",
+            ("UniqueGalaxyID",),
+        ),
+        "galaxy_type": field(
+            galaxies["Type"],
+            "dimensionless",
+            "SAGE type: 0 central, 1 resolved satellite, 2 orphan.",
+            ("Type",),
+        ),
+        "stellar_mass": field(
+            galaxies["StellarMass"] * mass_factor,
+            "Msun",
+            "Total stellar mass, including the bulge component.",
+            ("StellarMass",),
+        ),
+        "bulge_stellar_mass": field(
+            galaxies["BulgeMass"] * mass_factor,
+            "Msun",
+            "Bulge stellar mass, a subset of total stellar mass.",
+            ("BulgeMass",),
+        ),
+        "cold_gas_mass": field(
+            galaxies["ColdGas"] * mass_factor,
+            "Msun",
+            "Total SAGE cold star-forming gas reservoir.",
+            ("ColdGas",),
+            qualification="SAGE does not natively split this reservoir into HI and H2.",
+        ),
+        "baryonic_mass": field(
+            (galaxies["StellarMass"] + galaxies["ColdGas"]) * mass_factor,
+            "Msun",
+            "Declared cold baryonic mass: total stars plus cold gas.",
+            ("StellarMass", "ColdGas"),
+            "derived",
+        ),
+        "hot_gas_mass": field(
+            galaxies["HotGas"] * mass_factor,
+            "Msun",
+            "Hot halo gas assigned to the galaxy record.",
+            ("HotGas",),
+        ),
+        "ejected_gas_mass": field(
+            galaxies["EjectedGas"] * mass_factor,
+            "Msun",
+            "Gas in SAGE's feedback-ejected reservoir.",
+            ("EjectedGas",),
+        ),
+        "intracluster_stellar_mass": field(
+            galaxies["ICS"] * mass_factor,
+            "Msun",
+            "Intracluster stellar mass.",
+            ("ICS",),
+        ),
+        "star_formation_rate": field(
+            galaxies["StarFormationRate"],
+            "Msun/yr",
+            "Snapshot-averaged total star-formation rate.",
+            ("StarFormationRate",),
+        ),
+        "black_hole_mass": field(
+            galaxies["BlackHoleMass"] * mass_factor,
+            "Msun",
+            "Central black-hole mass.",
+            ("BlackHoleMass",),
+        ),
+        "host_halo_mass": field(
+            galaxies["CentralMvir"] * mass_factor,
+            "Msun",
+            "FoF central halo virial mass stamped onto each member.",
+            ("CentralMvir",),
+            qualification="SAGE uses its 200-critical virial-mass convention.",
+        ),
+        "subhalo_mass": field(
+            galaxies["Mvir"] * mass_factor,
+            "Msun",
+            "Galaxy-owning halo/subhalo virial mass; orphans have zero.",
+            ("Mvir",),
+            qualification="SAGE uses M200c for centrals and particle mass for subhalos.",
+        ),
+        "cold_gas_metal_mass": field(
+            galaxies["MetalsColdGas"] * mass_factor,
+            "Msun",
+            "Total metal mass in the cold-gas reservoir.",
+            ("MetalsColdGas",),
+        ),
+        "stellar_metal_mass": field(
+            galaxies["MetalsStellarMass"] * mass_factor,
+            "Msun",
+            "Total stellar metal mass, already including bulge metals.",
+            ("MetalsStellarMass",),
+            qualification=(
+                "MetalsBulgeMass is a subset and must not be added to MetalsStellarMass."
+            ),
+        ),
+        "stellar_disk_radius": field(
+            galaxies["DiskScaleRadius"] / float(hubble_h) * 1.0e3,
+            "kpc",
+            "SAGE exponential disk scale radius.",
+            ("DiskScaleRadius",),
+            qualification="This is a scale radius, not SHARK's disk half-mass radius.",
+        ),
+        "maximum_circular_velocity": field(
+            galaxies["Vmax"],
+            "km/s",
+            "Maximum circular velocity of the owning subhalo or inherited infall value.",
+            ("Vmax",),
+        ),
+        "position": field(
+            galaxies["Pos"],
+            "Mpc/h",
+            "Comoving galaxy position inherited from the owning halo.",
+            ("Pos",),
+        ),
+        "velocity": field(
+            galaxies["Vel"],
+            "km/s",
+            "Galaxy peculiar velocity inherited from the owning halo.",
+            ("Vel",),
+        ),
+        "sage_cooling_power": field(
+            galaxies["Cooling"],
+            "log10(erg/s)",
+            "SAGE cumulative cooling-energy proxy converted to logarithmic power.",
+            ("Cooling",),
+            "model_specific",
+            "This is not an instantaneous cooling mass rate.",
+        ),
+        "sage_heating_power": field(
+            galaxies["Heating"],
+            "log10(erg/s)",
+            "SAGE cumulative AGN-heating proxy converted to logarithmic power.",
+            ("Heating",),
+            "model_specific",
+            "This is not the same output as SHARK mechanical jet power.",
+        ),
+        "supernova_outflow_rate": field(
+            galaxies["SupernovaOutflowRate"],
+            "Msun/yr",
+            "SAGE supernova-driven outflow rate.",
+            ("SupernovaOutflowRate",),
+            "model_specific",
+        ),
+    }
+    unavailable = {
+        "atomic_gas_mass": "fiducial SAGE16 outputs only total cold gas",
+        "molecular_gas_mass": "fiducial SAGE16 outputs only total cold gas",
+        "black_hole_spin": "fiducial SAGE16 does not evolve black-hole spin",
+        "agn_bolometric_luminosity": "fiducial SAGE16 outputs cooling/heating proxies instead",
+        "agn_mechanical_power": "fiducial SAGE16 outputs a heating proxy, not jet power",
+        "stellar_angular_momentum": "fiducial SAGE16 does not output component angular momentum",
+        "cooling_rate": "SAGE's public Cooling field is an energy proxy, not a mass rate",
+        "burst_star_formation_rate": "fiducial SAGE16 outputs only total snapshot-averaged SFR",
+    }
+    return ComparisonCatalogue(
+        model="SAGE16",
+        dataset=dataset,
+        snapshot=int(snapshot),
+        redshift=float(redshift),
+        hubble_h=float(hubble_h),
+        effective_volume_mpc_over_h_cubed=float(effective_volume_mpc_over_h_cubed),
+        fields=fields,
+        unavailable_fields=unavailable,
+        source_paths=paths,
+        metadata={"parameters": parameters or {}, "native_mass_unit": "1e10 Msun/h"},
+    )

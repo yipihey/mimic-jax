@@ -10,15 +10,8 @@ from typing import Mapping, Sequence, Tuple
 
 import numpy as np
 
-
-@dataclass(frozen=True)
-class StellarMassFunction:
-    """A number density per logarithmic stellar-mass interval."""
-
-    bin_edges: np.ndarray
-    bin_centres: np.ndarray
-    counts: np.ndarray
-    number_density: np.ndarray
+from mimic_jax.observables import MassFunction as StellarMassFunction
+from mimic_jax.observables import mass_function
 
 
 @dataclass(frozen=True)
@@ -71,16 +64,11 @@ def stellar_mass_function(
     if hubble_h <= 0.0 or not np.isfinite(hubble_h):
         raise ValueError("hubble_h must be finite and positive")
 
-    positive = mass > 0.0
-    logarithmic_mass = np.log10(mass[positive] * 1.0e10 / hubble_h)
-    counts, _ = np.histogram(logarithmic_mass, bins=edges)
-    widths = np.diff(edges)
-    density = counts / float(volume_mpc_over_h_cubed) * hubble_h**3 / widths
-    return StellarMassFunction(
+    return mass_function(
+        mass * 1.0e10 / hubble_h,
+        volume_mpc_over_h_cubed=volume_mpc_over_h_cubed,
+        hubble_h=hubble_h,
         bin_edges=edges,
-        bin_centres=edges[:-1] + 0.5 * widths,
-        counts=counts.astype(np.int64),
-        number_density=density,
     )
 
 

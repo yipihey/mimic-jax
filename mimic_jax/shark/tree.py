@@ -50,6 +50,7 @@ class SharkTreeData:
     file_number: int
     self_contained: bool
     has_subhalos: bool
+    missing_descendant_rows: np.ndarray
 
     @property
     def number_of_trees(self) -> int:
@@ -59,6 +60,18 @@ class SharkTreeData:
     def number_of_nodes_total(self) -> int:
         return int(self.nodes["nodeIndex"].size)
 
+    @property
+    def number_of_missing_descendants(self) -> int:
+        """Number of positive descendant IDs unresolved in this input file.
+
+        SHARK's ``skip_missing_descendants`` option removes these subhalos
+        while building the in-memory topology.  They are therefore a normal,
+        explicit input condition for the public CI tree rather than evidence
+        that the complete file failed to load.
+        """
+
+        return int(self.missing_descendant_rows.size)
+
     def tree_slice(self, tree_number: int) -> slice:
         first = int(self.first_node[tree_number])
         return slice(first, first + int(self.number_of_nodes[tree_number]))
@@ -67,8 +80,15 @@ class SharkTreeData:
         return np.flatnonzero(self.nodes["snapshotNumber"] == snapshot)
 
 
-def load_shark_tree(path) -> SharkTreeData:
-    """Load a native SHARK tree and enforce topology/schema invariants."""
+def load_shark_tree(path, *, require_all_descendants=False) -> SharkTreeData:
+    """Load a native SHARK tree and enforce topology/schema invariants.
+
+    Positive descendant IDs that cannot be resolved within the file are
+    retained in :attr:`SharkTreeData.missing_descendant_rows`.  This mirrors
+    the upstream tree builder's reviewed ``skip_missing_descendants`` branch.
+    Set ``require_all_descendants=True`` when validating an input contract
+    that promises every descendant subhalo is present.
+    """
 
     try:
         import h5py
@@ -108,10 +128,16 @@ def load_shark_tree(path) -> SharkTreeData:
     node_indices = np.asarray(nodes["nodeIndex"], dtype=np.int64)
     if np.unique(node_indices).size != node_indices.size:
         raise ValueError("SHARK nodeIndex values are not unique")
-    valid_descendants = np.asarray(nodes["descendantIndex"], dtype=np.int64)
-    valid_descendants = valid_descendants[valid_descendants >= 0]
-    if not np.all(np.isin(valid_descendants, node_indices)):
-        raise ValueError("SHARK tree contains descendant links outside the file")
+    descendants = np.asarray(nodes["descendantIndex"], dtype=np.int64)
+    positive_descendant_rows = np.flatnonzero(descendants >= 0)
+    missing_descendant_rows = positive_descendant_rows[
+        ~np.isin(descendants[positive_descendant_rows], node_indices)
+    ].astype(np.int64, copy=False)
+    if require_all_descendants and missing_descendant_rows.size:
+        raise ValueError(
+            "SHARK tree contains "
+            f"{missing_descendant_rows.size} unresolved positive descendant links"
+        )
     if output_snapshots.shape != output_redshifts.shape:
         raise ValueError("SHARK output snapshot and redshift arrays differ in length")
     return SharkTreeData(
@@ -128,4 +154,5 @@ def load_shark_tree(path) -> SharkTreeData:
         file_number=file_number,
         self_contained=self_contained,
         has_subhalos=has_subhalos,
+        missing_descendant_rows=missing_descendant_rows,
     )
