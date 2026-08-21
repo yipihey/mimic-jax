@@ -371,6 +371,79 @@ class ComparisonReport:
         return payload
 
 
+@dataclass(frozen=True)
+class ModelMetricValue:
+    """One named model value participating in a multi-model metric."""
+
+    model_key: str
+    value: Any
+
+    def __post_init__(self) -> None:
+        _validate_key(self.model_key, "Model metric key")
+        _validate_scalar(self.value, f"Model metric value for {self.model_key!r}")
+
+
+@dataclass(frozen=True)
+class MultiModelMetric:
+    """One common quantity across an ordered collection of models."""
+
+    key: str
+    label: str
+    values: Tuple[ModelMetricValue, ...]
+    unit: str = ""
+    interpretation: str = ""
+
+    def __post_init__(self) -> None:
+        _validate_key(self.key, "Multi-model metric key")
+        if not self.label:
+            raise ValueError("Multi-model metric labels cannot be empty")
+        keys = tuple(item.model_key for item in self.values)
+        if len(keys) != len(set(keys)):
+            raise ValueError("Multi-model metric model keys must be unique")
+
+
+@dataclass(frozen=True)
+class MultiModelComparisonReport:
+    """First-class comparison report for three or more configured models."""
+
+    comparison_id: str
+    title: str
+    summary: str
+    runs: Tuple[ComparedRun, ...]
+    metrics: Tuple[MultiModelMetric, ...]
+    provenance: Provenance
+    health: Tuple[Diagnostic, ...] = ()
+    sections: Tuple[ReportSection, ...] = ()
+    links: Tuple[ReportLink, ...] = ()
+    schema_version: str = REPORT_SCHEMA_VERSION
+
+    def __post_init__(self) -> None:
+        _validate_key(self.comparison_id, "Comparison ID")
+        if not self.title or not self.summary:
+            raise ValueError("Multi-model reports require a title and summary")
+        if len(self.runs) < 3:
+            raise ValueError("Multi-model reports require at least three runs")
+        run_keys = tuple(run.key for run in self.runs)
+        if len(run_keys) != len(set(run_keys)):
+            raise ValueError("Compared-run keys must be unique")
+        for metric in self.metrics:
+            metric_keys = tuple(value.model_key for value in metric.values)
+            if set(metric_keys) != set(run_keys):
+                raise ValueError(
+                    f"Metric {metric.key!r} must provide exactly the report run keys {run_keys}"
+                )
+        if self.schema_version != REPORT_SCHEMA_VERSION:
+            raise ValueError(f"Unsupported report schema version: {self.schema_version}")
+        _validate_unique(self.metrics, "Multi-model comparison metric")
+        _validate_unique(self.health, "Multi-model health diagnostic")
+        _validate_unique(self.sections, "Multi-model section")
+
+    def to_dict(self) -> Mapping[str, Any]:
+        payload = _to_json_value(self)
+        payload["kind"] = "multi_model_comparison"
+        return payload
+
+
 def _to_json_value(value: Any) -> Any:
     if isinstance(value, Enum):
         return value.value

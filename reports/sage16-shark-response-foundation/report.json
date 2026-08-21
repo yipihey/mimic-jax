@@ -1,0 +1,346 @@
+{
+  "baseline": {
+    "git_commit": null,
+    "key": "sage16",
+    "label": "MIMIC/SAGE16 continuous central subset",
+    "report_path": null,
+    "run_id": "sage16-common-local-response"
+  },
+  "candidate": {
+    "git_commit": null,
+    "key": "shark",
+    "label": "SHARK Lagos23 controlled disk subset",
+    "report_path": null,
+    "run_id": "shark-common-local-response"
+  },
+  "comparison_id": "sage16-shark-response-foundation",
+  "health": [
+    {
+      "artifacts": [],
+      "key": "common-protocol",
+      "method": "mimic_jax.sam.ConfiguredSamModel",
+      "metrics": [],
+      "notes": [],
+      "status": "passed",
+      "summary": "Both configured models expose state, forcing, parameters, named process controls, RHS/rates, conservation, Jacobians, and annotated local response through one API.",
+      "title": "Common executable protocol",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "conservation",
+      "method": "",
+      "metrics": [
+        {
+          "description": "Maximum absolute common-ledger residual.",
+          "key": "sage16-maximum-residual",
+          "label": "MIMIC/SAGE16 maximum residual",
+          "unit": "native rate",
+          "value": 8.526512829121202e-14
+        },
+        {
+          "description": "Maximum absolute common-ledger residual.",
+          "key": "shark-maximum-residual",
+          "label": "SHARK Lagos23 maximum residual",
+          "unit": "native rate",
+          "value": 5.960464477539063e-08
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "Baryon and source-corrected metal rate residuals close at the matched operating point.",
+      "title": "Local conservation",
+      "tolerance": "maximum absolute residual <= 2e-6 native rate units"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Frequency response uses variation period 2π/ω. Dashed curves are frozen-coefficient predictions; solid curves evolve each nonlinear RHS.",
+          "key": "cooling-response",
+          "media_type": "image/svg+xml",
+          "path": "assets/cooling-response.svg",
+          "role": "figure",
+          "sha256": "9b8f7503c843578cbef89d6de3e760062c295d50c8dcbc8dd12ebd9ea23a171f",
+          "size_bytes": 91573,
+          "title": "Cooling-to-SFR dynamical response"
+        }
+      ],
+      "key": "linear-validity",
+      "method": "JAX local Jacobian versus nonlinear RK4 evolution",
+      "metrics": [
+        {
+          "description": "Across both models and all three perturbation sizes.",
+          "key": "maximum-relative-final-error",
+          "label": "Largest final relative discrepancy",
+          "unit": "fraction",
+          "value": 0.0696745136357603
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "The frozen local response was tested against 0.1%, 1%, and 5% sustained cooling perturbations over 0.05 Gyr.",
+      "title": "Local response versus nonlinear evolution",
+      "tolerance": "maximum final relative discrepancy <= 0.10"
+    },
+    {
+      "artifacts": [],
+      "key": "population-isolation",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "The experiment matches one local baryon inventory and forcing boundary; it does not yet run both full models on the same merger-tree population.",
+      "title": "Population-level model isolation",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "agn-closed-loop",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "SAGE radio-mode history and SHARK hot-halo AGN/heating memory are outside the two matched continuous subsets used here. No cross-model AGN conclusion is made.",
+      "title": "Matched AGN regulation",
+      "tolerance": ""
+    }
+  ],
+  "kind": "comparison",
+  "links": [
+    {
+      "target": "../sage16-shark-interoperability-audit/index.md",
+      "title": "SAGE–SHARK interoperability audit"
+    },
+    {
+      "target": "../sage16-linear-response/index.md",
+      "title": "SAGE response report"
+    },
+    {
+      "target": "../../docs/dev/MIMIC-JAX-COMMON-SAM-PROTOCOL-PLAN.md",
+      "title": "Common protocol plan"
+    },
+    {
+      "target": "https://github.com/virajpandya/sapphire",
+      "title": "Sapphire"
+    }
+  ],
+  "metrics": [
+    {
+      "baseline": 2797456650.4852705,
+      "candidate": 2836126324.287302,
+      "delta": 38669673.80203152,
+      "derivative_prediction": null,
+      "fractional_delta": 0.013823153897781954,
+      "interpretation": "The near agreement is a useful operating point, not a calibration or population-equivalence result.",
+      "key": "instantaneous-sfr",
+      "label": "Instantaneous SFR at the matched state",
+      "unit": "Msun/h/Gyr"
+    },
+    {
+      "baseline": 1.2619302554110794,
+      "candidate": 3.6756370725933527,
+      "delta": 2.4137068171822733,
+      "derivative_prediction": null,
+      "fractional_delta": 1.9127101571837641,
+      "interpretation": "This asks how strongly a slow fractional cooling variation appears in fractional SFR near the same local state.",
+      "key": "cooling-sfr-gain-10gyr",
+      "label": "Cooling-to-SFR response at a 10 Gyr period",
+      "unit": "fraction/fraction"
+    },
+    {
+      "baseline": 28.75801430326405,
+      "candidate": 7.188042634934895,
+      "delta": -21.569971668329156,
+      "derivative_prediction": null,
+      "fractional_delta": -0.7500508011737428,
+      "interpretation": "This is the longest damping time among locally stable modes; neutral tracker modes are excluded.",
+      "key": "slowest-stable-mode",
+      "label": "Slowest finite stable local mode",
+      "unit": "Gyr"
+    }
+  ],
+  "provenance": {
+    "command": [
+      "scripts/generate_common_sam_response_report.py",
+      "--output",
+      "reports/sage16-shark-response-foundation",
+      "--validation-duration-gyr",
+      "0.05",
+      "--validation-steps",
+      "100"
+    ],
+    "files": [
+      {
+        "path": "docs/dev/MIMIC-JAX-COMMON-SAM-PROTOCOL-PLAN.md",
+        "role": "configuration",
+        "sha256": "cda5460894b9441afbf9f4f85552644ae5ae7ada0ed86a7ea2b0bcc229f63e4e",
+        "size_bytes": 13672
+      }
+    ],
+    "generated_at": "2026-08-21T07:34:10Z",
+    "git_branch": "main",
+    "git_commit": "36f781e7f1165de753f1f106bff876abe9fd3727",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
+    },
+    "upstream_run": {}
+  },
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [
+        {
+          "description": "The same four principal mass reservoirs initialize both local calculations; model-specific trackers and angular momentum remain separate.",
+          "key": "matched-reservoirs",
+          "media_type": "image/svg+xml",
+          "path": "assets/matched-reservoirs.svg",
+          "role": "figure",
+          "sha256": "e549c77f770824df53573db6dcb18ad8295ed394a177c00a757f8a3a9ea497e6",
+          "size_bytes": 32614,
+          "title": "Matched local reservoir inventory"
+        }
+      ],
+      "body": "Both calculations use $M_\\star=M_\\mathrm{cold}=M_\\mathrm{eject}=10^{10}\\,M_\\odot/h$, $M_\\mathrm{hot}=5\\times10^{10}\\,M_\\odot/h$, a 5 kpc/$h$ disk scale, $V=220$ km/s, and $z=0$. The SHARK half-mass radius is the matching exponential-disk conversion. The SAGE cooling and reincorporation rates are converted from the MIMIC code time unit to Gyr and used as SHARK's prepared external supply. This aligns the local question while retaining each model's own star-formation and feedback prescriptions.",
+      "diagnostics": [],
+      "key": "matched-question",
+      "links": [],
+      "notes": [],
+      "summary": "One controlled local experiment removes several avoidable convention differences before asking a dynamical question.",
+      "title": "What exactly is being compared?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Frequency response uses variation period 2π/ω. Dashed curves are frozen-coefficient predictions; solid curves evolve each nonlinear RHS.",
+          "key": "cooling-response",
+          "media_type": "image/svg+xml",
+          "path": "assets/cooling-response.svg",
+          "role": "figure",
+          "sha256": "9b8f7503c843578cbef89d6de3e760062c295d50c8dcbc8dd12ebd9ea23a171f",
+          "size_bytes": 91573,
+          "title": "Cooling-to-SFR dynamical response"
+        },
+        {
+          "description": "Absolute fractional SFR response to a fractional process perturbation varying with a one-Gyr period; signs and phases remain in the array product.",
+          "key": "process-gains",
+          "media_type": "image/svg+xml",
+          "path": "assets/process-gains.svg",
+          "role": "figure",
+          "sha256": "bf6acb38bd5aa7d3a739edd1bb6a1e2fcd65ad8a6bdb49b30e88dce794528a3e",
+          "size_bytes": 37772,
+          "title": "Matched process-response amplitudes"
+        },
+        {
+          "description": "Complex signed transfer arrays, modes, and nonlinear validation histories.",
+          "key": "local-response-arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/local-response-arrays.npz",
+          "role": "data",
+          "sha256": "1eabeade874007dae4f0fdd9b089cbeb6fdcd70ec3f932ec392f3dcec8bc158d",
+          "size_bytes": 33533,
+          "title": "Local response arrays"
+        }
+      ],
+      "body": "The left panel treats cooling variability with period $T=2\\pi/\\omega$ and shows $|H(i\\omega)|$ for fractional SFR per fractional cooling change. The right panel gives the direct physical experiment: keep cooling 1% higher and watch the SFR over the next 0.05 Gyr. Agreement with the nonlinear trajectories is the validity test; the comparison does not rely on the matrix calculation alone. The process-gain panel must be read with the declared closure: SHARK cooling is prepared external forcing in this controlled subset, so reincorporated hot gas has no return path to SFR here. Its zero reincorporation gain is therefore a boundary limitation, not yet a statement about full SHARK. SAGE SN ejection is also zero at this operating point because that branch is inactive.",
+      "diagnostics": [],
+      "key": "response",
+      "links": [],
+      "notes": [],
+      "summary": "No global linearity is assumed. JAX differentiates each nonlinear RHS at the matched state, and the resulting local prediction is checked by evolving the nonlinear model.",
+      "title": "Does SFR remember the same cooling perturbation in the same way?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Finite stable eigenmode damping times after converting both models to Gyr and applying an input-output-invariant state scaling.",
+          "key": "response-times",
+          "media_type": "image/svg+xml",
+          "path": "assets/response-times.svg",
+          "role": "figure",
+          "sha256": "9efd2d439b26c1ee9de293313711c641cdac7262d522d0410d1b8b7c8bbc9cb5",
+          "size_bytes": 51496,
+          "title": "Stable local response times"
+        }
+      ],
+      "body": "These are eigenmode e-folding times of the local state Jacobian after converting both native time conventions to Gyr. Exact neutral tracker/integrated-mass modes are excluded. Mode composition is not labelled yet because mixed mass, metal, and angular-momentum coordinates require a separately declared nondimensional participation convention.",
+      "diagnostics": [],
+      "key": "memory",
+      "links": [],
+      "notes": [],
+      "summary": "The coupled reservoirs generate several stable damping times rather than one recipe timescale.",
+      "title": "How many memory times does each baryon cycle contain?"
+    },
+    {
+      "artifacts": [],
+      "body": "It does not show that full SAGE and SHARK populations differ for model-physics reasons; that requires the same merger-tree forcing, aligned selections, and both hybrid event schedulers. It also does not compare the closed AGN loops: SAGE's radio-mode heating history and SHARK's hot-halo BH/heating-radius state must be matched without reducing either to an externally prescribed loading. Those remain explicit not-evaluated gates rather than blank panels or inferred conclusions.",
+      "diagnostics": [],
+      "key": "limits",
+      "links": [],
+      "notes": [],
+      "summary": "The experiment is deliberately narrower than the full scientific claim.",
+      "title": "What does this first comparison not establish?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "State, forcing, parameter, process, capability, formulation, and upstream-revision metadata for both configured models.",
+          "key": "model-protocols",
+          "media_type": "application/json",
+          "path": "assets/model-protocols.json",
+          "role": "metadata",
+          "sha256": "a90e01510d96fb774d9083b4d60b09cd6f840469ee0ca8c3dc4c6f46761f5ecc",
+          "size_bytes": 43413,
+          "title": "Machine-readable model protocols"
+        }
+      ],
+      "body": "| Package/model | What it already does well | mimic-jax decision |\n|---|---|---|\n| Sapphire | Purpose-built JAX regulator, Diffrax integration, optimization, Fisher/HMC and accelerator execution | Interoperate and reuse generic ecosystem tools; compare scientific response where states and forcing can be matched |\n| Diffmah | Differentiable halo mass-assembly histories | Optional controlled forcing adapter; retain real merger trees as reference |\n| Diffstar / DiffstarPop | Differentiable SFH and population distributions | Complementary emulator/comparison layer, not a SAM port |\n| DSPS | Differentiable SFH/metallicity-to-SED/photometry mapping | Optional output adapter with SPS/filter provenance |\n| Galacticus | Mature adaptive ODE plus tree-event architecture | Numerical/architectural reference and independent analytic tests; no copied implementation |\n| SAGE16 / SHARK | Established production SAM physics and familiar observables | Preserve upstream equivalence, expose common flows/events/conservation/responses |\n",
+      "diagnostics": [],
+      "key": "ecosystem",
+      "links": [],
+      "notes": [],
+      "summary": "The discovery of Sapphire narrows the engineering target: reuse generic differentiable tooling and focus mimic-jax on faithful established-model representation and comparison.",
+      "title": "How does this fit the differentiable-galaxy ecosystem?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Operating point, formulation qualifications, response times, and validation errors.",
+          "key": "local-response-summary",
+          "media_type": "application/json",
+          "path": "assets/local-response-summary.json",
+          "role": "data",
+          "sha256": "1b77a28547c48d3b9f65c0c9f5ff23c0f1fa8d01b828570fa41dec8e30141fb4",
+          "size_bytes": 1475,
+          "title": "Machine-readable local response summary"
+        }
+      ],
+      "body": "The next science report should pair common population observables with baryon flows, parameter elasticities, historical process responses, cooling-to-SFR transfer, and AGN regulation. A result will be called a model-physics difference only after tree semantics, cosmology, forcing interpolation, numerical error, and selection differences are controlled.",
+      "diagnostics": [],
+      "key": "next-gate",
+      "links": [],
+      "notes": [],
+      "summary": "Run the two complete hybrid models on common halo histories, then compare regulation rather than only outputs.",
+      "title": "What is the next decisive experiment?"
+    }
+  ],
+  "summary": "A deliberately controlled first response experiment. SAGE16 and SHARK start with the same principal baryon inventory, disk scale, velocity, cooling supply, and metal fractions. Their familiar instantaneous SFRs are close here, but their coupled responses need not be. This is the foundation for—not a substitute for—the same-tree population comparison.",
+  "title": "Do SAGE16 and SHARK regulate the same matched disk in the same way?"
+}

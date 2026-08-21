@@ -1,0 +1,646 @@
+{
+  "array_file": {
+    "path": "arrays.npz",
+    "sha256": "2134ab03cc27981bd2798891fae0542fddb1e73ff6614966e1b934e2bb2c5ed1",
+    "size_bytes": 19754
+  },
+  "arrays": {
+    "conservation_residuals": {
+      "dtype": "float64",
+      "shape": [
+        2
+      ]
+    },
+    "convergence_fraction": {
+      "dtype": "float64",
+      "shape": [
+        7
+      ]
+    },
+    "convergence_strict_state": {
+      "dtype": "float64",
+      "shape": [
+        7
+      ]
+    },
+    "direct_input_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        5
+      ]
+    },
+    "forcing_values": {
+      "dtype": "float64",
+      "shape": [
+        5
+      ]
+    },
+    "input_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        7,
+        5
+      ]
+    },
+    "input_jacobian_finite_difference": {
+      "dtype": "float64",
+      "shape": [
+        7,
+        5
+      ]
+    },
+    "linearization_state": {
+      "dtype": "float64",
+      "shape": [
+        7
+      ]
+    },
+    "observable_values": {
+      "dtype": "float64",
+      "shape": [
+        6
+      ]
+    },
+    "output_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        7
+      ]
+    },
+    "parameter_output_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        16
+      ]
+    },
+    "parameter_output_jacobian_finite_difference": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        16
+      ]
+    },
+    "parameter_state_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        7,
+        16
+      ]
+    },
+    "parameter_values": {
+      "dtype": "float64",
+      "shape": [
+        16
+      ]
+    },
+    "rate_values": {
+      "dtype": "float64",
+      "shape": [
+        15
+      ]
+    },
+    "state_derivative": {
+      "dtype": "float64",
+      "shape": [
+        7
+      ]
+    },
+    "state_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        7,
+        7
+      ]
+    },
+    "state_jacobian_finite_difference": {
+      "dtype": "float64",
+      "shape": [
+        7,
+        7
+      ]
+    },
+    "trajectory_observables": {
+      "dtype": "float64",
+      "shape": [
+        65,
+        6
+      ]
+    },
+    "trajectory_parameter_output_jacobian": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        16
+      ]
+    },
+    "trajectory_parameter_output_jacobian_finite_difference": {
+      "dtype": "float64",
+      "shape": [
+        6,
+        16
+      ]
+    },
+    "trajectory_parameter_output_jacobian_finite_difference_errors": {
+      "dtype": "float64",
+      "shape": [
+        5
+      ]
+    },
+    "trajectory_parameter_output_jacobian_finite_difference_scan": {
+      "dtype": "float64",
+      "shape": [
+        5,
+        6,
+        16
+      ]
+    },
+    "trajectory_parameter_output_jacobian_finite_difference_steps": {
+      "dtype": "float64",
+      "shape": [
+        5
+      ]
+    },
+    "trajectory_state": {
+      "dtype": "float64",
+      "shape": [
+        65,
+        7
+      ]
+    },
+    "trajectory_times_gyr": {
+      "dtype": "float64",
+      "shape": [
+        65
+      ]
+    }
+  },
+  "case": {
+    "end_time_gyr": 8.0,
+    "forcing": {
+      "Mdot_in_dm": 70.0,
+      "Mvir": 1000000000000.0,
+      "NFW_c": 8.0,
+      "Rvir": 190.0,
+      "Vvir": 155.0
+    },
+    "initial_state": {
+      "Eth_cgm": 4e+58,
+      "MZ_cgm": 160000000.0,
+      "MZ_ism": 20000000.0,
+      "MZ_star": 10000000.0,
+      "M_cgm": 80000000000.0,
+      "M_ism": 2000000000.0,
+      "M_star": 1000000000.0
+    },
+    "parameters": {
+      "A_E": -1.0,
+      "A_M": 0.0,
+      "A_SF": 0.8,
+      "A_Z": -1.7,
+      "alpha0_E": -1.0,
+      "alpha0_M": -1.0,
+      "alpha0_SF": -1.8,
+      "alpha0_Z": -0.3,
+      "alphaz_E": 0.0,
+      "alphaz_M": 0.0,
+      "alphaz_SF": 0.0,
+      "alphaz_Z": 0.0,
+      "beta_E": 0.0,
+      "beta_M": 0.0,
+      "beta_SF": -0.7,
+      "beta_Z": 0.0
+    },
+    "sample_count": 65,
+    "schema_version": "mimic-jax-sapphire-case/v1",
+    "solver": {
+      "atol": 1e-08,
+      "max_steps": 65536,
+      "rtol": 1e-08
+    },
+    "start_time_gyr": 4.0
+  },
+  "conservation": {
+    "coordinates": [
+      {
+        "boundary": "Mdot_in_halo source and Mdot_out_halo sink",
+        "name": "baryons",
+        "unit": "Msun/Gyr"
+      },
+      {
+        "boundary": "stellar yield plus enriched inflow, minus enriched CGM outflow",
+        "name": "metals",
+        "unit": "Msun/Gyr"
+      }
+    ],
+    "qualification": "Open-system budgets reconstructed from native auxiliary rates."
+  },
+  "convergence": {
+    "comparison_tolerance": 1e-10,
+    "maximum_absolute_fractional_difference": 3.843459161138714e-06,
+    "quantity": "fractional difference of requested-tolerance final state from stricter solve"
+  },
+  "coordinates": {
+    "input": [
+      {
+        "description": "Log-fractional perturbation of native halo input Mdot_in_dm.",
+        "label": "Mdot in dm",
+        "name": "Mdot_in_dm",
+        "unit": "fractional forcing change"
+      },
+      {
+        "description": "Log-fractional perturbation of native halo input Mvir.",
+        "label": "Mvir",
+        "name": "Mvir",
+        "unit": "fractional forcing change"
+      },
+      {
+        "description": "Log-fractional perturbation of native halo input Rvir.",
+        "label": "Rvir",
+        "name": "Rvir",
+        "unit": "fractional forcing change"
+      },
+      {
+        "description": "Log-fractional perturbation of native halo input Vvir.",
+        "label": "Vvir",
+        "name": "Vvir",
+        "unit": "fractional forcing change"
+      },
+      {
+        "description": "Log-fractional perturbation of native halo input NFW_c.",
+        "label": "NFW c",
+        "name": "NFW_c",
+        "unit": "fractional forcing change"
+      }
+    ],
+    "observable": [
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "stellar mass",
+        "name": "stellar_mass",
+        "unit": "Msun"
+      },
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "ism mass",
+        "name": "ism_mass",
+        "unit": "Msun"
+      },
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "cgm mass",
+        "name": "cgm_mass",
+        "unit": "Msun"
+      },
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "star formation rate",
+        "name": "star_formation_rate",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "stellar metallicity",
+        "name": "stellar_metallicity",
+        "unit": "mass fraction"
+      },
+      {
+        "description": "Native local Sapphire observable.",
+        "label": "ism metallicity",
+        "name": "ism_metallicity",
+        "unit": "mass fraction"
+      }
+    ],
+    "parameter": [
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "A M",
+        "name": "A_M",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alpha0 M",
+        "name": "alpha0_M",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alphaz M",
+        "name": "alphaz_M",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "beta M",
+        "name": "beta_M",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "A E",
+        "name": "A_E",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alpha0 E",
+        "name": "alpha0_E",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alphaz E",
+        "name": "alphaz_E",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "beta E",
+        "name": "beta_E",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "A SF",
+        "name": "A_SF",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alpha0 SF",
+        "name": "alpha0_SF",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alphaz SF",
+        "name": "alphaz_SF",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "beta SF",
+        "name": "beta_SF",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "A Z",
+        "name": "A_Z",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alpha0 Z",
+        "name": "alpha0_Z",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "alphaz Z",
+        "name": "alphaz_Z",
+        "unit": "native Sapphire coordinate"
+      },
+      {
+        "description": "Raw configuration derivative; A_* is log10 normalization and slopes are linear.",
+        "label": "beta Z",
+        "name": "beta_Z",
+        "unit": "native Sapphire coordinate"
+      }
+    ],
+    "rate": [
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Mdot in halo",
+        "name": "Mdot_in_halo",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Edot in halo",
+        "name": "Edot_in_halo",
+        "unit": "erg/s"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Edot cool",
+        "name": "Edot_cool",
+        "unit": "erg/s"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Mdot cool",
+        "name": "Mdot_cool",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Mdot sfr",
+        "name": "Mdot_sfr",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Mdot wind",
+        "name": "Mdot_wind",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Edot wind",
+        "name": "Edot_wind",
+        "unit": "erg/s"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Edot out halo",
+        "name": "Edot_out_halo",
+        "unit": "erg/s"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "Mdot out halo",
+        "name": "Mdot_out_halo",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot sfr",
+        "name": "MZdot_sfr",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot cool",
+        "name": "MZdot_cool",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot yield",
+        "name": "MZdot_yield",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot wind",
+        "name": "MZdot_wind",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot in halo",
+        "name": "MZdot_in_halo",
+        "unit": "Msun/yr"
+      },
+      {
+        "description": "Native auxiliary Pandya23 rate.",
+        "label": "MZdot out halo",
+        "name": "MZdot_out_halo",
+        "unit": "Msun/yr"
+      }
+    ],
+    "state": [
+      {
+        "description": "Long-lived stellar mass.",
+        "label": "M star",
+        "name": "M_star",
+        "unit": "Msun"
+      },
+      {
+        "description": "Interstellar gas mass.",
+        "label": "M ism",
+        "name": "M_ism",
+        "unit": "Msun"
+      },
+      {
+        "description": "Circumgalactic gas mass.",
+        "label": "M cgm",
+        "name": "M_cgm",
+        "unit": "Msun"
+      },
+      {
+        "description": "Circumgalactic thermal energy.",
+        "label": "Eth cgm",
+        "name": "Eth_cgm",
+        "unit": "erg"
+      },
+      {
+        "description": "Stellar metal mass.",
+        "label": "MZ star",
+        "name": "MZ_star",
+        "unit": "Msun"
+      },
+      {
+        "description": "ISM metal mass.",
+        "label": "MZ ism",
+        "name": "MZ_ism",
+        "unit": "Msun"
+      },
+      {
+        "description": "CGM metal mass.",
+        "label": "MZ cgm",
+        "name": "MZ_cgm",
+        "unit": "Msun"
+      }
+    ]
+  },
+  "derivatives": {
+    "input_coordinates": "natural-log fractional halo-forcing perturbations",
+    "local_finite_difference_step": 1e-05,
+    "local_method": "jax.jacfwd through the native Pandya23 RHS and observables",
+    "local_parameter_output_scope": "instantaneous observable derivative at fixed final state and forcing",
+    "method": "native Sapphire JAX jacfwd",
+    "parameter_coordinates": "raw Sapphire configuration coordinates",
+    "state_coordinates": "physical rather than Sapphire's internal log10 coordinates",
+    "trajectory_finite_difference_reference_step": 0.0001,
+    "trajectory_finite_difference_steps": [
+      0.001,
+      0.0003,
+      0.0001,
+      3e-05,
+      1e-05
+    ],
+    "trajectory_method": "jax.jacfwd through the native Diffrax Tsit5 adaptive trajectory and endpoint observables",
+    "trajectory_parameter_output_scope": "end-to-end derivative of final observables through the native adaptive solve",
+    "validation": {
+      "input_jacobian_relative_l2_error": 1.3112363305168116e-10,
+      "parameter_output_jacobian_relative_l2_error": 7.970439982627634e-11,
+      "state_jacobian_relative_l2_error": 7.677947209546511e-10,
+      "trajectory_parameter_output_jacobian_relative_l2_error": 0.0012657121148671728
+    }
+  },
+  "linearization_point": {
+    "forcing_assumption": "constant physical halo coordinates over the integration interval",
+    "halo_mass_msun": 1000000000000.0,
+    "redshift": 0.589416887755442,
+    "time_gyr": 8.0
+  },
+  "model": {
+    "formulation": "native seven-state Pandya23 continuous central-galaxy model",
+    "label": "Sapphire Pandya23",
+    "name": "sapphire",
+    "repository": "https://github.com/virajpandya/sapphire",
+    "revision": "ee50e858e3427de50368c32205001248849b8be0",
+    "version": "0.130"
+  },
+  "provenance": {
+    "case_sha256": "a433e75f6e7da43a357da55c1abf3fef145beaa4abf001f9a628c3c9d0200602",
+    "command": [
+      "/Users/tabel/Projects/mimic-jax/scripts/run_sapphire_bridge.py",
+      "--source",
+      "/private/tmp/mimic-jax-sapphire.2FQ2kM/sapphire",
+      "--data",
+      "/private/tmp/mimic-sapphire-runtime.aONCRL/data/sapphire/data",
+      "--case",
+      "/var/folders/nt/x289rxb53njg4qpvf0b6l8080000gn/T/mimic-jax-sapphire-case-fey8gpfo/case.json",
+      "--output",
+      "/Users/tabel/Projects/mimic-jax/tests/data/sapphire/native-v0.130-controlled"
+    ],
+    "cooling_table": {
+      "path": "/private/tmp/mimic-sapphire-runtime.aONCRL/data/sapphire/data/coolfunc/newcool.dat",
+      "release": "v0.130",
+      "release_asset": "sapphire-data.tar.gz",
+      "sha256": "80b244490788afbe05164defc4b4f5797a5f7443b3597baeb802d1a950b5e782",
+      "source_url": "https://github.com/virajpandya/sapphire/releases/download/v0.130/sapphire-data.tar.gz"
+    },
+    "generated_at": "2026-08-21T09:26:06.796766+00:00",
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "cpu:0"
+      ],
+      "machine": "arm64",
+      "platform": "macOS-26.6.1-arm64-arm-64bit"
+    },
+    "software": {
+      "diffrax": "0.7.2",
+      "jax": "0.10.2",
+      "numpy": "2.4.6",
+      "python": "3.12.7",
+      "sapphire-jax": "0.130"
+    },
+    "source_dirty": false,
+    "source_revision": "ee50e858e3427de50368c32205001248849b8be0"
+  },
+  "qualification": "Native Sapphire under constant smooth halo forcing. This controlled experiment does not represent its TNG/CDHMAH population or add merger topology.",
+  "schema_version": "mimic-jax-sapphire-native/v1",
+  "solver": {
+    "atol": 1e-08,
+    "engine": "diffrax",
+    "max_steps": 65536,
+    "method": "Tsit5",
+    "result": "diffrax._solution.RESULTS<>",
+    "rtol": 1e-08,
+    "statistics": {
+      "max_steps": 65536,
+      "num_accepted_steps": 41,
+      "num_rejected_steps": 10,
+      "num_steps": 51
+    },
+    "step_control": "PIDController"
+  }
+}

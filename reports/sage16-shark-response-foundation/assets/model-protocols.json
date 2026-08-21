@@ -1,0 +1,1201 @@
+{
+  "sage16": {
+    "capabilities": [
+      {
+        "detail": "Five quiescent central flows plus metals under fixed halo forcing.",
+        "name": "continuous_rhs",
+        "status": "supported"
+      },
+      {
+        "detail": "Merger, instability, and stripping maps remain explicit SAGE operators.",
+        "name": "events",
+        "status": "model_specific"
+      },
+      {
+        "detail": "Infall budgets and source caps are finite SAGE reference constraints.",
+        "name": "constraints",
+        "status": "model_specific"
+      },
+      {
+        "detail": "Baryon and metal ledgers include stellar-yield sources explicitly.",
+        "name": "conservation",
+        "status": "supported"
+      },
+      {
+        "detail": "The independent full-tree SAGE16 JAX population path is evaluated.",
+        "name": "full_tree_physics_parity",
+        "status": "supported"
+      },
+      {
+        "detail": "JAX owns the SAGE16 L-Halo branch topology and event schedule.",
+        "name": "independent_topology_driver",
+        "status": "supported"
+      }
+    ],
+    "forcing_variables": [
+      {
+        "description": "Tree-supplied virial mass.",
+        "label": "halo virial mass",
+        "name": "halo.Mvir",
+        "role": "forcing",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Tree-supplied virial radius.",
+        "label": "halo virial radius",
+        "name": "halo.Rvir",
+        "role": "forcing",
+        "unit": "Mpc/h"
+      },
+      {
+        "description": "Tree-supplied virial velocity.",
+        "label": "halo virial velocity",
+        "name": "halo.Vvir",
+        "role": "forcing",
+        "unit": "km/s"
+      },
+      {
+        "description": "Stored disk scale radius held fixed over the local interval.",
+        "label": "disk scale radius",
+        "name": "disk_scale_radius",
+        "role": "forcing",
+        "unit": "Mpc/h"
+      }
+    ],
+    "formulation": "continuous quiescent central subset",
+    "label": "MIMIC/SAGE16",
+    "name": "sage16",
+    "observable_variables": [
+      {
+        "description": "Total stellar reservoir in the continuous subset.",
+        "label": "stellar mass",
+        "name": "stellar_mass",
+        "role": "observable",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Cold star-forming gas reservoir.",
+        "label": "cold-gas mass",
+        "name": "cold_gas",
+        "role": "observable",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Hot halo gas reservoir.",
+        "label": "hot-gas mass",
+        "name": "hot_gas",
+        "role": "observable",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Feedback-ejected gas reservoir.",
+        "label": "ejected-gas mass",
+        "name": "ejected_gas",
+        "role": "observable",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Instantaneous quiescent star-formation rate.",
+        "label": "star-formation rate",
+        "name": "star_formation_rate",
+        "role": "observable",
+        "unit": "1e10 Msun/h per internal time"
+      }
+    ],
+    "parameter_variables": [
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "GlobalBaryonFraction",
+        "name": "GlobalBaryonFraction",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "SfrEfficiency",
+        "name": "SfrEfficiency",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "StarFormingDiskFactor",
+        "name": "StarFormingDiskFactor",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "FeedbackReheatingEpsilon",
+        "name": "FeedbackReheatingEpsilon",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "FeedbackEjectionEfficiency",
+        "name": "FeedbackEjectionEfficiency",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "ReIncorporationFactor",
+        "name": "ReIncorporationFactor",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "AGNrecipe",
+        "name": "AGNrecipe",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "RadioModeEfficiency",
+        "name": "RadioModeEfficiency",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "BlackHoleGrowthRate",
+        "name": "BlackHoleGrowthRate",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "QuasarModeEfficiency",
+        "name": "QuasarModeEfficiency",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "RecycleFraction",
+        "name": "RecycleFraction",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "Yield",
+        "name": "Yield",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "FracZleaveDisk",
+        "name": "FracZleaveDisk",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "ThresholdMajorMerger",
+        "name": "ThresholdMajorMerger",
+        "role": "parameter",
+        "unit": "dimensionless"
+      },
+      {
+        "description": "Fiducial SAGE16 parameter retaining its upstream MIMIC name.",
+        "label": "ThresholdSatDisruption",
+        "name": "ThresholdSatDisruption",
+        "role": "parameter",
+        "unit": "dimensionless"
+      }
+    ],
+    "processes": [
+      {
+        "description": "Hot gas cooling into the cold disk.",
+        "differentiability": "piecewise smooth",
+        "label": "Cooling",
+        "name": "cooling",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.sage16.ode.calculate_continuous_cooling_rate",
+        "source_reservoirs": [
+          "HotGas"
+        ],
+        "target_reservoirs": [
+          "ColdGas"
+        ]
+      },
+      {
+        "description": "Cold gas converted into long-lived stars with instantaneous recycling.",
+        "differentiability": "thresholded piecewise smooth",
+        "label": "Star formation",
+        "name": "star_formation",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.sage16.ode._star_formation_rate",
+        "source_reservoirs": [
+          "ColdGas"
+        ],
+        "target_reservoirs": [
+          "StellarMass"
+        ]
+      },
+      {
+        "description": "Cold gas reheated into the hot halo by stellar feedback.",
+        "differentiability": "piecewise smooth",
+        "label": "SN reheating",
+        "name": "sn_reheating",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.sage16.ode._supernova_rates",
+        "source_reservoirs": [
+          "ColdGas"
+        ],
+        "target_reservoirs": [
+          "HotGas"
+        ]
+      },
+      {
+        "description": "Hot gas ejected beyond the halo by stellar feedback.",
+        "differentiability": "piecewise smooth",
+        "label": "SN ejection",
+        "name": "sn_ejection",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.sage16.ode._supernova_rates",
+        "source_reservoirs": [
+          "HotGas"
+        ],
+        "target_reservoirs": [
+          "EjectedGas"
+        ]
+      },
+      {
+        "description": "Ejected gas returned to the hot halo.",
+        "differentiability": "thresholded piecewise smooth",
+        "label": "Reincorporation",
+        "name": "reincorporation",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.sage16.ode._reincorporation_rate",
+        "source_reservoirs": [
+          "EjectedGas"
+        ],
+        "target_reservoirs": [
+          "HotGas"
+        ]
+      },
+      {
+        "description": "Tree-driven baryon supply applied as an explicit finite budget in reference SAGE16.",
+        "differentiability": "piecewise smooth finite map",
+        "label": "Halo infall",
+        "name": "halo_infall",
+        "operator_type": "forcing",
+        "perturbable": false,
+        "source_reference": "mimic_jax.sage16.processes.infall",
+        "source_reservoirs": [],
+        "target_reservoirs": [
+          "HotGas"
+        ]
+      },
+      {
+        "description": "Cooling suppression with a history-dependent heating-radius state in the hybrid formulation.",
+        "differentiability": "thresholded and history dependent",
+        "label": "Radio-mode AGN",
+        "name": "radio_mode_agn",
+        "operator_type": "projection",
+        "perturbable": false,
+        "source_reference": "mimic_jax.sage16.processes.radio_mode_heating",
+        "source_reservoirs": [
+          "HotGas"
+        ],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Finite environment-driven transfer from satellite hot/ejected reservoirs.",
+        "differentiability": "thresholded finite transfer",
+        "label": "Satellite stripping",
+        "name": "satellite_stripping",
+        "operator_type": "flow",
+        "perturbable": false,
+        "source_reference": "mimic_jax.sage16.processes.satellite_stripping",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Threshold-triggered finite disk-to-bulge transfer and possible starburst/BH growth.",
+        "differentiability": "thresholded event map",
+        "label": "Disk instability",
+        "name": "disk_instability",
+        "operator_type": "event",
+        "perturbable": false,
+        "source_reference": "mimic_jax.sage16.processes.disk_instability",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Topology-changing progenitor combination and merger-driven transfers.",
+        "differentiability": "discrete event map",
+        "label": "Galaxy merger",
+        "name": "merger",
+        "operator_type": "event",
+        "perturbable": false,
+        "source_reference": "mimic_jax.sage16.processes.mergers",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      }
+    ],
+    "qualification": "Fixed-halo continuous limit; finite reference maps and events remain separate.",
+    "state_variables": [
+      {
+        "description": "Cold star-forming gas in the central galaxy.",
+        "label": "ColdGas",
+        "name": "ColdGas",
+        "role": "reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Quasi-hydrostatic halo gas owned by the central galaxy.",
+        "label": "HotGas",
+        "name": "HotGas",
+        "role": "reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Gas outside the hot halo awaiting reincorporation.",
+        "label": "EjectedGas",
+        "name": "EjectedGas",
+        "role": "reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Total stellar mass; bulge mass is a subset, not an additional reservoir.",
+        "label": "StellarMass",
+        "name": "StellarMass",
+        "role": "reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Metal mass in cold gas.",
+        "label": "MetalsColdGas",
+        "name": "MetalsColdGas",
+        "role": "metal_reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Metal mass in hot halo gas.",
+        "label": "MetalsHotGas",
+        "name": "MetalsHotGas",
+        "role": "metal_reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Metal mass in ejected gas.",
+        "label": "MetalsEjectedGas",
+        "name": "MetalsEjectedGas",
+        "role": "metal_reservoir",
+        "unit": "1e10 Msun/h"
+      },
+      {
+        "description": "Metal mass locked in stars.",
+        "label": "MetalsStellarMass",
+        "name": "MetalsStellarMass",
+        "role": "metal_reservoir",
+        "unit": "1e10 Msun/h"
+      }
+    ],
+    "time_unit": "internal MIMIC time",
+    "time_unit_in_gyr": 977.7929880599283,
+    "upstream_repository": "https://github.com/darrencroton/mimic",
+    "upstream_revision": "69590cc60dcb7b8b6510ee0b16b1ed921a6c4853"
+  },
+  "shark": {
+    "capabilities": [
+      {
+        "detail": "Complete nonlinear disk/SN rate layer plus prepared cooling/QSO and reincorporation forcing.",
+        "name": "continuous_rhs",
+        "status": "partial"
+      },
+      {
+        "detail": "Merger and instability maps remain explicit SHARK operators.",
+        "name": "events",
+        "status": "model_specific"
+      },
+      {
+        "detail": "Infall, baryon caps, and heating projections remain in the hybrid interval.",
+        "name": "constraints",
+        "status": "model_specific"
+      },
+      {
+        "detail": "Baryon, metal, and angular-momentum ledgers are explicit; QSO loss is an internal tracked reservoir.",
+        "name": "conservation",
+        "status": "supported"
+      },
+      {
+        "detail": "Every realized native full-tree continuous physics state has been replayed through the JAX kernel.",
+        "name": "full_tree_physics_parity",
+        "status": "supported"
+      },
+      {
+        "detail": "Native SHARK still owns variable-cardinality topology and event scheduling; this is separate from evaluated physics parity.",
+        "name": "independent_topology_driver",
+        "status": "unavailable"
+      }
+    ],
+    "forcing_variables": [
+      {
+        "description": "Prepared cooling supply held fixed over the local interval.",
+        "label": "cooling rate",
+        "name": "disk.cooling_rate",
+        "role": "forcing",
+        "unit": "Msun/h/Gyr"
+      },
+      {
+        "description": "Disk structural forcing used by BR06 star formation.",
+        "label": "gas half-mass radius",
+        "name": "disk.gas_half_mass_radius",
+        "role": "forcing",
+        "unit": "Mpc/h"
+      },
+      {
+        "description": "Stellar structural forcing used by BR06 star formation.",
+        "label": "stellar half-mass radius",
+        "name": "disk.stellar_half_mass_radius",
+        "role": "forcing",
+        "unit": "Mpc/h"
+      },
+      {
+        "description": "Circular-velocity proxy used by the disk prescriptions.",
+        "label": "galaxy velocity",
+        "name": "disk.galaxy_velocity",
+        "role": "forcing",
+        "unit": "km/s"
+      },
+      {
+        "description": "Explicit ejected-to-hot flow for the continuous alternative.",
+        "label": "reincorporation rate",
+        "name": "reincorporation_rate",
+        "role": "forcing",
+        "unit": "Msun/h/Gyr"
+      }
+    ],
+    "formulation": "controlled continuous Lagos23 disk subset",
+    "label": "SHARK Lagos23",
+    "name": "shark",
+    "observable_variables": [
+      {
+        "description": "Stellar mass in the controlled disk component.",
+        "label": "stellar mass",
+        "name": "stellar_mass",
+        "role": "observable",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Cold interstellar gas in the controlled disk component.",
+        "label": "cold-gas mass",
+        "name": "cold_gas",
+        "role": "observable",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Hot halo gas reservoir.",
+        "label": "hot-halo gas mass",
+        "name": "hot_gas",
+        "role": "observable",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Stellar-feedback ejected reservoir.",
+        "label": "ejected-gas mass",
+        "name": "ejected_gas",
+        "role": "observable",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Instantaneous BR06 disk star-formation rate.",
+        "label": "star-formation rate",
+        "name": "star_formation_rate",
+        "role": "observable",
+        "unit": "Msun/h/Gyr"
+      }
+    ],
+    "parameter_variables": [
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cosmology.omega m",
+        "name": "cosmology.omega_m",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cosmology.omega b",
+        "name": "cosmology.omega_b",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cosmology.omega lambda",
+        "name": "cosmology.omega_lambda",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cosmology.hubble h",
+        "name": "cosmology.hubble_h",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "flow.recycle fraction",
+        "name": "flow.recycle_fraction",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "flow.yield mass fraction",
+        "name": "flow.yield_mass_fraction",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "flow.evolving yield",
+        "name": "flow.evolving_yield",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "flow.pre enrichment metallicity",
+        "name": "flow.pre_enrichment_metallicity",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cooling.tau cooling",
+        "name": "cooling.tau_cooling",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cooling.core radius fraction",
+        "name": "cooling.core_radius_fraction",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "cooling.maximum log10 cooling function",
+        "name": "cooling.maximum_log10_cooling_function",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.hubble h",
+        "name": "star_formation.hubble_h",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.efficiency per gyr",
+        "name": "star_formation.efficiency_per_gyr",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.pressure normalization k per cm3",
+        "name": "star_formation.pressure_normalization_k_per_cm3",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.pressure power",
+        "name": "star_formation.pressure_power",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.gas velocity dispersion km per s",
+        "name": "star_formation.gas_velocity_dispersion_km_per_s",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.starburst boost",
+        "name": "star_formation.starburst_boost",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "star formation.angular momentum transfer",
+        "name": "star_formation.angular_momentum_transfer",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.hubble h",
+        "name": "stellar_feedback.hubble_h",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.omega m",
+        "name": "stellar_feedback.omega_m",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.beta disk",
+        "name": "stellar_feedback.beta_disk",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.velocity normalization km per s",
+        "name": "stellar_feedback.velocity_normalization_km_per_s",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.halo efficiency",
+        "name": "stellar_feedback.halo_efficiency",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.disk efficiency",
+        "name": "stellar_feedback.disk_efficiency",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.redshift power",
+        "name": "stellar_feedback.redshift_power",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.minimum loading",
+        "name": "stellar_feedback.minimum_loading",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.galaxy velocity scaling",
+        "name": "stellar_feedback.galaxy_velocity_scaling",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "stellar feedback.radial feedback",
+        "name": "stellar_feedback.radial_feedback",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reincorporation.timescale normalization gyr",
+        "name": "reincorporation.timescale_normalization_gyr",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reincorporation.halo mass normalization msun over h",
+        "name": "reincorporation.halo_mass_normalization_msun_over_h",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reincorporation.halo mass power",
+        "name": "reincorporation.halo_mass_power",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reionisation.velocity cut km per s",
+        "name": "reionisation.velocity_cut_km_per_s",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reionisation.reionisation redshift",
+        "name": "reionisation.reionisation_redshift",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "reionisation.velocity redshift power",
+        "name": "reionisation.velocity_redshift_power",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.hubble h",
+        "name": "agn.hubble_h",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.kappa agn",
+        "name": "agn.kappa_agn",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.kappa jet",
+        "name": "agn.kappa_jet",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.alpha cool",
+        "name": "agn.alpha_cool",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.hot halo threshold",
+        "name": "agn.hot_halo_threshold",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.radiative efficiency",
+        "name": "agn.radiative_efficiency",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.mdotcrit adaf",
+        "name": "agn.mdotcrit_adaf",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.eta superedd",
+        "name": "agn.eta_superedd",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.low accretion adaf",
+        "name": "agn.low_accretion_adaf",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.constant lowlum adaf",
+        "name": "agn.constant_lowlum_adaf",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.constant highlum adaf",
+        "name": "agn.constant_highlum_adaf",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.memory start redshift",
+        "name": "agn.memory_start_redshift",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.wind feedback",
+        "name": "agn.wind_feedback",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.epsilon wind",
+        "name": "agn.epsilon_wind",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.solar metallicity",
+        "name": "agn.solar_metallicity",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.alpha thin disk",
+        "name": "agn.alpha_thin_disk",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.viscosity ratio",
+        "name": "agn.viscosity_ratio",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "agn.spin iteration limit",
+        "name": "agn.spin_iteration_limit",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "black hole seed mass",
+        "name": "black_hole_seed_mass",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "black hole seed halo mass",
+        "name": "black_hole_seed_halo_mass",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      },
+      {
+        "description": "Model-owned parameter; consult the SHARK prescription metadata for units.",
+        "label": "limit baryon fraction",
+        "name": "limit_baryon_fraction",
+        "role": "parameter",
+        "unit": "dimensionless or native model unit"
+      }
+    ],
+    "processes": [
+      {
+        "description": "Hot halo gas transferred directly to the cold disk in the continuous formulation.",
+        "differentiability": "piecewise smooth",
+        "label": "Cooling",
+        "name": "cooling",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.flows.direct_cooling_flow_derivative",
+        "source_reservoirs": [
+          "hot_halo_gas"
+        ],
+        "target_reservoirs": [
+          "cold_gas"
+        ]
+      },
+      {
+        "description": "BR06 molecular star formation with instantaneous recycling and metal production.",
+        "differentiability": "piecewise smooth with activity threshold",
+        "label": "Star formation",
+        "name": "star_formation",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.prescriptions.disk.lagos23_disk_flow_rates",
+        "source_reservoirs": [
+          "cold_gas"
+        ],
+        "target_reservoirs": [
+          "stellar_mass"
+        ]
+      },
+      {
+        "description": "Lagos13 stellar-feedback transfer from cold gas to the hot halo.",
+        "differentiability": "piecewise smooth",
+        "label": "SN reheating",
+        "name": "sn_reheating",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.prescriptions.stellar_feedback.lagos13_feedback_loadings",
+        "source_reservoirs": [
+          "cold_gas"
+        ],
+        "target_reservoirs": [
+          "hot_halo_gas"
+        ]
+      },
+      {
+        "description": "Lagos13 stellar-feedback transfer from the hot halo to ejected gas.",
+        "differentiability": "piecewise smooth",
+        "label": "SN ejection",
+        "name": "sn_ejection",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.prescriptions.stellar_feedback.lagos13_feedback_loadings",
+        "source_reservoirs": [
+          "hot_halo_gas"
+        ],
+        "target_reservoirs": [
+          "ejected_gas"
+        ]
+      },
+      {
+        "description": "AGN/QSO loading that reheats cold gas into the hot halo.",
+        "differentiability": "piecewise smooth under fixed forcing",
+        "label": "QSO reheating",
+        "name": "qso_reheating",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.prescriptions.agn.lagos23_qso_outflow_loadings",
+        "source_reservoirs": [
+          "cold_gas"
+        ],
+        "target_reservoirs": [
+          "hot_halo_gas"
+        ]
+      },
+      {
+        "description": "AGN/QSO loading that transfers gas into SHARK's lost reservoir.",
+        "differentiability": "piecewise smooth under fixed forcing",
+        "label": "QSO ejection",
+        "name": "qso_ejection",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.prescriptions.agn.lagos23_qso_outflow_loadings",
+        "source_reservoirs": [
+          "cold_gas"
+        ],
+        "target_reservoirs": [
+          "lost_gas"
+        ]
+      },
+      {
+        "description": "Ejected gas returned continuously to the hot halo.",
+        "differentiability": "piecewise smooth",
+        "label": "Reincorporation",
+        "name": "reincorporation",
+        "operator_type": "flow",
+        "perturbable": true,
+        "source_reference": "mimic_jax.shark.flows.reincorporation_flow_derivative",
+        "source_reservoirs": [
+          "ejected_gas"
+        ],
+        "target_reservoirs": [
+          "hot_halo_gas"
+        ]
+      },
+      {
+        "description": "Finite cosmological supply and baryon-cap update in the SHARK reference interval.",
+        "differentiability": "finite constrained map",
+        "label": "Halo infall",
+        "name": "halo_infall",
+        "operator_type": "forcing",
+        "perturbable": false,
+        "source_reference": "mimic_jax.shark.hybrid.apply_cosmological_infall",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Heating radius and excess jet-power history promoted in the augmented hybrid state where faithful.",
+        "differentiability": "thresholded hybrid state",
+        "label": "AGN heating memory",
+        "name": "agn_heating_memory",
+        "operator_type": "projection",
+        "perturbable": false,
+        "source_reference": "mimic_jax.shark.prescriptions.agn.project_lagos23_heating_radius",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Threshold-triggered disk-to-bulge transfer, burst, and black-hole update.",
+        "differentiability": "thresholded event map",
+        "label": "Disk instability",
+        "name": "disk_instability",
+        "operator_type": "event",
+        "perturbable": false,
+        "source_reference": "mimic_jax.shark.hybrid.apply_disk_instability_event",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      },
+      {
+        "description": "Topology-changing galaxy combination, burst, and black-hole update.",
+        "differentiability": "discrete event map",
+        "label": "Galaxy merger",
+        "name": "merger",
+        "operator_type": "event",
+        "perturbable": false,
+        "source_reference": "mimic_jax.shark.hybrid.apply_galaxy_merger_event",
+        "source_reservoirs": [],
+        "target_reservoirs": []
+      }
+    ],
+    "qualification": "Nonlinear disk/SN rates with fixed structural and prepared cooling/AGN forcing; full hybrid intervals remain model-owned.",
+    "state_variables": [
+      {
+        "description": "Stellar mass of the disk or burst component being evolved.",
+        "label": "stellar mass",
+        "name": "stellar_mass",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Cold interstellar gas of that disk or burst component.",
+        "label": "cold gas",
+        "name": "cold_gas",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Halo gas already selected to cool onto the galaxy.",
+        "label": "cold halo gas",
+        "name": "cold_halo_gas",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Quasi-hydrostatic hot-halo gas.",
+        "label": "hot halo gas",
+        "name": "hot_halo_gas",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Gas ejected from the halo by stellar feedback.",
+        "label": "ejected gas",
+        "name": "ejected_gas",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Gas lost from the tracked halo by QSO feedback.",
+        "label": "lost gas",
+        "name": "lost_gas",
+        "role": "reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals locked in the stellar component.",
+        "label": "stellar metals",
+        "name": "stellar_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals in the cold interstellar gas.",
+        "label": "cold gas metals",
+        "name": "cold_gas_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals in the cooling halo-gas reservoir.",
+        "label": "cold halo gas metals",
+        "name": "cold_halo_gas_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals in the hot-halo gas.",
+        "label": "hot halo gas metals",
+        "name": "hot_halo_gas_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals in ejected gas.",
+        "label": "ejected gas metals",
+        "name": "ejected_gas_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Metals in QSO-lost gas.",
+        "label": "lost gas metals",
+        "name": "lost_gas_metals",
+        "role": "metal_reservoir",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Episode-integrated stellar mass formed before recycling.",
+        "label": "formed stellar mass",
+        "name": "formed_stellar_mass",
+        "role": "tracker",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Episode-integrated pre-existing metals in formed stars.",
+        "label": "formed stellar metals",
+        "name": "formed_stellar_metals",
+        "role": "tracker",
+        "unit": "Msun/h"
+      },
+      {
+        "description": "Total angular momentum of the stellar component.",
+        "label": "stellar angular momentum",
+        "name": "stellar_angular_momentum",
+        "role": "angular_momentum",
+        "unit": "Msun Mpc km/s / h^2"
+      },
+      {
+        "description": "Total angular momentum of cold interstellar gas.",
+        "label": "cold gas angular momentum",
+        "name": "cold_gas_angular_momentum",
+        "role": "angular_momentum",
+        "unit": "Msun Mpc km/s / h^2"
+      },
+      {
+        "description": "Total angular momentum of cooling halo gas.",
+        "label": "cold halo angular momentum",
+        "name": "cold_halo_angular_momentum",
+        "role": "angular_momentum",
+        "unit": "Msun Mpc km/s / h^2"
+      },
+      {
+        "description": "Total angular momentum of hot-halo gas.",
+        "label": "hot halo angular momentum",
+        "name": "hot_halo_angular_momentum",
+        "role": "angular_momentum",
+        "unit": "Msun Mpc km/s / h^2"
+      },
+      {
+        "description": "Total angular momentum of ejected gas.",
+        "label": "ejected angular momentum",
+        "name": "ejected_angular_momentum",
+        "role": "angular_momentum",
+        "unit": "Msun Mpc km/s / h^2"
+      }
+    ],
+    "time_unit": "Gyr",
+    "time_unit_in_gyr": 1.0,
+    "upstream_repository": "https://github.com/ICRAR/shark",
+    "upstream_revision": "5af50d8fa7a040883409b10171c645e1db4e5fb2"
+  }
+}

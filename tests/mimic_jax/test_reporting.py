@@ -14,6 +14,9 @@ from mimic_jax.reporting import (
     ComparisonReport,
     Diagnostic,
     DiagnosticStatus,
+    ModelMetricValue,
+    MultiModelComparisonReport,
+    MultiModelMetric,
     Provenance,
     ReportSection,
     RunIdentity,
@@ -175,6 +178,56 @@ def test_comparison_report_preserves_zero_baseline_and_derivative_prediction(tmp
     assert manifest["metrics"][1]["fractional_delta"] == pytest.approx(-0.1)
     assert "not defined" in markdown
     assert "12%" in markdown
+
+
+def test_multi_model_report_renders_all_models_and_machine_readable_values(tmp_path):
+    runs = (
+        ComparedRun("sage16", "SAGE16", "sage16-local"),
+        ComparedRun("shark", "SHARK", "shark-local"),
+        ComparedRun("sapphire", "Sapphire", "sapphire-local"),
+    )
+    metric = MultiModelMetric(
+        "stellar_mass",
+        "Final stellar mass",
+        (
+            ModelMetricValue("sage16", 1.0),
+            ModelMetricValue("shark", 1.1),
+            ModelMetricValue("sapphire", 0.9),
+        ),
+        unit="1e10 Msun",
+        interpretation="A controlled adapter test, not a population comparison.",
+    )
+    report = MultiModelComparisonReport(
+        comparison_id="three-model-local",
+        title="Three configured galaxy models",
+        summary="All three are represented without forcing identical physics.",
+        runs=runs,
+        metrics=(metric,),
+        provenance=_fixed_provenance(),
+    )
+    written = write_report(report, tmp_path)
+    manifest = json.loads(written.manifest_path.read_text(encoding="utf-8"))
+    markdown = written.markdown_path.read_text(encoding="utf-8")
+    assert manifest["kind"] == "multi_model_comparison"
+    assert [run["key"] for run in manifest["runs"]] == ["sage16", "shark", "sapphire"]
+    assert manifest["metrics"][0]["values"][2]["value"] == 0.9
+    assert "| Quantity | SAGE16 | SHARK | Sapphire |" in markdown
+    assert "A controlled adapter test" in markdown
+
+    missing = MultiModelMetric(
+        "incomplete",
+        "Incomplete",
+        (ModelMetricValue("sage16", 1.0), ModelMetricValue("shark", 1.0)),
+    )
+    with pytest.raises(ValueError, match="exactly the report run keys"):
+        MultiModelComparisonReport(
+            comparison_id="invalid-three-model",
+            title="Invalid",
+            summary="Missing one model value.",
+            runs=runs,
+            metrics=(missing,),
+            provenance=_fixed_provenance(),
+        )
 
 
 def test_provenance_capture_is_explicit_and_checksum_bound(tmp_path):

@@ -14,6 +14,8 @@ from mimic_jax.reporting.model import (
     ComparisonReport,
     Diagnostic,
     DiagnosticStatus,
+    MultiModelComparisonReport,
+    MultiModelMetric,
     Provenance,
     ReportLink,
     ReportSection,
@@ -21,7 +23,7 @@ from mimic_jax.reporting.model import (
     ScalarMetric,
 )
 
-Report = Union[RunReport, ComparisonReport]
+Report = Union[RunReport, ComparisonReport, MultiModelComparisonReport]
 
 _STATUS_LABELS = {
     DiagnosticStatus.PASSED: "✅ Passed",
@@ -420,11 +422,67 @@ def render_comparison_markdown(report: ComparisonReport) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def _render_multi_model_metrics(
+    metrics: Sequence[MultiModelMetric], runs: Sequence[ComparedRun]
+) -> List[str]:
+    headers = " | ".join(run.label for run in runs)
+    lines = [
+        f"| Quantity | {headers} |",
+        "| --- | " + " | ".join("---:" for _ in runs) + " |",
+    ]
+    for metric in metrics:
+        values = {value.model_key: value.value for value in metric.values}
+        unit = f" {metric.unit}" if metric.unit else ""
+        rendered = " | ".join(f"{_table_text(values[run.key])}{unit}" for run in runs)
+        lines.append(f"| {metric.label} | {rendered} |")
+    return lines + [""]
+
+
+def render_multi_model_comparison_markdown(report: MultiModelComparisonReport) -> str:
+    """Render a three-or-more-model scientific comparison to durable Markdown."""
+
+    lines = _front_matter(
+        report.title, report.comparison_id, "multi_model_comparison", report.provenance
+    )
+    lines.extend(
+        [
+            f"# {report.title}",
+            "",
+            report.summary,
+            "",
+            "[Machine-readable manifest](report.json)",
+            "",
+            "## Compared models",
+            "",
+            "| Model | Run ID |",
+            "| --- | --- |",
+        ]
+    )
+    for run in report.runs:
+        lines.append(f"| {_render_compared_run(run)} | `{run.run_id}` |")
+    lines.append("")
+    lines.extend(_render_health(report.health, title="Comparison health"))
+    lines.extend(["## Common quantities", ""])
+    lines.extend(_render_multi_model_metrics(report.metrics, report.runs))
+    for metric in report.metrics:
+        if metric.interpretation:
+            lines.append(f"- **{metric.label}:** {metric.interpretation}")
+    if any(metric.interpretation for metric in report.metrics):
+        lines.append("")
+    for section in report.sections:
+        lines.extend(_render_section(section))
+    lines.extend(_render_links(report.links))
+    lines.extend(_render_provenance(report.provenance))
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def render_markdown(report: Report) -> str:
     """Render either report kind to Markdown."""
 
     if isinstance(report, RunReport):
         return render_run_markdown(report)
+    if isinstance(report, MultiModelComparisonReport):
+        return render_multi_model_comparison_markdown(report)
     return render_comparison_markdown(report)
 
 

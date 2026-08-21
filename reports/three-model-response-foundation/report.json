@@ -1,0 +1,584 @@
+{
+  "comparison_id": "three-model-response-foundation",
+  "health": [
+    {
+      "artifacts": [],
+      "key": "configured-models",
+      "method": "mimic_jax.load_model",
+      "metrics": [],
+      "notes": [],
+      "status": "passed",
+      "summary": "SAGE16, SHARK Lagos23, and native Sapphire Pandya23 load through one registry with state, forcing, parameter, process, observable, and capability metadata.",
+      "title": "Three configured model boundaries",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [
+        {
+          "description": "AD/finite-difference, tolerance-refinement, and open-system conservation diagnostics are computed from the pinned native run.",
+          "key": "sapphire-validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/native-sapphire-validation.svg",
+          "role": "figure",
+          "sha256": "568a0417d89a356619f7bd6038cf651474cb6c8e6afef7cf79810ce8e922eeae",
+          "size_bytes": 65361,
+          "title": "Native Sapphire adapter validation"
+        }
+      ],
+      "key": "sapphire-native-derivatives",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "maximum-relative-l2-error",
+          "label": "Maximum relative L2 error",
+          "unit": "fraction",
+          "value": 7.677947209546511e-10
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "State, fractional halo-input, and fixed-state parameter-to-observable Jacobians are checked against symmetric finite differences.",
+      "title": "Native Sapphire local derivative validation",
+      "tolerance": "maximum relative L2 error < 1e-7"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "AD/finite-difference, tolerance-refinement, and open-system conservation diagnostics are computed from the pinned native run.",
+          "key": "sapphire-validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/native-sapphire-validation.svg",
+          "role": "figure",
+          "sha256": "568a0417d89a356619f7bd6038cf651474cb6c8e6afef7cf79810ce8e922eeae",
+          "size_bytes": 65361,
+          "title": "Native Sapphire adapter validation"
+        }
+      ],
+      "key": "sapphire-trajectory-parameter-derivatives",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "trajectory-relative-l2-error",
+          "label": "Relative L2 error at the declared reference step",
+          "unit": "fraction",
+          "value": 0.0012657121148671728
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "Final-observable derivatives pass through the native adaptive Diffrax trajectory and are compared with symmetric finite differences across five perturbation sizes. The looser gate records the accept/reject controller's discrete path rather than pretending it is a smooth local RHS.",
+      "title": "End-to-end Sapphire parameter derivatives",
+      "tolerance": "relative L2 error < 5e-3 at parameter-coordinate step 1e-4"
+    },
+    {
+      "artifacts": [],
+      "key": "sapphire-native-integration",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "maximum-final-state-difference",
+          "label": "Maximum final-state difference",
+          "unit": "fraction",
+          "value": 3.843459161138714e-06
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "The requested 1e-8 adaptive solve is compared with a 1e-10 solve for the same physical case.",
+      "title": "Native Sapphire integration refinement",
+      "tolerance": "maximum absolute fractional final-state difference < 1e-4"
+    },
+    {
+      "artifacts": [],
+      "key": "three-model-local-conservation",
+      "method": "",
+      "metrics": [
+        {
+          "description": "",
+          "key": "sapphire-normalized-residual",
+          "label": "Sapphire Pandya23 normalized residual",
+          "unit": "fraction of max(source, sink, 1 native rate unit)",
+          "value": 3.481291760212259e-15
+        },
+        {
+          "description": "",
+          "key": "sage16-normalized-residual",
+          "label": "MIMIC/SAGE16 normalized residual",
+          "unit": "fraction of max(source, sink, 1 native rate unit)",
+          "value": 8.526512829121202e-14
+        },
+        {
+          "description": "",
+          "key": "shark-normalized-residual",
+          "label": "SHARK Lagos23 normalized residual",
+          "unit": "fraction of max(source, sink, 1 native rate unit)",
+          "value": 8.72766464816721e-16
+        }
+      ],
+      "notes": [],
+      "status": "passed",
+      "summary": "Each evaluated continuous calculation closes its declared mass, metal, and where present angular-momentum ledger after external boundaries are included.",
+      "title": "Three-model local conservation",
+      "tolerance": "maximum normalized residual < 1e-12"
+    },
+    {
+      "artifacts": [],
+      "key": "shared-process-controls",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "warning",
+      "summary": "SAGE16 and SHARK expose explicit cooling/feedback process perturbations. The unmodified Sapphire closure currently exposes halo-input and parameter perturbations; mimic-jax does not copy or rewrite its RHS to fabricate process hooks.",
+      "title": "Identical process-control surface",
+      "tolerance": ""
+    },
+    {
+      "artifacts": [],
+      "key": "common-population",
+      "method": "",
+      "metrics": [],
+      "notes": [],
+      "status": "not_evaluated",
+      "summary": "Sapphire's native smooth central-halo histories are not yet matched to the full branch/event topology used by SAGE16 and SHARK.",
+      "title": "Same-history population comparison",
+      "tolerance": ""
+    }
+  ],
+  "kind": "multi_model_comparison",
+  "links": [
+    {
+      "target": "../sage16-shark-response-foundation/index.md",
+      "title": "SAGE16–SHARK response foundation"
+    },
+    {
+      "target": "https://github.com/virajpandya/sapphire",
+      "title": "Sapphire source"
+    },
+    {
+      "target": "../../docs/dev/MIMIC-JAX-COMMON-SAM-PROTOCOL-PLAN.md",
+      "title": "Common protocol plan"
+    }
+  ],
+  "metrics": [
+    {
+      "interpretation": "Different dimensions reflect different model physics; they are not padded into a universal state.",
+      "key": "state-dimension",
+      "label": "Continuous state coordinates",
+      "unit": "",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 8
+        },
+        {
+          "model_key": "shark",
+          "value": 19
+        },
+        {
+          "model_key": "sapphire",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "interpretation": "Parameter counts describe the audited formulation, not comparable degrees of freedom.",
+      "key": "parameter-dimension",
+      "label": "Exposed parameter coordinates",
+      "unit": "",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 15
+        },
+        {
+          "model_key": "shark",
+          "value": 55
+        },
+        {
+          "model_key": "sapphire",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "interpretation": "Sapphire exposes native halo-input and parameter derivatives but no copied process-control hooks.",
+      "key": "perturbable-processes",
+      "label": "Named fractional process controls",
+      "unit": "",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 5
+        },
+        {
+          "model_key": "shark",
+          "value": 7
+        },
+        {
+          "model_key": "sapphire",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "interpretation": "Each value belongs to its declared local operating point and closure boundary.",
+      "key": "slowest-stable-mode",
+      "label": "Slowest finite stable local mode",
+      "unit": "Gyr",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 28.75801430326405
+        },
+        {
+          "model_key": "shark",
+          "value": 7.188042634934895
+        },
+        {
+          "model_key": "sapphire",
+          "value": 8.045207981239946
+        }
+      ]
+    },
+    {
+      "interpretation": "SAGE16/SHARK inputs are cooling; Sapphire's input is upstream halo accretion, so the latter includes CGM filtering.",
+      "key": "supply-sfr-gain",
+      "label": "Supply-to-SFR response at a 10 Gyr period",
+      "unit": "fraction/fraction",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 1.2619302554110794
+        },
+        {
+          "model_key": "shark",
+          "value": 3.6756370725933527
+        },
+        {
+          "model_key": "sapphire",
+          "value": 0.3374574521744069
+        }
+      ]
+    },
+    {
+      "interpretation": "Unavailable is a model-scope statement, not a failed numerical test.",
+      "key": "event-topology",
+      "label": "Event/topology capability",
+      "unit": "",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": "model_specific"
+        },
+        {
+          "model_key": "shark",
+          "value": "model_specific"
+        },
+        {
+          "model_key": "sapphire",
+          "value": "unavailable"
+        }
+      ]
+    },
+    {
+      "interpretation": "Each ledger includes its declared external source and sink boundary before normalization.",
+      "key": "normalized-conservation-residual",
+      "label": "Maximum normalized local conservation residual",
+      "unit": "fraction of max(source, sink, 1 native rate unit)",
+      "values": [
+        {
+          "model_key": "sage16",
+          "value": 8.526512829121202e-14
+        },
+        {
+          "model_key": "shark",
+          "value": 8.72766464816721e-16
+        },
+        {
+          "model_key": "sapphire",
+          "value": 3.481291760212259e-15
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "command": [
+      "scripts/generate_three_model_response_report.py",
+      "--output",
+      "reports/three-model-response-foundation",
+      "--sapphire-artifact",
+      "tests/data/sapphire/native-v0.130-controlled"
+    ],
+    "files": [
+      {
+        "path": "docs/dev/MIMIC-JAX-SAPPHIRE-INTEGRATION-PLAN.md",
+        "role": "configuration",
+        "sha256": "1c10d4073d38b19932bd0decaa0cbf97111ab9fa40f1f19eefdf326f2a4ee01d",
+        "size_bytes": 7849
+      },
+      {
+        "path": "tests/data/sapphire/native-v0.130-controlled/artifact.json",
+        "role": "input",
+        "sha256": "e46deee5c1eb1808b0bb8ef620a636b6970b3b8dd83d3653506bbfdf73275a53",
+        "size_bytes": 17673
+      },
+      {
+        "path": "tests/data/sapphire/native-v0.130-controlled/arrays.npz",
+        "role": "input",
+        "sha256": "2134ab03cc27981bd2798891fae0542fddb1e73ff6614966e1b934e2bb2c5ed1",
+        "size_bytes": 19754
+      }
+    ],
+    "generated_at": "2026-08-21T09:49:19Z",
+    "git_branch": "main",
+    "git_commit": "36f781e7f1165de753f1f106bff876abe9fd3727",
+    "git_dirty": true,
+    "hardware": {
+      "jax_backend": "cpu",
+      "jax_devices": [
+        "TFRT_CPU_0"
+      ],
+      "machine": "arm64",
+      "processor": "arm",
+      "release": "25.6.0",
+      "system": "Darwin"
+    },
+    "random_seeds": {},
+    "software": {
+      "h5py": "3.16.0",
+      "jax": "0.4.38",
+      "jaxlib": "0.4.38",
+      "matplotlib": "3.11.1",
+      "mimic-jax": "0.1.0",
+      "numpy": "2.5.2",
+      "python": "3.13.0"
+    },
+    "upstream_run": {}
+  },
+  "runs": [
+    {
+      "git_commit": null,
+      "key": "sage16",
+      "label": "MIMIC/SAGE16",
+      "report_path": null,
+      "run_id": "sage16-common-local-response"
+    },
+    {
+      "git_commit": null,
+      "key": "shark",
+      "label": "SHARK Lagos23",
+      "report_path": null,
+      "run_id": "shark-common-local-response"
+    },
+    {
+      "git_commit": null,
+      "key": "sapphire",
+      "label": "Sapphire Pandya23",
+      "report_path": null,
+      "run_id": "sapphire-v0.130-native-controlled"
+    }
+  ],
+  "schema_version": "mimic-jax-report/v1",
+  "sections": [
+    {
+      "artifacts": [
+        {
+          "description": "Evaluated, qualified, unavailable, and not-evaluated comparison domains with reservoir and observable semantics.",
+          "key": "three-model-comparison-matrix",
+          "media_type": "application/json",
+          "path": "assets/three-model-comparison-matrix.json",
+          "role": "data",
+          "sha256": "4a55dd986e98e917a1038a0aa5cded0c249fe59b98601f90597c60b967135977",
+          "size_bytes": 3650,
+          "title": "Three-model comparison matrix"
+        }
+      ],
+      "body": "| Question | Status | What the comparison means |\n|---|---|---|\n| Can all three expose named state, forcing, parameters, processes, and observables? | **Evaluated** | One semantic registry and machine-readable protocol, without padding states into a universal vector. |\n| Can all three expose a local continuous RHS and state Jacobian? | **Evaluated** | SAGE16/SHARK run in-process; Sapphire is evaluated by its pinned native Pandya23 runtime. |\n| Can all three close baryon and metal budgets? | **Evaluated** | SAGE16/SHARK use structural ledgers; Sapphire includes halo inflow, CGM outflow, yield, and enriched-flow boundaries. |\n| Can all three be asked how SFR responds to changing supply? | **Qualified** | SAGE16/SHARK perturb cooling; Sapphire perturbs dark-matter accretion before CGM filtering. |\n| Can all three expose parameter responses? | **Evaluated with distinct coordinates** | The normalization and metadata API is shared; parameter identities and derivative horizons are not silently equated. |\n| Can all three be compared on the same full merger-tree population? | **Not evaluated** | A smooth-main-branch forcing adapter, population weights, and aligned selections remain required. |\n| Can merger and satellite event maps be compared across all three? | **Not applicable** | The audited Sapphire independent-central model has no such topology. |\n",
+      "diagnostics": [],
+      "key": "comparison-boundary",
+      "links": [],
+      "notes": [],
+      "summary": "The three models now share an analysis language, while every scientific comparison retains an explicit evidence state.",
+      "title": "What can be compared today?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Pandya23 is run by Sapphire v0.130 with native Diffrax Tsit5 integration under constant smooth halo forcing.",
+          "key": "sapphire-trajectory",
+          "media_type": "image/svg+xml",
+          "path": "assets/native-sapphire-trajectory.svg",
+          "role": "figure",
+          "sha256": "ac34a185c70558c9134331aaec951865be3e04be76d24b93cc0b78482843f1f6",
+          "size_bytes": 55950,
+          "title": "Native Sapphire controlled trajectory"
+        },
+        {
+          "description": "AD/finite-difference, tolerance-refinement, and open-system conservation diagnostics are computed from the pinned native run.",
+          "key": "sapphire-validation",
+          "media_type": "image/svg+xml",
+          "path": "assets/native-sapphire-validation.svg",
+          "role": "figure",
+          "sha256": "568a0417d89a356619f7bd6038cf651474cb6c8e6afef7cf79810ce8e922eeae",
+          "size_bytes": 65361,
+          "title": "Native Sapphire adapter validation"
+        },
+        {
+          "description": "Pinned revision, case, coordinates, solver, finite-difference validation, cooling-table checksum, software, and hardware.",
+          "key": "sapphire-native-manifest",
+          "media_type": "application/json",
+          "path": "assets/sapphire-artifact.json",
+          "role": "metadata",
+          "sha256": "e46deee5c1eb1808b0bb8ef620a636b6970b3b8dd83d3653506bbfdf73275a53",
+          "size_bytes": 17673,
+          "title": "Native Sapphire artifact manifest"
+        },
+        {
+          "description": "Physical trajectory, rates, state/input/parameter Jacobians, finite differences, and convergence arrays.",
+          "key": "sapphire-native-arrays",
+          "media_type": "application/x-npz",
+          "path": "assets/sapphire-arrays.npz",
+          "role": "data",
+          "sha256": "2134ab03cc27981bd2798891fae0542fddb1e73ff6614966e1b934e2bb2c5ed1",
+          "size_bytes": 19754,
+          "title": "Native Sapphire trajectory and response arrays"
+        }
+      ],
+      "body": "The bridge runs Sapphire v0.130 at revision `ee50e858e3427de50368c32205001248849b8be0` with its official SD93 cooling table. It converts Sapphire's internal $d\\log_{10}x/d\\log_{10}t$ derivative back to physical $dx/dt$ before exporting the state Jacobian. The complete case, solver tolerances, cooling-table checksum, software versions, device, trajectory, rates, and finite-difference arrays accompany this page.",
+      "diagnostics": [],
+      "key": "native-sapphire",
+      "links": [],
+      "notes": [],
+      "summary": "Yes: the controlled trajectory and derivatives come from the pinned upstream Pandya23 closure and native Diffrax solver.",
+      "title": "Is this actually Sapphire?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "State, forcing, parameters, processes, capabilities, qualifications, and upstream revisions.",
+          "key": "three-model-protocols",
+          "media_type": "application/json",
+          "path": "assets/three-model-protocols.json",
+          "role": "metadata",
+          "sha256": "b0c8ef96c8cb9340a47fad0b87b246ac62e493f417803d97145734db97088ea8",
+          "size_bytes": 57356,
+          "title": "Three-model semantic manifests"
+        }
+      ],
+      "body": "| Concept | SAGE16 | SHARK Lagos23 | Sapphire Pandya23 |\n|---|---|---|---|\n| Continuous state | Cold/hot/ejected/stars + metals | Disk/halo/ejected/lost + metals, trackers, angular momentum | Stars/ISM/CGM + CGM thermal energy + metals |\n| Halo forcing | Merger-tree virial properties | Native SHARK tree/halo interval data | Smooth $\\dot M_h$, $M_h$, $R_\\mathrm{vir}$, $V_\\mathrm{vir}$, concentration |\n| Events | Mergers, instability, stripping/topology maps | Mergers, instability, disruption and native topology | Not present in the audited independent-central model |\n| Differentiable inputs here | Named process controls and parameters | Named process controls and nested parameters | Fractional halo inputs and native Pandya23 parameters |\n| Common observables available now | Stellar/gas masses and SFR | Stellar/gas masses and SFR | Stellar/ISM/CGM masses, SFR and metallicities |\n",
+      "diagnostics": [],
+      "key": "same-language",
+      "links": [],
+      "notes": [],
+      "summary": "The commonality is semantic and mathematical, not an invented claim that the reservoirs or prescriptions are identical.",
+      "title": "What is genuinely common across the three models?"
+    },
+    {
+      "artifacts": [],
+      "body": "| Physical role | SAGE16 | SHARK Lagos23 | Sapphire Pandya23 | Comparison status |\n|---|---|---|---|---|\n| Long-lived stars | `StellarMass` | `stellar_mass` | `M_star` | Direct local mass quantity |\n| Star-forming gas | `ColdGas` | `cold_gas` | `M_ism` | Qualified by phase and aperture conventions |\n| Halo atmosphere | `HotGas` | `cold_halo_gas` + `hot_halo_gas` | `M_cgm` plus `Eth_cgm` | Qualified; not synonymous state coordinates |\n| Ejected material | `EjectedGas` | `ejected_gas` + `lost_gas` | No separate reservoir | Unavailable as a three-model reservoir comparison |\n| Metals | Cold/hot/ejected/stellar | Six gas/stellar reservoirs plus trackers | Stellar/ISM/CGM | Total metal budgets compare; individual reservoirs remain qualified |\n| Dynamical memory | Upstream history/event state outside this local vector | Angular momentum, formed-mass trackers, AGN memory in wider model | CGM thermal energy | Model-specific; mode composition must use named coordinates |\n",
+      "diagnostics": [],
+      "key": "reservoir-correspondence",
+      "links": [],
+      "notes": [],
+      "summary": "Several physical roles overlap, but the report preserves phase boundaries and model-specific memory rather than equating names.",
+      "title": "Which reservoirs really correspond?"
+    },
+    {
+      "artifacts": [],
+      "body": "| Physical process | SAGE16 | SHARK Lagos23 | Sapphire Pandya23 | Safe comparison today |\n|---|---|---|---|---|\n| Cosmological supply | Finite tree-driven infall budget | Native halo-interval infall preparation | Smooth halo accretion forcing | Forcing metadata and open-system budget |\n| Cooling | Hot-to-cold transfer | Halo-to-disk cooling supply | CGM energy loss plus CGM-to-ISM transfer | Local response, with input boundary stated |\n| Star formation | Thresholded disk law with recycling | Pressure-based molecular disk law with recycling | ISM depletion law with recycling | SFR and local derivatives, not recipe identity |\n| Stellar feedback | Reheating and ejection | Reheating, ejection, QSO channels | ISM wind plus energy injection and CGM outflow | Flux/budget roles; process controls are not yet identical |\n| Reincorporation | Explicit ejected-to-hot flow | Explicit ejected return | No separate ejected reservoir | Two-model process comparison only |\n| Metal enrichment | Yield plus advective flows | Yield plus multi-reservoir transport | Yield plus stellar/ISM/CGM transport | Total metal conservation and qualified metallicities |\n| AGN/BH regulation | Present in full hybrid SAGE16 | Present in full SHARK | Absent in audited Pandya23 model | Not a three-model comparison |\n",
+      "diagnostics": [],
+      "key": "process-correspondence",
+      "links": [],
+      "notes": [],
+      "summary": "All three contain supply, cooling, star formation, feedback transport, and enrichment, but their closure boundaries differ.",
+      "title": "Which baryon-cycle processes overlap?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "SAGE16 and SHARK are perturbed at the cooling boundary; Sapphire is perturbed at the upstream dark-matter accretion boundary. The distinction is part of the result, not hidden normalization.",
+          "key": "supply-response",
+          "media_type": "image/svg+xml",
+          "path": "assets/three-model-supply-response.svg",
+          "role": "figure",
+          "sha256": "37ccede6c994412533e5b38e0fe59fa5f360adf3c9112083fa4a1676c3e006eb",
+          "size_bytes": 63585,
+          "title": "Gas-supply response across three models"
+        }
+      ],
+      "body": "For SAGE16 and SHARK the experiment perturbs the cooling transfer directly. For Sapphire it perturbs dark-matter accretion, which changes baryonic halo inflow and must propagate through the CGM before reaching the ISM. The different boundary is scientifically useful: it separates a recipe-level cooling response from the full atmosphere's filtering of halo supply.",
+      "diagnostics": [],
+      "key": "supply-response",
+      "links": [],
+      "notes": [],
+      "summary": "The same response machinery can be applied without pretending the input boundary is the same.",
+      "title": "On what timescales does star formation follow its supply?"
+    },
+    {
+      "artifacts": [
+        {
+          "description": "Stable local damping times at each explicitly recorded operating point; direct numerical values should not be interpreted as a same-halo population comparison.",
+          "key": "response-times",
+          "media_type": "image/svg+xml",
+          "path": "assets/three-model-response-times.svg",
+          "role": "figure",
+          "sha256": "1ea7ef6e4f8507d74623d33b528b49b32b1510ddab855e8bd168267755d91c96",
+          "size_bytes": 66449,
+          "title": "Coupled response times across three models"
+        }
+      ],
+      "body": "The poles are calculated from each physical state Jacobian after an input-output-invariant state scaling. Neutral integrated-mass/tracker modes are excluded. The current figure compares local mathematical structure, not matched galaxies: a same-history mass/redshift grid is the next evidence gate.",
+      "diagnostics": [],
+      "key": "memory-times",
+      "links": [],
+      "notes": [],
+      "summary": "Each nonlinear model generates several coupled local damping times rather than inheriting one recipe timescale.",
+      "title": "Do the three baryon cycles forget perturbations on the same timescales?"
+    },
+    {
+      "artifacts": [],
+      "body": "The maximum normalized residuals are `8.527e-14` for SAGE16, `8.728e-16` for SHARK, and `3.481e-15` for Sapphire. For closed ledgers the denominator floor is one native rate unit; for open ledgers it is the larger declared source or sink. This is a numerical closure test, not a claim that the models place baryons in equivalent reservoirs.",
+      "diagnostics": [],
+      "key": "conservation-comparison",
+      "links": [],
+      "notes": [],
+      "summary": "Yes for the evaluated local calculations, once every model's external boundary is included explicitly.",
+      "title": "Do the three local baryon cycles close their budgets?"
+    },
+    {
+      "artifacts": [],
+      "body": "| Observable | Three-model status | Required qualification |\n|---|---|---|\n| Stellar mass | Direct local overlap | Align IMF, units, aperture, selection, and population weights for catalogues |\n| Star-formation rate | Direct local overlap | Align instantaneous/averaged definitions before observational comparison |\n| Cold gas / ISM mass | Qualified overlap | Preserve phase definitions; Sapphire's ISM is not automatically a SAGE/SHARK cold-gas aperture |\n| Stellar metallicity | Available | Align mass weighting, yield convention, and solar normalization |\n| Gas metallicity | Qualified overlap | Align gas phase and distinguish metal mass fraction from observational oxygen calibration |\n| Stellar mass function | Not evaluated for three models | Sapphire needs a number-density-complete or explicitly weighted population on compatible halo histories |\n| Black-hole and AGN observables | Unavailable across all three | Pandya23 has no BH/AGN state; retain the established SAGE16--SHARK comparison separately |\n| Satellite/environment/clustering statistics | Not applicable to current Sapphire model | Requires an extended topology-owning model rather than an invented adapter |\n",
+      "diagnostics": [],
+      "key": "observable-overlap",
+      "links": [],
+      "notes": [],
+      "summary": "Stellar mass, SFR, star-forming gas, and metallicity provide the strongest three-model overlap; abundance statistics require one more population-level gate.",
+      "title": "Which familiar outputs can eventually be compared?"
+    },
+    {
+      "artifacts": [],
+      "body": "Mimic-jax exposes dimensionless fractional responses when the observable and parameter have meaningful positive scales, $E_{O,\\theta}=\\partial\\ln O/\\partial\\ln\\theta$, and explicit reference-scale responses otherwise. SAGE16 and SHARK can differentiate their in-process configured subsets. Sapphire now exports both a fixed-state local parameter Jacobian and the derivative of final observables through its complete adaptive native trajectory. Sapphire's `A_*` coordinates are base-10 logarithmic normalizations and several slope parameters are zero or signed, so the report does not label raw coordinate derivatives as elasticities or match them one-to-one with SAGE/SHARK parameters.",
+      "diagnostics": [],
+      "key": "parameter-response-boundary",
+      "links": [],
+      "notes": [],
+      "summary": "The API is common; the parameters and time horizons remain physical properties of each model.",
+      "title": "What does a common parameter response mean?"
+    },
+    {
+      "artifacts": [],
+      "body": "Sapphire currently models independent central histories and familiar scaling relations, whereas full SAGE16 and SHARK include branch topology, satellites, mergers, black holes, and additional observables. The next comparison must construct a documented main-progenitor forcing adapter, preserve each model's event scope, attach population weights, and then compare SMHM, gas fractions, metallicity, SFMS, and any number-density statistic that is actually defined for the sample.",
+      "diagnostics": [],
+      "key": "limits",
+      "links": [],
+      "notes": [],
+      "summary": "The adapter is executable and validated, but the forcing and topology domains are not yet identical.",
+      "title": "What remains before a population-level three-model science claim?"
+    }
+  ],
+  "summary": "Sapphire is now a native third configured model rather than an architectural footnote. Its Pandya23 equations remain owned and executed by Sapphire in an isolated modern-JAX environment; mimic-jax imports versioned scientific artifacts and asks the same questions about reservoirs, forcing, conservation, parameter derivatives, and local response.",
+  "title": "What becomes comparable when SAGE16, SHARK, and Sapphire share one analysis language?"
+}

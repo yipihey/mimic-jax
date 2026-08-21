@@ -59,8 +59,20 @@ def validate_manifest(path: Path):
         return [f"{path}: invalid JSON: {error}"]
     if payload.get("schema_version") != REPORT_SCHEMA_VERSION:
         errors.append(f"{path}: unsupported or missing schema_version")
-    if payload.get("kind") not in ("run", "comparison"):
-        errors.append(f"{path}: kind must be 'run' or 'comparison'")
+    valid_kinds = ("run", "comparison", "multi_model_comparison")
+    if payload.get("kind") not in valid_kinds:
+        errors.append(f"{path}: kind must be 'run', 'comparison', or 'multi_model_comparison'")
+    if payload.get("kind") == "multi_model_comparison":
+        run_keys = tuple(run.get("key") for run in payload.get("runs", ()))
+        if len(run_keys) < 3 or len(run_keys) != len(set(run_keys)) or None in run_keys:
+            errors.append(f"{path}: multi-model report requires at least three unique run keys")
+        for metric in payload.get("metrics", ()):
+            metric_keys = tuple(value.get("model_key") for value in metric.get("values", ()))
+            if len(metric_keys) != len(set(metric_keys)) or set(metric_keys) != set(run_keys):
+                errors.append(
+                    f"{path}: multi-model metric {metric.get('key', '<unknown>')} does not "
+                    "provide exactly one value for every run"
+                )
     markdown = path.parent / "index.md"
     if not markdown.is_file():
         errors.append(f"{path}: matching index.md is missing")

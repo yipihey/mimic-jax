@@ -5,10 +5,16 @@ import jax.numpy as jnp
 import numpy as np
 
 from mimic_jax import (
+    LinearizationPoint,
+    ResponseCoordinate,
+    annotate_state_space,
+    characteristic_modes,
     frequency_response,
     impulse_response,
     linearize_state_space,
     local_poles,
+    scale_state_space,
+    state_space_in_gyr,
     step_response,
     transfer_matrix,
 )
@@ -96,6 +102,65 @@ def test_transfer_and_time_responses_are_jittable_and_differentiable():
     derivative = jax.grad(response)(jnp.asarray(2.0))
     assert np.isfinite(value)
     assert np.isfinite(derivative)
+
+
+def test_native_time_conversion_makes_cross_model_response_units_explicit():
+    native = linearize_state_space(
+        lambda state, control: -2.0 * state + control,
+        lambda state, control: state,
+        jnp.asarray(1.0),
+        jnp.asarray(0.0),
+    )
+    coordinate = ResponseCoordinate("mass", "mass", "native mass")
+    annotated = annotate_state_space(
+        native,
+        point=LinearizationPoint(
+            "model",
+            "formulation",
+            0.5,
+            "native time",
+            time_unit_in_gyr=4.0,
+        ),
+        state_coordinates=(coordinate,),
+        input_coordinates=(ResponseCoordinate("supply", "supply", "fractional change"),),
+        output_coordinates=(coordinate,),
+    )
+    converted = state_space_in_gyr(annotated)
+    np.testing.assert_allclose(converted.state_jacobian, [[-0.5]])
+    np.testing.assert_allclose(converted.input_jacobian, [[0.25]])
+    np.testing.assert_allclose(converted.point.time, 2.0)
+    modes = characteristic_modes(converted)
+    np.testing.assert_allclose(modes.response_times_gyr, [2.0])
+
+
+def test_state_similarity_scaling_preserves_poles_and_transfer_response():
+    state = jnp.asarray([2.0, 3.0])
+    control = jnp.asarray([0.0])
+    raw = linearize_state_space(
+        lambda current, inputs: jnp.asarray(
+            [-2.0 * current[0] + inputs[0], current[0] - 0.5 * current[1]]
+        ),
+        lambda current, inputs: jnp.asarray([current[1]]),
+        state,
+        control,
+    )
+    annotated = annotate_state_space(
+        raw,
+        point=LinearizationPoint("model", "formulation", 0.0, "Gyr"),
+        state_coordinates=(
+            ResponseCoordinate("fast", "fast", "mass"),
+            ResponseCoordinate("slow", "slow", "mass"),
+        ),
+        input_coordinates=(ResponseCoordinate("supply", "supply", "mass/Gyr"),),
+        output_coordinates=(ResponseCoordinate("observable", "observable", "mass"),),
+    )
+    scaled = scale_state_space(annotated, jnp.asarray([1.0e-2, 1.0e2]))
+    np.testing.assert_allclose(
+        np.sort_complex(np.asarray(local_poles(scaled))),
+        np.sort_complex(np.asarray(local_poles(annotated))),
+    )
+    np.testing.assert_allclose(transfer_matrix(scaled, 0.3j), transfer_matrix(annotated, 0.3j))
+    np.testing.assert_allclose(step_response(scaled, [0.2]), step_response(annotated, [0.2]))
 
 
 def test_sage16_cooling_response_uses_actual_rhs_and_preserves_baryon_tangents():

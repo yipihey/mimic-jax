@@ -1,0 +1,97 @@
+{
+  "domains": {
+    "common_event_topology": {
+      "qualification": "The audited Sapphire model has no merger/satellite event system.",
+      "status": "not_applicable"
+    },
+    "configured_model_metadata": {
+      "qualification": "All three load through mimic_jax.load_model.",
+      "status": "evaluated"
+    },
+    "continuous_local_rhs": {
+      "qualification": "SAGE16 and SHARK run in-process; Sapphire is delegated to its pinned native runtime.",
+      "status": "evaluated"
+    },
+    "local_conservation": {
+      "qualification": "SAGE16 and SHARK use structural ledgers; Sapphire uses native rates with explicit open-system boundaries.",
+      "status": "evaluated"
+    },
+    "local_state_jacobian_and_modes": {
+      "qualification": "Each result belongs to its recorded operating point and state coordinates.",
+      "status": "evaluated"
+    },
+    "parameter_response": {
+      "qualification": "One normalization API is available, but parameters are not presumed to be physically interchangeable.",
+      "status": "evaluated_with_distinct_coordinates"
+    },
+    "same_halo_history_population": {
+      "qualification": "Sapphire smooth-central forcing has not been matched to SAGE16/SHARK branch topology and population weights.",
+      "status": "not_evaluated"
+    },
+    "supply_to_sfr_response": {
+      "qualification": "SAGE16/SHARK perturb cooling; Sapphire perturbs halo accretion upstream of its CGM.",
+      "status": "qualified"
+    }
+  },
+  "models": [
+    "sage16",
+    "shark",
+    "sapphire"
+  ],
+  "normalized_conservation_residuals": {
+    "sage16": 8.526512829121202e-14,
+    "sapphire": 3.481291760212259e-15,
+    "shark": 8.72766464816721e-16
+  },
+  "reservoir_correspondence": {
+    "ejected_gas": {
+      "comparison": "unavailable as a three-model reservoir",
+      "sage16": "EjectedGas",
+      "sapphire": null,
+      "shark": "ejected_gas + lost_gas"
+    },
+    "halo_atmosphere": {
+      "comparison": "qualified; these are not synonymous reservoirs",
+      "sage16": "HotGas",
+      "sapphire": "M_cgm + Eth_cgm",
+      "shark": "cold_halo_gas + hot_halo_gas"
+    },
+    "long_lived_stars": {
+      "comparison": "direct at the continuous-state level",
+      "sage16": "StellarMass",
+      "sapphire": "M_star",
+      "shark": "stellar_mass"
+    },
+    "star_forming_gas": {
+      "comparison": "qualified because phase and aperture definitions remain model-owned",
+      "sage16": "ColdGas",
+      "sapphire": "M_ism",
+      "shark": "cold_gas"
+    },
+    "tracked_metals": {
+      "comparison": "shared total ledgers; reservoir-level mapping is qualified",
+      "sage16": "four metal reservoirs",
+      "sapphire": "stellar, ISM, and CGM metal reservoirs",
+      "shark": "six metal reservoirs plus formed-metal tracker"
+    }
+  },
+  "schema_version": "mimic-jax-three-model-comparison/v1",
+  "shared_observables": {
+    "gas_metallicity": "qualified phase-definition comparison",
+    "star_formation_rate": "direct local quantity in all three",
+    "star_forming_gas_mass": "qualified cold-gas/ISM comparison",
+    "stellar_mass": "direct local quantity in all three",
+    "stellar_mass_function": "requires a weighted common population and is not evaluated for Sapphire here",
+    "stellar_metallicity": "available in all three model ecosystems; only Sapphire is exercised in this controlled native artifact"
+  },
+  "slowest_stable_mode_gyr": {
+    "sage16": 28.75801430326405,
+    "sapphire": 8.045207981239946,
+    "shark": 7.188042634934895
+  },
+  "ten_gyr_supply_to_sfr_gain": {
+    "sage16": 1.2619302554110794,
+    "sapphire": 0.3374574521744069,
+    "shark": 3.6756370725933527
+  }
+}

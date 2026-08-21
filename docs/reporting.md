@@ -26,7 +26,7 @@ The report manifest has five stable concepts:
 
 `ReportSection.body` optionally carries ordinary Markdown for equation-rich pedagogical sections. It is stored in the same machine-readable manifest and rendered before the section artifacts; it does not create a parallel report source or let presentation enter the physics kernels.
 
-Comparison reports use a separate manifest with explicit baseline and candidate runs. Scalar comparisons retain both values, the absolute difference, and a fractional difference only when the baseline supplies a meaningful nonzero scale. A derivative prediction can be recorded alongside the measured finite change without conflating the two.
+Pairwise comparison reports use a manifest with explicit baseline and candidate runs. Scalar comparisons retain both values, the absolute difference, and a fractional difference only when the baseline supplies a meaningful nonzero scale. A derivative prediction can be recorded alongside the measured finite change without conflating the two. `MultiModelComparisonReport` generalizes the same durable report boundary to three or more named models without choosing an arbitrary baseline; every metric must provide exactly one explicit value or availability state for every participating model.
 
 ## Durable outputs
 
@@ -185,7 +185,7 @@ JAX_ENABLE_X64=1 mimic_venv/bin/python \
 
 The result is `reports/sage16-differentiable-calibration/index.md`. Its failed surrogate gate and unavailable final parameter intervals are intentional report outputs, not build failures. The exact evaluated SAGE improvement, local curvature forecast, emulator training/validation arrays, and MCMC diagnostic remain available for inspection.
 
-For ordinary Python use, construct `RunReport` or `ComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream MIMIC run record.
+For ordinary Python use, construct `RunReport`, `ComparisonReport`, or `MultiModelComparisonReport` from canonical result summaries and call `write_report(report, directory)`. `parameter_response_diagnostic`, `timestep_refinement_diagnostic`, `conservation_diagnostic`, and `benchmark_diagnostic` are adapters: they summarize existing objects and never rerun the science. `capture_provenance` records the repository state, explicit configurations and input checksums, software, hardware/backend, command, and upstream run record.
 
 Comparison metrics should normally be constructed with `ComparisonMetric.from_values(...)`. It records baseline, candidate, and absolute difference, and defines a fractional difference only for a meaningful nonzero baseline. `derivative_prediction` is a separate optional fractional prediction, so a local elasticity is never confused with the measured finite run-to-run change.
 

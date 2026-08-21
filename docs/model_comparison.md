@@ -1,11 +1,38 @@
-# Comparing SAGE16, SHARK, and future SAMs
+# Comparing SAGE16, SHARK, Sapphire, and future SAMs
 
-Mimic-jax compares models through two explicit contracts rather than pairwise plotting code:
+Mimic-jax compares models through three explicit contracts rather than pairwise plotting code:
 
 1. a **canonical galaxy catalogue** for observable reductions;
 2. a **canonical merger-tree forcing record** for auditing whether the same histories can drive each model.
+3. a **configured SAM protocol** for continuous flows, named process perturbations, conservation, parameter responses, and local dynamical response.
 
-The current [SAGE16--SHARK interoperability audit](../reports/sage16-shark-interoperability-audit/index.md) is the executable status record. It establishes substantial output overlap, but it does **not** yet claim that either JAX population model can run the other model's native trees.
+The [SAGE16--SHARK interoperability audit](../reports/sage16-shark-interoperability-audit/index.md) establishes substantial output overlap between the two production SAM ports, but it does **not** yet claim that either JAX population model can run the other model's native trees. The [three-model response report](../reports/three-model-response-foundation/index.md) adds a pinned native Sapphire calculation and makes its distinct smooth-central forcing and event scope explicit.
+
+## Common dynamical boundary
+
+`load_model` provides one deliberately small execution and analysis surface:
+
+```python
+from mimic_jax import load_model
+
+sage = load_model("sage16")
+shark = load_model("shark")
+sapphire = load_model("sapphire")
+
+print(sage.metadata.process_control_names)
+print(shark.metadata.capability("continuous_rhs"))
+print(sapphire.metadata.capability("events"))
+```
+
+SAGE16 and SHARK expose their live in-process RHS, native named rates, conserved quantities, parameter responses, Jacobians, and local response through `ConfiguredSamModel`. Sapphire exposes the same semantic metadata and scientific products through a native external artifact because its current Python/JAX requirements conflict with the validated SAGE16/SHARK environment. The state and forcing coordinates remain model-owned: SAGE is not given SHARK reservoirs, SHARK is not reduced to SAGE's parameterization, and Sapphire's CGM is not silently renamed as another model's hot reservoir.
+
+The common process controls are logarithmic multipliers. A cooling control `epsilon` means `cooling -> cooling * exp(epsilon)`, so its small-perturbation interpretation is a fractional change in cooling. This lets the same response code ask how fractional SFR responds to cooling, star formation, SN feedback, or reincorporation without pretending the underlying prescriptions are identical.
+
+Local response objects record the model, formulation, state/input/output names, units, redshift, halo mass, derivative method, and native time convention. `state_space_in_gyr` must be applied before comparing response times or frequency responses across models. `scale_state_space` applies an explicitly supplied similarity scaling when mixed mass, metal, and angular-momentum coordinates make matrix exponentials poorly conditioned; it preserves poles and the complete input-output transfer function.
+
+The [first common-response report](../reports/sage16-shark-response-foundation/index.md) uses this boundary for a matched local disk experiment. It validates the frozen linear response against nonlinear evolution and keeps same-tree population isolation and matched closed-loop AGN regulation marked **not evaluated**.
+
+The [three-model report](../reports/three-model-response-foundation/index.md) deliberately compares different supply boundaries rather than hiding them. SAGE16 and SHARK receive fractional cooling perturbations; Sapphire receives a fractional dark-matter accretion perturbation that propagates through its CGM. Both ask how strongly SFR follows supply variability, but only the latter contains the upstream atmospheric filtering in that plotted transfer.
 
 ## Catalogue boundary
 
@@ -78,7 +105,7 @@ Observations use their own declared target conventions. The shared Baldry et al.
 2. Are the field definitions scientifically compatible with the target model?
 3. Does a topology-owning JAX population driver accept this tree format?
 
-The answers today are:
+The production-SAM topology answers today are:
 
 | Source trees | SAGE16 JAX | SHARK Lagos23 JAX |
 | --- | --- | --- |
@@ -88,6 +115,8 @@ The answers today are:
 SAGE-on-SHARK needs an audited L-Halo progenitor ordering, virial-radius and velocity-dispersion convention, plus a conversion of VELOCIraptor angular momentum into the vector used by SAGE's disk-radius law. SHARK-on-L-Halo needs at least concentration, interpolation/DHalo semantics, main-progenitor/ownership rules, and validated spin/half-mass-radius conversions.
 
 The exhaustive SHARK population RHS replay is complementary evidence: it validates every realized continuous physics evaluation selected by native SHARK. It does not yet make JAX the owner of variable-cardinality topology and event scheduling.
+
+Sapphire v0.130 consumes smooth main-progenitor histories containing dark-matter accretion, halo mass, virial radius, virial velocity, and NFW concentration. The audited Pandya23 model evolves independent central galaxies and has no general merger/satellite event topology. Adapting a common smooth main branch is feasible; calling that a full-tree topology comparison would not be.
 
 ## Reproduce the audit
 
@@ -105,9 +134,9 @@ python scripts/audit_sage_shark_interoperability.py \
 
 The report writes durable Markdown, a standard report manifest, compact numerical arrays, and `assets/model-comparison-audit.json`. The latter exposes field provenance, observable capabilities, tree blockers, and claim boundaries to agents without requiring them to reverse-engineer figures.
 
-## Acceptance gate for a controlled model comparison
+## Acceptance gate for a controlled population comparison
 
-A SAGE--SHARK science comparison isolates baryonic model choices only after both models use:
+A population science comparison isolates baryonic model choices only after participating models use:
 
 - the same canonical halo histories and event topology;
 - the same cosmology, volume, and redshift outputs;
@@ -116,4 +145,4 @@ A SAGE--SHARK science comparison isolates baryonic model choices only after both
 - independently converged numerical modes;
 - propagated finite-volume and numerical uncertainties.
 
-Until that gate passes, native Mini-Millennium and mini-SURFS overlays demonstrate catalogue interoperability and provide within-model validation, not a causal difference between SAGE and SHARK physics.
+For Sapphire, the gate additionally requires defensible population weights because its released inference workflow samples smooth central histories rather than providing an automatically number-density-complete merger-tree catalogue. Until these gates pass, native Mini-Millennium, mini-SURFS, and Sapphire controlled-history results demonstrate interoperability and within-model validation, not a causal three-model difference.

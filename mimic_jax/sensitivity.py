@@ -37,6 +37,9 @@ class ParameterResponseMatrix:
     normalization: str
     derivative_method: str
     invalid_policy: str
+    model: str = "unspecified"
+    formulation: str = "unspecified"
+    qualification: str = ""
 
     @property
     def sign(self):
@@ -69,6 +72,9 @@ class ParameterResponseMatrix:
             normalization=self.normalization,
             derivative_method=self.derivative_method,
             invalid_policy=self.invalid_policy,
+            model=self.model,
+            formulation=self.formulation,
+            qualification=self.qualification,
         )
 
 
@@ -100,6 +106,9 @@ class HistoricalProcessResponse:
     normalization: str
     derivative_method: str
     invalid_policy: str
+    model: str = "unspecified"
+    formulation: str = "unspecified"
+    qualification: str = ""
 
     @property
     def sign(self):
@@ -132,6 +141,9 @@ class HistoricalProcessResponse:
             normalization=self.normalization,
             derivative_method=self.derivative_method,
             invalid_policy=self.invalid_policy,
+            model=self.model,
+            formulation=self.formulation,
+            qualification=self.qualification,
             ln_scale_factor_edges=np.asarray(self.ln_scale_factor_edges),
             redshift_edges=np.asarray(self.redshift_edges),
             **extra,
@@ -234,6 +246,8 @@ def parameter_response_matrix(
     observable_scales=None,
     parameter_scales=None,
     invalid: str = "raise",
+    parameter_getter: Optional[Callable[[Any, str], Any]] = None,
+    parameter_replacer: Optional[Callable[[Any, str, Any], Any]] = None,
 ) -> ParameterResponseMatrix:
     """Calculate ``d ln(observable) / d ln(parameter)`` for selected fields.
 
@@ -244,26 +258,89 @@ def parameter_response_matrix(
     parameter_names = tuple(parameter_names)
     if not parameter_names:
         raise ValueError("At least one parameter name is required")
-    unknown = set(parameter_names) - set(parameters._fields)
-    if unknown:
-        raise ValueError(f"Unknown parameter fields: {sorted(unknown)}")
-    selected_parameters = [jnp.asarray(getattr(parameters, name)) for name in parameter_names]
+    if (parameter_getter is None) != (parameter_replacer is None):
+        raise ValueError("parameter_getter and parameter_replacer must be supplied together")
+    if parameter_getter is None:
+        unknown = set(parameter_names) - set(parameters._fields)
+        if unknown:
+            raise ValueError(f"Unknown parameter fields: {sorted(unknown)}")
+        parameter_getter = lambda record, name: getattr(record, name)
+        parameter_replacer = lambda record, name, value: record._replace(**{name: value})
+    try:
+        selected_parameters = [
+            jnp.asarray(parameter_getter(parameters, name)) for name in parameter_names
+        ]
+    except (AttributeError, KeyError) as error:
+        raise ValueError(f"Unknown parameter path: {error}") from error
     if any(not jnp.issubdtype(value.dtype, jnp.inexact) for value in selected_parameters):
         raise TypeError("Selected parameters must have a differentiable floating-point dtype")
     parameter_values = jnp.stack(selected_parameters)
 
     def evaluate(selected_values):
-        replacements = dict(zip(parameter_names, selected_values))
-        return jnp.atleast_1d(jnp.asarray(observable_fn(parameters._replace(**replacements))))
+        current = parameters
+        for name, value in zip(parameter_names, selected_values):
+            current = parameter_replacer(current, name, value)
+        return jnp.atleast_1d(jnp.asarray(observable_fn(current)))
 
     observables = evaluate(parameter_values)
     if observables.ndim != 1:
         raise ValueError("observable_fn must return a scalar or one-dimensional array")
     raw_derivatives = jax.jacrev(evaluate)(parameter_values)
-    values, valid = _normalise_parameter_derivatives(
+    return parameter_response_from_derivatives(
         raw_derivatives,
         observables,
         parameter_values,
+        parameter_names=parameter_names,
+        observable_names=observable_names,
+        observable_units=observable_units,
+        parameter_units=parameter_units,
+        normalization=normalization,
+        observable_scales=observable_scales,
+        parameter_scales=parameter_scales,
+        invalid=invalid,
+        derivative_method="jax.jacrev",
+    )
+
+
+def parameter_response_from_derivatives(
+    raw_derivatives,
+    observable_values,
+    parameter_values,
+    *,
+    parameter_names: Sequence[str],
+    observable_names: Optional[Sequence[str]] = None,
+    observable_units: Optional[Sequence[str]] = None,
+    parameter_units: Optional[Sequence[str]] = None,
+    normalization: str = LOG_ELASTICITY,
+    observable_scales=None,
+    parameter_scales=None,
+    invalid: str = "raise",
+    derivative_method: str = "supplied derivatives",
+    model: str = "unspecified",
+    formulation: str = "unspecified",
+    qualification: str = "",
+) -> ParameterResponseMatrix:
+    """Normalize an already computed observable-by-parameter derivative matrix.
+
+    This is the artifact/external-runtime counterpart to
+    :func:`parameter_response_matrix`. It applies exactly the same explicit
+    logarithmic or reference-scale rules without recomputing model physics.
+    """
+
+    observables = jnp.atleast_1d(jnp.asarray(observable_values))
+    parameters = jnp.atleast_1d(jnp.asarray(parameter_values))
+    derivatives = jnp.asarray(raw_derivatives)
+    if observables.ndim != 1 or parameters.ndim != 1:
+        raise ValueError("Observable and parameter values must be one-dimensional")
+    if derivatives.shape != (observables.size, parameters.size):
+        raise ValueError(
+            "raw_derivatives must have shape (n_observable, n_parameter); "
+            f"received {derivatives.shape}, expected {(observables.size, parameters.size)}"
+        )
+    values, valid = _normalise_parameter_derivatives(
+        derivatives,
+        observables,
+        parameters,
         normalization,
         observable_scales,
         parameter_scales,
@@ -271,10 +348,10 @@ def parameter_response_matrix(
     )
     return ParameterResponseMatrix(
         values=values,
-        raw_derivatives=raw_derivatives,
+        raw_derivatives=derivatives,
         valid=valid,
         observable_values=observables,
-        parameter_values=parameter_values,
+        parameter_values=parameters,
         observable_scales=(
             None if observable_scales is None else jnp.asarray(observable_scales, dtype=jnp.float64)
         ),
@@ -282,12 +359,15 @@ def parameter_response_matrix(
             None if parameter_scales is None else jnp.asarray(parameter_scales, dtype=jnp.float64)
         ),
         observable_names=_names(observable_names, observables.size, "observable"),
-        parameter_names=parameter_names,
+        parameter_names=_names(parameter_names, parameters.size, "parameter"),
         observable_units=_units(observable_units, observables.size),
-        parameter_units=_units(parameter_units, parameter_values.size),
+        parameter_units=_units(parameter_units, parameters.size),
         normalization=normalization,
-        derivative_method="jax.jacrev",
+        derivative_method=derivative_method,
         invalid_policy=invalid,
+        model=model,
+        formulation=formulation,
+        qualification=qualification,
     )
 
 
@@ -297,6 +377,7 @@ def validate_parameter_response(
     parameters,
     *,
     relative_steps: Sequence[float] = (1.0e-2, 3.0e-3, 1.0e-3),
+    parameter_replacer: Optional[Callable[[Any, str, Any], Any]] = None,
 ) -> ParameterResponseValidation:
     """Compare an elasticity with symmetric multiplicative finite differences."""
 
@@ -307,12 +388,14 @@ def validate_parameter_response(
         raise ValueError("relative_steps must lie strictly between zero and one")
 
     rows = []
+    if parameter_replacer is None:
+        parameter_replacer = lambda record, name, value: record._replace(**{name: value})
     for step in np.asarray(steps):
         columns = []
         denominator = np.log1p(step) - np.log1p(-step)
         for name, value in zip(response.parameter_names, response.parameter_values):
-            upper = parameters._replace(**{name: value * (1.0 + step)})
-            lower = parameters._replace(**{name: value * (1.0 - step)})
+            upper = parameter_replacer(parameters, name, value * (1.0 + step))
+            lower = parameter_replacer(parameters, name, value * (1.0 - step))
             upper_observable = np.atleast_1d(np.asarray(observable_fn(upper), dtype=np.float64))
             lower_observable = np.atleast_1d(np.asarray(observable_fn(lower), dtype=np.float64))
             if np.any(upper_observable <= 0.0) or np.any(lower_observable <= 0.0):
@@ -512,6 +595,9 @@ def _save_archive(path, **contents) -> None:
         "normalization",
         "derivative_method",
         "invalid_policy",
+        "model",
+        "formulation",
+        "qualification",
     }
     encoded = {}
     for key, value in contents.items():

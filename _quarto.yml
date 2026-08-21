@@ -14,6 +14,7 @@ project:
     - docs/performance.md
     - docs/mimic_jax_scientific_program.md
     - docs/shark_lagos23.md
+    - docs/sapphire_interoperability.md
     - docs/model_comparison.md
     - plot/mimic-plot/README.md
   resources:
@@ -47,8 +48,14 @@ website:
         text: SHARK Lagos23
       - href: reports/sage16-shark-interoperability-audit/index.md
         text: Compare models
+      - href: reports/sage16-shark-response-foundation/index.md
+        text: Compare responses
+      - href: reports/three-model-response-foundation/index.md
+        text: Three-model response
       - href: docs/shark_lagos23.md
         text: SHARK guide
+      - href: docs/sapphire_interoperability.md
+        text: Sapphire guide
       - href: docs/sage16_hybrid_system.md
         text: Hybrid SAGE16
   page-footer:

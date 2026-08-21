@@ -1,0 +1,48 @@
+{
+  "experiment": {
+    "disk_scale_radius_mpc_over_h": 0.005,
+    "halo_mass_msun_over_h": 1000000000000.0,
+    "qualification": "matched local continuous-flow experiment, not a population comparison",
+    "redshift": 0.0,
+    "virial_velocity_km_per_s": 220.0
+  },
+  "models": {
+    "sage16": {
+      "baseline_sfr_msun_over_h_per_gyr": 2797456650.4852705,
+      "formulation": "continuous quiescent central subset",
+      "label": "MIMIC/SAGE16",
+      "linear_validation_relative_final_error": [
+        0.01415270952045829,
+        0.018484403312956973,
+        0.037575256794708266
+      ],
+      "maximum_conservation_residual_native_rate": 8.526512829121202e-14,
+      "stable_response_times_gyr": [
+        0.3282890543481462,
+        0.38777276969598373,
+        0.38777276969598373,
+        0.7595989790536639,
+        28.75801430326405,
+        28.75801430326405
+      ]
+    },
+    "shark": {
+      "baseline_sfr_msun_over_h_per_gyr": 2836126324.287302,
+      "formulation": "controlled continuous Lagos23 disk subset",
+      "label": "SHARK Lagos23",
+      "linear_validation_relative_final_error": [
+        0.04526250947016612,
+        0.04977539483238501,
+        0.0696745136357603
+      ],
+      "maximum_conservation_residual_native_rate": 5.960464477539063e-08,
+      "stable_response_times_gyr": [
+        0.38777276969598373,
+        0.389826885166064,
+        2.039460303945188,
+        2.296515015212252,
+        7.188042634934895
+      ]
+    }
+  }
+}
